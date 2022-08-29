@@ -6,7 +6,7 @@ import { useRouter } from "next/router";
 
 export default function SidebarWithHeader({children}: { children?: ReactNode; }) {
   const {isOpen, onOpen, onClose} = useDisclosure();
-  const mainColor = useColorModeValue('gray.100', 'gray.900')
+  const mainColor = useColorModeValue('gray.50', 'gray.900')
   const router = useRouter();
 
   if (router.pathname === "/") {
