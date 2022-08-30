@@ -1,15 +1,17 @@
 import { useMutation } from "react-query";
-
+import { api } from "../../services/api";
+import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
-import { api } from "../services/api";
-import { queryClient } from "../services/queryClient";
 
-export type createUserForm = {
-  id: number;
+export type createUserFormData = {
   name: string;
-  cpf: string;
-  age: number;
+  login: string
+  email: string;
+  password: string;
+  password_confirmation: string;
+  admin: boolean;
+  active: boolean;
 }
 
 type ErrorType = {
@@ -18,10 +20,11 @@ type ErrorType = {
 }
 
 export function useCreateUser(onSuccess?: () => {}, onError?: () => {}) {
+
   const toast = useToast()
 
-  return useMutation(async (user: createUserForm) => {
-    const response = await api.post('/api/people', {
+  return useMutation(async (user: createUserFormData) => {
+    const response = await api.post('v1/user', {
       ...user
     })
 
@@ -30,14 +33,14 @@ export function useCreateUser(onSuccess?: () => {}, onError?: () => {}) {
     onSuccess: async () => {
       await queryClient.invalidateQueries(['user'])
       onSuccess?.()
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, onError: (erro: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({
-        title: error.response.data.title,
-        description: error.response.data.details,
+        title: erro.response.data.title,
+        description: erro.response.data.details,
         status: 'error',
-        duration: 4000,
+        duration: 9000,
         isClosable: true,
       })
     }

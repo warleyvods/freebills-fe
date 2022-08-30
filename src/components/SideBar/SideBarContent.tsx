@@ -16,8 +16,9 @@ interface LinkItemProps {
 }
 
 const LinkItemsAdmin: Array<LinkItemProps> = [
+  {name: 'Contas', icon: RiGroupLine, ref: '/accounts'},
+  {name: 'Dashboard', icon: RiGroupLine, ref: '/dashboard'},
   {name: 'Usuários', icon: RiUser3Line, ref: '/users'},
-  // {name: 'Funcionários', icon: RiGroupLine, ref: '/employees'},
   // {name: 'Funções', icon: RiFolderOpenLine, ref: '/careers'},
 ];
 
