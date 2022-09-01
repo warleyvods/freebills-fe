@@ -16,7 +16,7 @@ export default function CardsDashboard({description, value, color} : DashBoardPr
       <HStack justifyContent={"space-between"} align={"center"}>
         <VStack justify={"flex-start"} p={2} alignItems={"start"}>
           <Text fontWeight="normal" fontSize={"1.2rem"}>{description}</Text>
-          <Text fontWeight="bold" fontSize={"1.2rem"}>R$ 1.000,00</Text>
+          <Text fontWeight="bold" fontSize={"1.2rem"}>R$ {value}</Text>
         </VStack>
         <IconButton
           color={"white"}
