@@ -18,7 +18,7 @@ function generatePagesArray(from: number, to: number) {
     .filter(page => page >= 0)
 }
 
-export function Pagination({totalCountOfRegisters, registerPerPage = 7, currentPage = 1, onPageChange}: PaginationProps) {
+export function Pagination({totalCountOfRegisters, registerPerPage = 8, currentPage = 1, onPageChange}: PaginationProps) {
 
   const lastPage = totalCountOfRegisters % registerPerPage == 0 ? (totalCountOfRegisters / registerPerPage) - 1 : Math.floor(totalCountOfRegisters / registerPerPage)
   const previousPages = currentPage > 0 ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1) : []

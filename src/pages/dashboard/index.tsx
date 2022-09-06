@@ -10,9 +10,6 @@ export default function Dashboard() {
   const {data: user} = useMe();
   const {data: dash} = useDashboard(user?.id);
 
-  console.log(dash)
-
-
   return (
     <SidebarWithHeader>
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
@@ -21,10 +18,10 @@ export default function Dashboard() {
         </Flex>
         <>
           <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px'>
-            <CardsDashboard description={"Saldo Atual"} value={dash?.balanceType} color={"blue"} />
-            <CardsDashboard description={"Receitas"} color={"green"} />
-            <CardsDashboard description={"Despesas"} color={"red"} />
-            <CardsDashboard description={"Cartões"} color={"purple"} />
+            <CardsDashboard description={"Saldo Atual"} value={dash?.totalBalance} color={"blue"} />
+            <CardsDashboard description={"Receitas"} value={dash?.totalRevenue} color={"green"} />
+            <CardsDashboard description={"Despesas"} value={dash?.totalExpensive} color={"red"} />
+            <CardsDashboard description={"Cartões"} value={dash?.totalExpensiveCards} color={"purple"} />
           </SimpleGrid>
         </>
       </Flex>

@@ -1,7 +1,6 @@
 import { Box, BoxProps, CloseButton, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
-import { FiHome } from "react-icons/fi";
-import { RiFolderOpenLine, RiGroupLine, RiUser3Line } from "react-icons/ri";
+import { RiExchangeBoxLine, RiExchangeDollarLine, RiFundsLine, RiGroupLine, RiUser3Line } from "react-icons/ri";
 import { IconType } from "react-icons";
 import { NavItem } from "./NavItem";
 
@@ -16,16 +15,16 @@ interface LinkItemProps {
 }
 
 const LinkItemsAdmin: Array<LinkItemProps> = [
-  {name: 'Contas', icon: RiGroupLine, ref: '/accounts'},
-  {name: 'Dashboard', icon: RiGroupLine, ref: '/dashboard'},
-  {name: 'Usuários', icon: RiUser3Line, ref: '/users'},
-  // {name: 'Funções', icon: RiFolderOpenLine, ref: '/careers'},
+  {name: 'Contas', icon: RiExchangeDollarLine, ref: '/accounts'},
+  {name: 'Dashboard', icon: RiFundsLine, ref: '/dashboard'},
+  {name: 'Transações', icon: RiExchangeBoxLine, ref: '/transactions'},
+  {name: 'Usuários', icon: RiGroupLine, ref: '/users'},
 ];
 
 const LinkItemsUser: Array<LinkItemProps> = [
-  {name: 'Dashboard', icon: FiHome, ref: '/dashboard'},
-  {name: 'Funcionários', icon: RiGroupLine, ref: '/employees'},
-  {name: 'Funções', icon: RiFolderOpenLine, ref: '/careers'},
+  {name: 'Contas', icon: RiGroupLine, ref: '/accounts'},
+  {name: 'Dashboard', icon: RiGroupLine, ref: '/dashboard'},
+  {name: 'Transações', icon: RiUser3Line, ref: '/transactions'},
 ];
 
 export const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
@@ -50,7 +49,7 @@ export const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
         <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          CRUD BASE
+          $$ FREEBILLS
         </Text>
         <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose} />
       </Flex>

@@ -4,7 +4,10 @@ import { useRouter } from "next/router";
 
 type DashboardBalance = {
   type: string;
-  balanceType: number;
+  totalBalance: number;
+  totalRevenue: number;
+  totalExpensive: number;
+  totalExpensiveCards: number;
 }
 
 export async function getDashboard(userId: number): Promise<DashboardBalance> {
