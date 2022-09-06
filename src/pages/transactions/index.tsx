@@ -20,7 +20,7 @@ import {
   Tr,
   useColorModeValue
 } from "@chakra-ui/react";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiMore2Fill } from "react-icons/ri";
 import TagW from "../../components/Tag";
 import { useTransaction } from "../../hooks/transactions/useTransaction";
 import { useMe } from "../../hooks/users/useMe";
@@ -36,7 +36,7 @@ import CardsDashboard from "../../components/Cards/CardsDashboard";
 import { useDashboard } from "../../hooks/dashboard/useDashboard";
 import { Formik } from 'formik';
 import { useIsFetching } from "react-query";
-import { SearchIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, ChevronRightIcon, SearchIcon } from "@chakra-ui/icons";
 
 interface ColumnsProps {
   name: string;
@@ -59,12 +59,32 @@ export default function Transaction() {
   const mainColor = useColorModeValue('white', 'gray.800')
   const isFetching = useIsFetching(['transaction'])
   const [keyword, setKeyword] = useState("");
+  const [month, setMonth] = useState(new Date().getMonth() + 1)
+  const [year, setYear] = useState(new Date().getFullYear())
   const [page, setPage] = useState(0)
   const {data: user} = useMe();
   const {data: dash} = useDashboard(user?.id);
-  const {data: transactions, isLoading, error} = useTransaction(user?.id, page, keyword);
+  const {data: transactions, isLoading, error} = useTransaction(user?.id, page, keyword, month, year);
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const padding = "1px";
+
+
+  const handleChangeMonthIncrement = () => {
+    if (month >= 1 && month < 12) {
+      setMonth(month + 1);
+    } else {
+      return null;
+    }
+  }
+
+  const handleChangeMonthDecrement = () => {
+    if (month > 1 && month <= 12) {
+      setMonth(month - 1);
+    } else {
+      return null;
+    }
+  }
+
 
   function handleDeleteTransaction(transactionId: number) {
     deleteTransaction(transactionId)
@@ -143,6 +163,36 @@ export default function Transaction() {
                     </>
                   }
                 </Formik>
+                <IconButton
+                  onClick={() => handleChangeMonthDecrement()}
+                  color={"white"}
+                  colorScheme={"gray"}
+                  isRound={true}
+                  aria-label={"button account"}
+                  icon={<ChevronLeftIcon w={8} h={8} />}
+                  size={"lg"}
+                />
+                  <HStack p={0}>
+                    <Text fontWeight={"bold"}>{
+                      new Date(`"${month}"`).toLocaleDateString('pt-BR', {
+                        month: 'long',
+                      })}
+                    </Text>
+                    <Text fontWeight={"bold"}>{
+                      new Date().toLocaleDateString('pt-BR', {
+                        year: 'numeric',
+                      })}
+                    </Text>
+                  </HStack>
+                  <IconButton
+                    onClick={() => handleChangeMonthIncrement()}
+                    color={"white"}
+                    colorScheme={"gray"}
+                    isRound={true}
+                    aria-label={"button account"}
+                    icon={<ChevronRightIcon w={8} h={8} />}
+                    size={"lg"}
+                  />
               </HStack>
               <LightMode>
                 <NewTransactionModal trigger={(open) =>
@@ -258,5 +308,5 @@ export default function Transaction() {
         </Flex>
       </Box>
     </SidebarWithHeader>
-  )
+)
 };
