@@ -31,6 +31,7 @@ export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
   }, {
     onSuccess: async () => {
       await queryClient.invalidateQueries(['transaction'])
+      await queryClient.invalidateQueries(['balance'])
       onSuccess?.()
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()

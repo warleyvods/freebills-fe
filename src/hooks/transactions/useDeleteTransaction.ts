@@ -17,6 +17,7 @@ export function useDeleteTransaction() {
         isClosable: true,
       })
       await queryClient.invalidateQueries(['transaction'])
+      await queryClient.invalidateQueries(['balance'])
     }, onError: (err: any) => {
       toast({
         title: err.response.data.title,

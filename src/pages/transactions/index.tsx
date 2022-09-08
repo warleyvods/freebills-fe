@@ -7,7 +7,10 @@ import {
   Heading,
   HStack,
   Icon,
-  IconButton, Input, InputGroup, InputLeftElement,
+  IconButton,
+  Input,
+  InputGroup,
+  InputLeftElement,
   LightMode,
   SimpleGrid,
   Spinner,
@@ -20,7 +23,7 @@ import {
   Tr,
   useColorModeValue
 } from "@chakra-ui/react";
-import { RiAddLine, RiMore2Fill } from "react-icons/ri";
+import { RiAddLine } from "react-icons/ri";
 import TagW from "../../components/Tag";
 import { useTransaction } from "../../hooks/transactions/useTransaction";
 import { useMe } from "../../hooks/users/useMe";
@@ -31,7 +34,7 @@ import { GrEdit } from "react-icons/gr";
 import { useDeleteTransaction } from "../../hooks/transactions/useDeleteTransaction";
 import { NewTransactionModal } from "../../components/Modals/NewTransaction";
 import { dateFormat, numberFormat } from "../../components/Utils/utils";
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import CardsDashboard from "../../components/Cards/CardsDashboard";
 import { useDashboard } from "../../hooks/dashboard/useDashboard";
 import { Formik } from 'formik';
@@ -63,28 +66,28 @@ export default function Transaction() {
   const [year, setYear] = useState(new Date().getFullYear())
   const [page, setPage] = useState(0)
   const {data: user} = useMe();
-  const {data: dash} = useDashboard(user?.id);
-  const {data: transactions, isLoading, error} = useTransaction(user?.id, page, keyword, month, year);
+  const {data: dash} = useDashboard(user?.id, month, year);
+  const {data: transactions, isLoading, error} = useTransaction(page, keyword, month, year);
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const padding = "1px";
 
+  const incrementMonth = useCallback(() => {
+    setMonth((month) => {
+      if (month >= 1 && month < 12) {
+        return ++month
+      }
+      return month;
+    })
+  }, [])
 
-  const handleChangeMonthIncrement = () => {
-    if (month >= 1 && month < 12) {
-      setMonth(month + 1);
-    } else {
-      return null;
-    }
-  }
-
-  const handleChangeMonthDecrement = () => {
-    if (month > 1 && month <= 12) {
-      setMonth(month - 1);
-    } else {
-      return null;
-    }
-  }
-
+  const decreaseMonth = useCallback(() => {
+    setMonth((month) => {
+      if (month > 1 && month <= 12) {
+        return --month
+      }
+      return month;
+    })
+  }, [])
 
   function handleDeleteTransaction(transactionId: number) {
     deleteTransaction(transactionId)
@@ -164,7 +167,7 @@ export default function Transaction() {
                   }
                 </Formik>
                 <IconButton
-                  onClick={() => handleChangeMonthDecrement()}
+                  onClick={decreaseMonth}
                   color={"white"}
                   colorScheme={"gray"}
                   isRound={true}
@@ -172,27 +175,27 @@ export default function Transaction() {
                   icon={<ChevronLeftIcon w={8} h={8} />}
                   size={"lg"}
                 />
-                  <HStack p={0}>
-                    <Text fontWeight={"bold"}>{
-                      new Date(`"${month}"`).toLocaleDateString('pt-BR', {
-                        month: 'long',
-                      })}
-                    </Text>
-                    <Text fontWeight={"bold"}>{
-                      new Date().toLocaleDateString('pt-BR', {
-                        year: 'numeric',
-                      })}
-                    </Text>
-                  </HStack>
-                  <IconButton
-                    onClick={() => handleChangeMonthIncrement()}
-                    color={"white"}
-                    colorScheme={"gray"}
-                    isRound={true}
-                    aria-label={"button account"}
-                    icon={<ChevronRightIcon w={8} h={8} />}
-                    size={"lg"}
-                  />
+                <HStack p={0}>
+                  <Text fontWeight={"bold"}>{
+                    new Date(`"${month}"`).toLocaleDateString('pt-BR', {
+                      month: 'long',
+                    })}
+                  </Text>
+                  <Text fontWeight={"bold"}>{
+                    new Date().toLocaleDateString('pt-BR', {
+                      year: 'numeric',
+                    })}
+                  </Text>
+                </HStack>
+                <IconButton
+                  onClick={incrementMonth}
+                  color={"white"}
+                  colorScheme={"gray"}
+                  isRound={true}
+                  aria-label={"button account"}
+                  icon={<ChevronRightIcon w={8} h={8} />}
+                  size={"lg"}
+                />
               </HStack>
               <LightMode>
                 <NewTransactionModal trigger={(open) =>
@@ -308,5 +311,5 @@ export default function Transaction() {
         </Flex>
       </Box>
     </SidebarWithHeader>
-)
+  )
 };

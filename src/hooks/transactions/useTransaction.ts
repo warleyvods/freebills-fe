@@ -16,7 +16,7 @@ type getTransactionResponse = {
   content: TransactionType[];
 }
 
-export async function getAllTransactions(userId: number, page: number, keyword: string, month: string, year: string): Promise<getTransactionResponse> {
+export async function getAllTransactions(page: number, keyword: string, month: string, year: string, userId?: number): Promise<getTransactionResponse> {
   const size = 8;
   const response = await api.get('v1/transactions/filter', {
     params: {
@@ -32,8 +32,8 @@ export async function getAllTransactions(userId: number, page: number, keyword: 
   return response.data;
 }
 
-export function useTransaction(userId: number, page: number, keyword, month, year) {
-  return useQuery(['transaction', userId, page, keyword, month, year], () => getAllTransactions(userId, page, keyword, month, year), {
+export function useTransaction(page: number, keyword, month, year, userId?: number) {
+  return useQuery(['transaction', userId, page, keyword, month, year], () => getAllTransactions(page, keyword, month, year, userId), {
     staleTime: 0,
     cacheTime: 0
   })
