@@ -23,6 +23,8 @@ import { useCreateAccount } from "../../../hooks/accounts/useCreateAccount";
 import { useMe } from "../../../hooks/users/useMe";
 import { useCreateTransaction } from "../../../hooks/transactions/useCreateTransaction";
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
+import { IconType } from "react-icons";
+import { RiExchangeBoxLine, RiExchangeDollarLine, RiFundsLine, RiGroupLine } from "react-icons/ri";
 
 // const createAddressValidationSchema = yup.object().shape({
 //   amount: yup.number().required('Valor Obrigatório.'),
@@ -31,6 +33,47 @@ import { useAccounts } from "../../../hooks/accounts/useAccounts";
 //   transactionType: yup.number().required('Valor Obrigatório.'),
 //   transactionCategory: yup.number().required('Valor Obrigatório.'),
 // });
+
+interface LinkItemProps {
+  category: string;
+  categoryName: string;
+}
+
+const allCategory: Array<LinkItemProps> = [
+  {category: 'HOUSE', categoryName: 'Casa'},
+  {category: 'EDUCATION', categoryName: 'Educação'},
+  {category: 'ELECTRONIC', categoryName: 'Eletrônica'},
+  {category: 'LEISURE', categoryName: 'Lazer' },
+  {category: 'RESTAURANT', categoryName: 'Restaurante' },
+  {category: 'HEALTH', categoryName: 'Saúde' },
+  {category: 'SERVICE', categoryName: 'Serviço' },
+  {category: 'SUPERMARKET', categoryName: 'Supermercado' },
+  {category: 'TRANSPORT', categoryName: 'Transporte' },
+  {category: 'CLOTHES', categoryName: 'Roupa' },
+  {category: 'TRIPS', categoryName: 'Viagem' },
+  {category: 'OTHERS', categoryName: 'Outros' },
+  {category: 'AWARD', categoryName: 'Prêmio' },
+  {category: 'GIFT', categoryName: 'Presente' },
+  {category: 'SALARY', categoryName: 'Salário' },
+];
+
+export const category = {
+  "HOUSE": "Casa",
+  "EDUCATION": "Educação",
+  "ELECTRONIC": "Eletrônica",
+  "LEISURE": "Lazer",
+  "RESTAURANT": "Restaurante",
+  "HEALTH": "Saúde",
+  "SERVICE": "Serviço",
+  "SUPERMARKET": "Supermercado",
+  "TRANSPORT": "Transporte",
+  "CLOTHES": "Roupas",
+  "TRIPS": "Viagens",
+  "OTHERS": "Outros",
+  "AWARD": "Prêmio",
+  "GIFT": "Presente",
+  "SALARY": "Salário"
+}
 
 const initialValues = {
   amount: '',
@@ -145,7 +188,9 @@ export function NewTransactionModal({onCancel, trigger}: ModalTypes) {
                                   value={values.transactionCategory}
                                   onChange={handleChange}>
 
-                            <option value='HOUSE'>Casa</option>
+                            {allCategory.map((cat) => (
+                              <option key={cat.category} value={cat.category}>{cat.categoryName}</option>
+                            ))}
                           </Select>
 
                           <Select placeholder={"Selecione um Tipo"}

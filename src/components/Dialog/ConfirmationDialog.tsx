@@ -45,7 +45,7 @@ export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, title, d
           backdropFilter='blur(10px)'
         />
         <ModalContent bg={mainColor}>
-          <ModalHeader bg={"red"}>{title}</ModalHeader>
+          <ModalHeader>{title}</ModalHeader>
           <ModalCloseButton />
           <ModalBody justifyContent={"center"}>
             <h1>{description}</h1>

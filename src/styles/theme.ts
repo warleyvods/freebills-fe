@@ -30,6 +30,9 @@ export const theme = extendTheme(config, {
       "50": "#EEEEF2",
       "10": "#f6f6f8"
     },
+    green: {
+      "10": "#38a169"
+    },
     lime: {
       "500": "#d4f5e3",
     },

@@ -1,4 +1,3 @@
-import SidebarWithHeader from "../../components/SideBar";
 import {
   Box,
   Button,
@@ -9,7 +8,6 @@ import {
   HStack,
   Icon,
   IconButton,
-  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -24,28 +22,29 @@ import {
   Thead,
   Tooltip,
   Tr,
-  useColorModeValue,
-  VStack
+  useColorModeValue
 } from "@chakra-ui/react";
 import { RiAddLine, RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
-import TagW from "../../components/Tag";
-import { useTransaction } from "../../hooks/transactions/useTransaction";
-import { useMe } from "../../hooks/users/useMe";
-import { ConfirmationDialog } from "../../components/Dialog/ConfirmationDialog";
-import { Pagination } from "../../components/Pagination";
+import TagW from "../../../components/Tag";
+import { useTransaction } from "../../../hooks/transactions/useTransaction";
+import { useMe } from "../../../hooks/users/useMe";
+import { ConfirmationDialog } from "../../../components/Dialog/ConfirmationDialog";
+import { Pagination } from "../../../components/Pagination";
 import { BiTrash } from "react-icons/bi";
 import { GrEdit } from "react-icons/gr";
-import { useDeleteTransaction } from "../../hooks/transactions/useDeleteTransaction";
-import { category, NewTransactionModal } from "../../components/Modals/NewTransaction";
-import { dateFormat, numberFormat } from "../../components/Utils/utils";
+import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
+import { category, NewTransactionModal } from "../../../components/Modals/NewTransaction";
+import { dateFormat, numberFormat } from "../../../components/Utils/utils";
 import React, { useCallback, useState } from "react";
-import CardsDashboard from "../../components/Cards/CardsDashboard";
-import { useDashboard } from "../../hooks/dashboard/useDashboard";
+import CardsDashboard from "../../../components/Cards/CardsDashboard";
+import { useDashboard } from "../../../hooks/dashboard/useDashboard";
 import { Formik } from 'formik';
 import { useIsFetching } from "react-query";
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, SearchIcon, SmallCloseIcon } from "@chakra-ui/icons";
-import { MdOutlineAttachMoney } from "react-icons/md";
-import { FaRegCreditCard } from "react-icons/fa";
+import SidebarWithHeader from "../../../components/SideBar";
+import { useTransactionRevenue } from "../../../hooks/transactions/useTransactionRevenue";
+import { useTransactionExpense } from "../../../hooks/transactions/useTransactionExpense";
+import { MdAccountBalance, MdOutlineAttachMoney } from "react-icons/md";
 
 interface ColumnsProps {
   name: string;
@@ -61,7 +60,7 @@ const LinkItems: Array<ColumnsProps> = [
   {name: 'Opções'},
 ];
 
-export default function Transaction() {
+export default function TransactionRevenue() {
   const searchIconColor = useColorModeValue("gray.700", "gray.200");
   const mainTeal = useColorModeValue("teal.300", "teal.300");
   const inputBg = useColorModeValue("white", "gray.800");
@@ -73,7 +72,7 @@ export default function Transaction() {
   const [page, setPage] = useState(0)
   const {data: user} = useMe();
   const {data: dash} = useDashboard(user?.id, month, year);
-  const {data: transactions, isLoading, error} = useTransaction(page, keyword, month, year);
+  const {data: transactions, isLoading, error} = useTransactionExpense(page, keyword, month, year);
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const padding = "1px";
 
@@ -101,31 +100,12 @@ export default function Transaction() {
 
   return (
     <SidebarWithHeader>
-      <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px' pb={5}>
-        <CardsDashboard description={"Saldo Atual"}
-                        value={numberFormat(dash?.totalBalance)}
-                        color={"blue.600"}
-                        icon={MdOutlineAttachMoney}
-                        path={"/transactions"}
-        />
 
-        <CardsDashboard description={"Receitas"}
-                        value={numberFormat(dash?.totalRevenue)}
-                        color={"green.10"}
-                        icon={RiArrowUpLine}
-                        path={"/transactions/revenue"}
-        />
-        <CardsDashboard description={"Despesas"}
-                        value={numberFormat(dash?.totalExpensive)}
-                        color={"red.600"}
-                        icon={RiArrowDownLine}
-                        path={"/transactions/expense"}
-        />
-        <CardsDashboard description={"Cartões"}
-                        value={numberFormat(dash?.totalExpensiveCards)}
-                        color={"purple.500"}
-                        icon={FaRegCreditCard}
-        />
+      <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px' pb={5}>
+        <CardsDashboard description={"Saldo Atual"} value={numberFormat(dash?.totalBalance)} color={"blue.600"} icon={MdOutlineAttachMoney} path={"/transactions"} />
+        <CardsDashboard description={"Despesas Pendentes"} value={numberFormat(dash?.totalExpensive)} color={"red.600"} icon={RiArrowUpLine} />
+        <CardsDashboard description={"Despesas Pagas"} value={numberFormat(dash?.totalExpensive)} color={"red.600"} icon={RiArrowDownLine} />
+        <CardsDashboard description={"Total"} value={numberFormat(dash?.totalExpensive)} color={"red.600"} icon={MdAccountBalance} />
       </SimpleGrid>
 
       <Box boxShadow={"lg"} borderRadius={25}>
@@ -134,7 +114,7 @@ export default function Transaction() {
             <HStack pl={10} justify={"center"}>
               <IconButton
                 onClick={decreaseMonth}
-                color={searchIconColor}
+                color={"red.600"}
                 isRound={true}
                 variant={"ghost"}
                 aria-label={"button account"}
@@ -156,7 +136,7 @@ export default function Transaction() {
               </HStack>
               <IconButton
                 onClick={incrementMonth}
-                color={searchIconColor}
+                color={"red.600"}
                 colorScheme={"gray"}
                 variant={"ghost"}
                 isRound={true}
@@ -168,7 +148,7 @@ export default function Transaction() {
             <Flex mb={8} justify={"space-between"} align={"center"}>
               <HStack spacing={20}>
                 <Heading size={"lg"} fontWeight={"bold"}>
-                  Transações
+                  Despesas
                   {isFetching > 0 && <Spinner size={"sm"} color={"gray.500"} ml={4} />}
                 </Heading>
                 <Formik initialValues={{keyword: ""}}
@@ -232,9 +212,9 @@ export default function Transaction() {
                           onClick={open}
                           size={"sm"}
                           fontSize={"sm"}
-                          colorScheme={"facebook"}
+                          colorScheme={"red"}
                           leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
-                  >Adicionar nova transação
+                  >Adicionar nova despesa
                   </Button>
                 } />
               </LightMode>
@@ -250,12 +230,7 @@ export default function Transaction() {
               </Flex>
             ) : transactions.content.length === 0 ? (
               <Center>
-                <VStack>
-                  <Image boxSize='200px'
-                         src="https://web.mobills.com.br/static/media/mobills-illustration.19b7ceda.svg"
-                         alt="React Logo" />
-                  <Text fontWeight={"bold"} fontSize={"24px"} pb={10}>Não há transações</Text>
-                </VStack>
+                <Text fontWeight={"bold"} fontSize={"24px"} pb={10}>Não há transações</Text>
               </Center>
             ) : (
               <>
@@ -338,8 +313,8 @@ export default function Transaction() {
                                       size="sm"
                                       icon={<Icon as={BiTrash} fontSize={"16"} />}
                                       onClick={onOpen} />}
-                                    title={"Deletar Transação"} mainColor={mainColor} buttonText={"Deletar"}
-                                    description={"Deseja deletar essa transação?"} />
+                                    title={"Deletar Despesa"} mainColor={mainColor} buttonText={"Deletar"}
+                                    description={"Deseja deletar essa despesa?"} />
                                 </LightMode>
                               </HStack>
                             </Flex>

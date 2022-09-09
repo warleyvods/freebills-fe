@@ -122,7 +122,7 @@ export function NewAccountModal({onCancel, trigger}: ModalTypes) {
                                        value={values.accountType}
                                        error={errors.accountType}
                           />
-                          <InputFormik label="Banco"
+                          <InputFormik label="Instituição Financeira"
                                        name="bankType"
                                        type="text"
                                        onChange={handleChange}

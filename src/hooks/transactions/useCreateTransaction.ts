@@ -6,7 +6,7 @@ import { AxiosError } from "axios";
 
 export type createTransactionData = {
   accountId: number,
-  amount: number,
+  amount: string,
   date: string,
   paid: boolean,
   description: string,
@@ -23,6 +23,7 @@ export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
   return useMutation(async (transaction: createTransactionData) => {
+    transaction.amount = transaction.amount.replace(/\D/g, '.');
     const response = await api.post('v1/transactions', {
       ...transaction
     })
