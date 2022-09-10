@@ -3,7 +3,10 @@ import {
   Button,
   Center,
   Divider,
+  FormControl,
+  FormLabel,
   HStack,
+  LightMode,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -11,7 +14,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SimpleGrid, Switch,
+  Select,
+  SimpleGrid,
+  Switch,
+  Tooltip,
+  useColorModeValue,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
@@ -21,6 +28,7 @@ import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
 import { useCreateAccount } from "../../../hooks/accounts/useCreateAccount";
 import { useMe } from "../../../hooks/users/useMe";
+import { InfoIcon } from "@chakra-ui/icons";
 
 const createAddressValidationSchema = yup.object().shape({
   amount: yup.number().required('Valor Obrigatório.'),
@@ -32,8 +40,8 @@ const createAddressValidationSchema = yup.object().shape({
 const initialValues = {
   amount: '',
   description: '',
-  accountType: '',
-  bankType: '',
+  accountType: 'CHECKING_ACCOUNT',
+  bankType: 'INTER',
   dashboard: false
 }
 
@@ -46,11 +54,13 @@ interface ModalTypes {
 }
 
 export function NewAccountModal({onCancel, trigger}: ModalTypes) {
+  const mainColor = useColorModeValue('white', 'gray.800');
+  const inverseMainColor = useColorModeValue('gray.800', 'white');
+  const selectBgColor = useColorModeValue('gray.10', 'gray.900');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const createAccount = useCreateAccount();
-  const { data: user } = useMe();
+  const {data: user} = useMe();
   const userId = user?.id;
-
 
   const handleOk = useCallback(() => {
     onClose();
@@ -83,7 +93,7 @@ export function NewAccountModal({onCancel, trigger}: ModalTypes) {
         size="xl"
       >
         <ModalOverlay backdropFilter='blur(1px)' />
-        <ModalContent bg="white">
+        <ModalContent bg={mainColor}>
           <Formik initialValues={initialValues}
                   onSubmit={handleCreateAddress}
                   validationSchema={createAddressValidationSchema}
@@ -98,10 +108,11 @@ export function NewAccountModal({onCancel, trigger}: ModalTypes) {
                   </Center>
                   <ModalCloseButton />
                   <ModalBody justifyContent="center">
-                    <Box flex={1} borderRadius={8} bg="white" pt={5} pl={5} pr={5} pb={8}>
+                    <Box flex={1} color={inverseMainColor} borderRadius={8} pt={5} pl={5} pr={5} pb={8}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
                           <InputFormik label="Valor"
+                                       important={"*"}
                                        name="amount"
                                        type="text"
                                        onChange={handleChange}
@@ -109,38 +120,72 @@ export function NewAccountModal({onCancel, trigger}: ModalTypes) {
                                        error={errors.amount}
                           />
                           <InputFormik label="Descrição"
+                                       important={"*"}
                                        name="description"
                                        type="text"
                                        onChange={handleChange}
                                        value={values.description}
                                        error={errors.description}
                           />
-                          <InputFormik label="Tipo da Conta"
-                                       name="accountType"
-                                       type="text"
-                                       onChange={handleChange}
-                                       value={values.accountType}
-                                       error={errors.accountType}
-                          />
-                          <InputFormik label="Instituição Financeira"
-                                       name="bankType"
-                                       type="text"
-                                       onChange={handleChange}
-                                       value={values.bankType}
-                                       error={errors.bankType}
-                          />
-                          <Switch id="dashboard"
-                                  name="dashboard"
-                                  isChecked={values.dashboard}
-                                  onChange={handleChange}
-                          />
+                          <FormControl>
+                            <FormLabel htmlFor='accountType'>Tipo da Conta <span
+                              style={{color: "red"}}>*</span></FormLabel>
+                            <Select id={"accountType"}
+                                    name={"accountType"}
+                                    value={values.accountType}
+                                    onChange={handleChange}
+                                    bg={selectBgColor}
+                            >
+                              <option value='CHECKING_ACCOUNT'>Conta Corrente</option>
+                              <option value='SAVINGS'>Poupança</option>
+                              <option value='MONEY'>Dinheiro</option>
+                              <option value='INVESTMENTS'>Investimento</option>
+                              <option value='OTHERS'>Outros</option>
+                            </Select>
+                          </FormControl>
+
+                          <FormControl>
+                            <FormLabel htmlFor='accountType'>Instituição Financeira <span
+                              style={{color: "red"}}>*</span></FormLabel>
+                            <Select id={"bankType"}
+                                    name={"bankType"}
+                                    value={values.bankType}
+                                    onChange={handleChange}
+                                    bg={selectBgColor}
+                            >
+                              <option value='INTER'>Banco Inter</option>
+                              <option value='NUBANK'>Nubank</option>
+                              <option value='CAIXA'>Caixa</option>
+                              <option value='SANTANDER'>Santander</option>
+                            </Select>
+                          </FormControl>
+
+                          <LightMode>
+                            <HStack justify={"space-between"} mt={3} alignItems={"baseline"}>
+                              <HStack justify={"space-between"} alignItems={"baseline"} spacing={"1px"}>
+                                <FormLabel htmlFor='dashboard'>Adicionar no dashboard</FormLabel>
+                                <Tooltip
+                                  label='Ao marcar esta opção o valor dessa conta corrente irá somar e aparecer no dashboard.'
+                                  placement='auto-start'>
+                                  <InfoIcon w={4} h={4} />
+                                </Tooltip>
+                              </HStack>
+                              <Switch id="dashboard"
+                                      name="dashboard"
+                                      isChecked={values.dashboard}
+                                      onChange={handleChange}
+                              />
+                            </HStack>
+                          </LightMode>
                         </SimpleGrid>
                       </VStack>
                     </Box>
                   </ModalBody>
                   <ModalFooter>
                     <HStack spacing={2}>
-                      <Button isLoading={isSubmitting} colorScheme="blue" type="submit">Salvar</Button>
+                      <LightMode>
+                        <Button isLoading={isSubmitting} colorScheme="blue" type="submit">Salvar</Button>
+                      </LightMode>
                     </HStack>
                   </ModalFooter>
                 </form>

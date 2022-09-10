@@ -28,6 +28,7 @@ export default function Accounts() {
         <Flex flexDirection="row" justifyContent="space-between" mb="20px" mt="10px" ml={"10px"}>
           <Heading>Contas {!isLoading && isFetching && <Spinner size={"sm"} color={"gray.500"} ml={4} />}</Heading>
           <NewAccountModal
+            mainColor={mainColor}
             trigger={onOpen =>
               <Button as={"a"}
                       size={"sm"}
@@ -57,6 +58,7 @@ export default function Accounts() {
                   <VStack justify={"center"} w={"100%"} h={"100%"}>
                     <Text fontWeight="bold" fontSize={"25px"}>Adicionar Conta</Text>
                     <NewAccountModal
+                      mainColor={mainColor}
                       trigger={open =>
                         <IconButton
                           onClick={open}

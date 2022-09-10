@@ -30,7 +30,7 @@ export default function Dashboard() {
             />
 
             <CardsDashboard description={"Receitas"}
-                            value={numberFormat(dash?.totalRevenue)}
+                            value={!!dash?.totalRevenue ? numberFormat(dash.totalRevenue) : 'R$ 0,00'}
                             color={"green.10"}
                             icon={RiArrowUpLine}
                             path={"/transactions/revenue"}
