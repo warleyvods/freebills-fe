@@ -121,7 +121,7 @@ export const MobileNav = ({onOpen, ...rest}: MobileProps) => {
               bg={useColorModeValue('white', 'gray.900')}
               borderColor={useColorModeValue('gray.200', 'gray.700')}
             >
-              <NextLink href={""}>
+              <NextLink href={"/logout"}>
                 <MenuItem>
                   Desconectar
                 </MenuItem>
