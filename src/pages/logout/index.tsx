@@ -1,6 +1,6 @@
 import { useQuery } from "react-query";
 import { useRouter } from "next/router";
-import { api } from "../services/api";
+import { api } from "../../services/api";
 
 export const Logout = () => {
   const router = useRouter();

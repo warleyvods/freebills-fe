@@ -7,7 +7,7 @@ import {
   Heading,
   HStack,
   Icon,
-  IconButton,
+  IconButton, Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -22,7 +22,7 @@ import {
   Thead,
   Tooltip,
   Tr,
-  useColorModeValue
+  useColorModeValue, VStack
 } from "@chakra-ui/react";
 import { RiAddLine, RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
 import TagW from "../../../components/Tag";
@@ -231,7 +231,12 @@ export default function TransactionRevenue() {
               </Flex>
             ) : transactions.content.length === 0 ? (
               <Center>
-                <Text fontWeight={"bold"} fontSize={"24px"} pb={10}>Não há transações</Text>
+                <VStack>
+                  <Image boxSize='200px'
+                         src="https://web.mobills.com.br/static/media/mobills-illustration.19b7ceda.svg"
+                         alt="React Logo" />
+                  <Text fontWeight={"bold"} fontSize={"24px"} pb={10}>Não há despesas</Text>
+                </VStack>
               </Center>
             ) : (
               <>

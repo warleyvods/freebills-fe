@@ -22,6 +22,7 @@ import React, { useState } from "react";
 import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Formik } from 'formik';
 import { InputFormik } from "../components/Form/input";
+import LogoBills from "../components/Logo/LogoBills";
 
 export type SignInFormData = {
   login: string;
@@ -118,12 +119,14 @@ export default function SignIn() {
                           mainColor == 'white' ? (
                             <>
                               <VStack>
+                                <LogoBills />
                                 <Heading fontFamily={'Poppins'} fontWeight={"bold"} fontSize={'25px'}>Free Bills</Heading>
                               </VStack>
                             </>
                           ) : (
                             <>
                               <VStack>
+                                <LogoBills />
                                 <Heading fontFamily={'Poppins'} fontWeight={"bold"} fontSize={'25px'}>Free Bills</Heading>
                               </VStack>
                             </>
