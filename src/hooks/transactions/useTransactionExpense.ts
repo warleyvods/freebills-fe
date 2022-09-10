@@ -20,9 +20,9 @@ export async function getAllTransactionsExpense(page: number, keyword: string, m
   const size = 8;
   const response = await api.get('v1/transactions/expense', {
     params: {
-      // page,
+      page,
       userId: userId,
-      // size,
+      size,
       keyword,
       month,
       year

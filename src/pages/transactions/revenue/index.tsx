@@ -43,6 +43,7 @@ import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, SearchIcon, SmallCloseIco
 import SidebarWithHeader from "../../../components/SideBar";
 import { useTransactionRevenue } from "../../../hooks/transactions/useTransactionRevenue";
 import { MdAccountBalance, MdOutlineAttachMoney } from "react-icons/md";
+import { useDashboardRevenue } from "../../../hooks/dashboard/useDashboardRevenue";
 
 interface ColumnsProps {
   name: string;
@@ -69,7 +70,7 @@ export default function TransactionRevenue() {
   const [year, setYear] = useState(new Date().getFullYear())
   const [page, setPage] = useState(0)
   const {data: user} = useMe();
-  const {data: dash} = useDashboard(user?.id, month, year);
+  const {data: dash} = useDashboardRevenue(user?.id, month, year);
   const {data: transactions, isLoading, error} = useTransactionRevenue(page, keyword, month, year);
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const padding = "1px";
@@ -107,12 +108,12 @@ export default function TransactionRevenue() {
                         path={"/transactions"}
         />
         <CardsDashboard description={"Receitas Pendentes"}
-                        value={numberFormat(dash?.totalRevenue)}
+                        value={numberFormat(dash?.totalRevenuePending)}
                         color={"green.10"}
                         icon={RiArrowUpLine}
         />
         <CardsDashboard description={"Receitas Recebidas"}
-                        value={numberFormat(dash?.totalRevenue)}
+                        value={numberFormat(dash?.totalRevenueReceived)}
                         color={"green.10"}
                         icon={RiArrowDownLine}
         />

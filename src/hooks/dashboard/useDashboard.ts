@@ -11,7 +11,7 @@ type DashboardBalance = {
 }
 
 export async function getDashboard(userId: number, month?: number, year?: number): Promise<DashboardBalance> {
-  const response = await api.get('v1/dashboard', {
+  const response = await api.get('v1/dashboard/total', {
     params: {
       userId: userId,
       month,
