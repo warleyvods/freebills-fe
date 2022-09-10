@@ -3,6 +3,7 @@ import React from "react";
 import { RiExchangeBoxLine, RiExchangeDollarLine, RiFundsLine, RiGroupLine, RiUser3Line } from "react-icons/ri";
 import { IconType } from "react-icons";
 import { NavItem } from "./NavItem";
+import { useMe } from "../../hooks/users/useMe";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -28,14 +29,15 @@ const LinkItemsUser: Array<LinkItemProps> = [
 ];
 
 export const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
+  const {data: user, isLoading} = useMe();
   const bg = useColorModeValue('white', 'gray.900');
   const br = useColorModeValue('gray.200', 'gray.700');
 
-  // if (isLoading) {
-  //   return null;
-  // }
+  if (isLoading) {
+    return null;
+  }
 
-  const itemsList = LinkItemsAdmin;
+  const itemsList = user.admin ? LinkItemsAdmin : LinkItemsUser;
 
   return (
     <Box
