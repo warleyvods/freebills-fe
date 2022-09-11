@@ -52,7 +52,7 @@ export default function SignIn() {
   const {mutate: signIn} = useMutation(async ({login, password}: SignInFormData) => {
     try {
       setLoading(true)
-      await api.post('login', {
+      await api.post(`/v1/auth/login`, {
         login, password
       })
 

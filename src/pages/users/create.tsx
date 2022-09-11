@@ -22,7 +22,7 @@ import { Formik } from 'formik';
 import { InputFormik } from "../../components/Form/input";
 import SidebarWithHeader from "../../components/SideBar";
 
-const createUserValidationSchema = yup.object().shape({
+export const createUserValidationSchema = yup.object().shape({
   name: yup.string().required('Nome obrigatório.').min(3, 'No mínimo 3 caracteres.'),
   login: yup.string().required('Login unico obrigatório.').min(3, 'No mínimo 3 caracteres.'),
   email: yup.string().required('E-mail obrigatório.').email('E-mail inválido.'),
