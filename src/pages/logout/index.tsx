@@ -6,7 +6,7 @@ export const Logout = () => {
   const router = useRouter();
 
   useQuery(['logout'], async () => {
-    await api.get('v1/auth/logout')
+    await api.post('v1/auth/logout')
     router.push("/");
   })
 
