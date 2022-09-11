@@ -89,3 +89,11 @@ export const createEmployeeValidationSchema = yup.object().shape({
   status: yup.boolean().required().equals([true])
 })
 
+export const accountType = {
+  'CHECKING_ACCOUNT': 'Conta Corrente',
+  'SAVINGS': 'Poupança',
+  'MONEY': 'Dinheiro',
+  'INVESTMENTS': 'Investimentos',
+  'OUTHERS': 'Outros'
+}
+

@@ -12,6 +12,7 @@ export type updatePasswordUserFormData = {
 
 type ErrorType = {
   title: string;
+  details: string;
 }
 
 export function useUpdateUserPassword(onSuccess?: () => {}, onError?: () => {}) {
@@ -32,7 +33,7 @@ export function useUpdateUserPassword(onSuccess?: () => {}, onError?: () => {}) 
 
       toast({
         title: erro.response.data.title,
-        description: "Você não pode alterar a senha do desenvolvedor",
+        description: erro.response.data.details,
         status: 'error',
         duration: 9000,
         isClosable: true,

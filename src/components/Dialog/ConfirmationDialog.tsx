@@ -9,6 +9,7 @@ import {
   ModalHeader,
   ModalOverlay,
   useDisclosure,
+  LightMode
 } from '@chakra-ui/react'
 import { ReactNode, useCallback } from "react";
 
@@ -23,7 +24,16 @@ interface ModalProps {
   buttonText: string;
 }
 
-export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, title, disabled, description, buttonText }: ModalProps) {
+export function ConfirmationDialog({
+  onOk,
+  onCancel,
+  trigger,
+  mainColor,
+  title,
+  disabled,
+  description,
+  buttonText
+}: ModalProps) {
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   const handleCancel = useCallback(() => {
@@ -36,9 +46,10 @@ export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, title, d
     onClose();
   }, [onClose, onOk])
 
-  return(
+  return (
     <>
-      {trigger(disabled ? () => {} : onOpen, onClose)}
+      {trigger(disabled ? () => {
+      } : onOpen, onClose)}
       <Modal onClose={handleCancel} isOpen={isOpen} isCentered>
         <ModalOverlay
           bg='blackAlpha.300'
@@ -52,8 +63,10 @@ export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, title, d
           </ModalBody>
           <ModalFooter>
             <HStack spacing={2}>
-              <Button colorScheme={"blue"} onClick={handleCancel}>Cancelar</Button>
-              <Button colorScheme={"red"} onClick={handleOk}>{buttonText}</Button>
+              <LightMode>
+                <Button colorScheme={"blue"} onClick={handleCancel}>Cancelar</Button>
+                <Button colorScheme={"red"} onClick={handleOk}>{buttonText}</Button>
+              </LightMode>
             </HStack>
           </ModalFooter>
         </ModalContent>

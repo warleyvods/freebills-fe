@@ -1,16 +1,12 @@
-import { useToast } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
+import { useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 
-export type accountFormData = {
-  userId: number;
-  amount: number;
-  description: string;
-  accountType: string;
-  dashboard: boolean;
-  bankType: string;
+export type updateArchiveAccount = {
+  id: number;
+  archived: boolean;
 }
 
 type ErrorType = {
@@ -18,18 +14,19 @@ type ErrorType = {
   details: string;
 }
 
-export function useCreateAccount(onSuccess?: () => {}, onError?: () => {}) {
-  const toast = useToast();
+export function useUpdateArchiveAccount(onSuccess?: () => {}, onError?: () => {}) {
+  const toast = useToast()
 
-  return useMutation(async (account: accountFormData) => {
-    const response = await api.post('v1/accounts', {
-      ...account
+  return useMutation(async (updateArchiveAccount: updateArchiveAccount) => {
+    await api.patch('v1/accounts', {
+      ...updateArchiveAccount
     })
 
-    return response.data.user;
+    return null;
   }, {
     onSuccess: async () => {
       await queryClient.invalidateQueries(['accounts'])
+      await queryClient.invalidateQueries(['accounts-archived'])
       onSuccess?.()
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()

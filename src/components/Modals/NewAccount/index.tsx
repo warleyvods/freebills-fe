@@ -29,6 +29,8 @@ import { InputFormik } from "../../Form/input";
 import { useCreateAccount } from "../../../hooks/accounts/useCreateAccount";
 import { useMe } from "../../../hooks/users/useMe";
 import { InfoIcon } from "@chakra-ui/icons";
+import { useAccountById } from "../../../hooks/accounts/useAccountById";
+import { useUpdateAccount } from "../../../hooks/accounts/useUpdateAccount";
 
 const createAddressValidationSchema = yup.object().shape({
   amount: yup.number().required('Valor Obrigatório.'),
@@ -46,6 +48,7 @@ const initialValues = {
 }
 
 interface ModalTypes {
+  accountId?: number;
   onOk?: () => void;
   onCancel?: () => void;
   trigger: (onOpen?: () => void, onClose?: () => void) => ReactNode;
@@ -53,12 +56,14 @@ interface ModalTypes {
   userId?: number;
 }
 
-export function NewAccountModal({onCancel, trigger}: ModalTypes) {
+export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes) {
   const mainColor = useColorModeValue('white', 'gray.800');
   const inverseMainColor = useColorModeValue('gray.800', 'white');
   const selectBgColor = useColorModeValue('gray.10', 'gray.900');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const createAccount = useCreateAccount();
+  const {data: accountFound } = useAccountById(accountId);
+  const updateAccount = useUpdateAccount();
   const {data: user} = useMe();
   const userId = user?.id;
 
@@ -66,12 +71,14 @@ export function NewAccountModal({onCancel, trigger}: ModalTypes) {
     onClose();
   }, [onClose]);
 
-  const handleUpdateAddress = async (values) => {
+  const handleUpdateAccount = async (values) => {
+    await updateAccount.mutate({
+      accountId, ...values
+    })
     handleOk()
-    console.log("id nulo porra")
   };
 
-  const handleCreateAddress = (values) => {
+  const handleCreateAccount = (values) => {
     createAccount.mutate({
       ...values, userId
     });
@@ -94,15 +101,15 @@ export function NewAccountModal({onCancel, trigger}: ModalTypes) {
       >
         <ModalOverlay backdropFilter='blur(1px)' />
         <ModalContent bg={mainColor}>
-          <Formik initialValues={initialValues}
-                  onSubmit={handleCreateAddress}
+          <Formik initialValues={ accountFound || initialValues }
+                  onSubmit={!!accountId ? handleUpdateAccount : handleCreateAccount}
                   validationSchema={createAddressValidationSchema}
                   validateOnChange={false}
           >
             {({handleSubmit, handleChange, values, isSubmitting, errors}) =>
               <>
                 <form onSubmit={handleSubmit}>
-                  <ModalHeader fontSize="25px" fontWeight="bold">Adicionar Nova Conta</ModalHeader>
+                  <ModalHeader fontSize="25px" fontWeight="bold">{text} Conta</ModalHeader>
                   <Center>
                     <Divider maxW="550" borderColor="gray.700" />
                   </Center>
@@ -112,6 +119,7 @@ export function NewAccountModal({onCancel, trigger}: ModalTypes) {
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
                           <InputFormik label="Valor"
+                                       isDisabled={!!accountId}
                                        important={"*"}
                                        name="amount"
                                        type="text"

@@ -4,9 +4,9 @@ import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
 
-export type accountFormData = {
+export type updateAccountFormData = {
+  accountId: number;
   userId: number;
-  amount: number;
   description: string;
   accountType: string;
   dashboard: boolean;
@@ -18,11 +18,11 @@ type ErrorType = {
   details: string;
 }
 
-export function useCreateAccount(onSuccess?: () => {}, onError?: () => {}) {
+export function useUpdateAccount(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast();
 
-  return useMutation(async (account: accountFormData) => {
-    const response = await api.post('v1/accounts', {
+  return useMutation(async (account: updateAccountFormData) => {
+    const response = await api.put('v1/accounts', {
       ...account
     })
 

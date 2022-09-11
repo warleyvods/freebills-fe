@@ -5,17 +5,22 @@ import {
   Button,
   Flex,
   Heading,
+  HStack,
   Icon,
   IconButton,
+  LightMode,
   SimpleGrid,
   Spinner,
-  Text, useColorModeValue, VStack
+  Text,
+  useColorModeValue,
+  VStack
 } from "@chakra-ui/react";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiArchiveLine } from "react-icons/ri";
 import CardsAccount from "../../components/Cards/CardsAccounts";
 import { NewAccountModal } from "../../components/Modals/NewAccount";
 import { useAccounts } from "../../hooks/accounts/useAccounts";
 import { useMe } from "../../hooks/users/useMe";
+import NextLink from "next/link";
 
 export default function Accounts() {
   const {data: user} = useMe();
@@ -27,19 +32,36 @@ export default function Accounts() {
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
         <Flex flexDirection="row" justifyContent="space-between" mb="20px" mt="10px" ml={"10px"}>
           <Heading>Contas {!isLoading && isFetching && <Spinner size={"sm"} color={"gray.500"} ml={4} />}</Heading>
-          <NewAccountModal
-            trigger={onOpen =>
-              <Button as={"a"}
-                      size={"sm"}
-                      onClick={onOpen}
-                      fontSize={"sm"}
-                      colorScheme={"facebook"}
-                      leftIcon={<Icon as={RiAddLine} fontSize={"20"} />
-                      }
-              >Adicionar novo
-              </Button>
-            }
-          />
+          <HStack spacing={3}>
+            <NewAccountModal
+              text={"Adicionar"}
+              trigger={onOpen =>
+                <LightMode>
+                  <Button as={"a"}
+                          size={"sm"}
+                          onClick={onOpen}
+                          fontSize={"sm"}
+                          colorScheme={"facebook"}
+                          leftIcon={<Icon as={RiAddLine} fontSize={"20"} />
+                          }
+                  >Adicionar novo
+                  </Button>
+                </LightMode>
+              }
+            />
+            <LightMode>
+              <NextLink href={"/accounts/archiveds"}>
+                <Button as={"a"}
+                        size={"sm"}
+                        fontSize={"sm"}
+                        colorScheme={"purple"}
+                        leftIcon={<Icon as={RiArchiveLine} fontSize={"20"} />
+                        }
+                >Arquivados
+                </Button>
+              </NextLink>
+            </LightMode>
+          </HStack>
         </Flex>
         {isLoading ? (
           <Flex justify={"center"}>
@@ -65,13 +87,12 @@ export default function Accounts() {
                           icon={<RiAddLine />}
                           size={"lg"}
                         />}
-
                     />
                   </VStack>
                 </Box>
               ) : (
                 accounts?.map(acc => (
-                  <CardsAccount key={acc.id} amount={acc.amount} description={acc.description} />
+                  <CardsAccount key={acc.id} amount={acc.amount} description={acc.description} accId={acc.id} />
                 ))
               )}
             </SimpleGrid>
