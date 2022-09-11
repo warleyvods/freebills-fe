@@ -12,7 +12,8 @@ import {
   Stack,
   useColorModeValue,
   useToast,
-  VStack
+  Text,
+  VStack, Link
 } from "@chakra-ui/react";
 import * as yup from 'yup';
 import { useMutation } from "react-query";
@@ -23,6 +24,7 @@ import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Formik } from 'formik';
 import { InputFormik } from "../components/Form/input";
 import LogoBills from "../components/Logo/LogoBills";
+import NextLink from "next/link";
 
 export type SignInFormData = {
   login: string;
@@ -41,8 +43,8 @@ const initialValues = {
 
 export default function SignIn() {
   const [show, setShow] = useState(false)
-  const mainColor = useColorModeValue('white', 'gray.900');
-  const boxColor = useColorModeValue('gray.50', 'gray.800');
+  const mainColor = useColorModeValue('white', 'gray.700');
+  const boxColor = useColorModeValue('white', 'gray.800');
   const [loading, setLoading] = useState(false);
   const toast = useToast()
   const router = useRouter();
@@ -94,15 +96,16 @@ export default function SignIn() {
           h="100vh"
           align="center"
           justify="center"
-          bg={mainColor}
+          bg={useColorModeValue('gray.50', 'gray.800')}
     >
       <Stack spacing={8} mx={'auto'} w={'450px'} py={12} px={6}>
         <Flex width="100%"
               maxWidth={"auto"}
               bg={boxColor}
               p={"8"}
-              borderRadius={8}
+              rounded={'lg'}
               flexDir={"column"}
+              boxShadow={'lg'}
         >
           <Formik initialValues={initialValues}
                   validateOnChange={false}
@@ -114,7 +117,7 @@ export default function SignIn() {
                 <form onSubmit={handleSubmit}>
                   <Stack spacing={4}>
                     <Center pb={10}>
-                      <Box maxH={"400px"} maxW={"230px"}>
+                      <Box maxH={"400px"} maxW={"230px"} >
                         {
                           mainColor == 'white' ? (
                             <>
@@ -165,17 +168,27 @@ export default function SignIn() {
                       </InputRightElement>
                     </InputGroup>
                   </Stack>
-                  <Stack spacing={10} mt={5}>
+                  <Stack spacing={5} mt={4}>
                     <Stack
                       direction={{base: 'column', sm: 'row'}}
                       align={'start'}
                       justify={'space-between'}>
                       <Checkbox>Lembrar</Checkbox>
+                      <NextLink href={"/forgot"}>
+                        <Text align={'center'} mt={3}>
+                          <Link color={'blue.400'}>Esqueceu sua senha?</Link>
+                        </Text>
+                      </NextLink>
                     </Stack>
                     <LightMode>
                       <Button type={"submit"} marginTop={6} colorScheme={"facebook"} isLoading={loading}>Entrar</Button>
                     </LightMode>
                   </Stack>
+                  <NextLink href={"/sign-in"}>
+                    <Text align={'center'} mt={3}>
+                      <Link color={'blue.400'}>Cadastre-se</Link>
+                    </Text>
+                  </NextLink>
                 </form>
               </>
             }

@@ -12,6 +12,14 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
+  if (currLocation.pathname === '/sign-in') {
+    return NextResponse.next();
+  }
+
+  if (currLocation.pathname === '/forgot') {
+    return NextResponse.next();
+  }
+
   const tokenString = request.cookies.token;
   if (!tokenString) {
     return NextResponse.redirect(new URL('/', currLocation))

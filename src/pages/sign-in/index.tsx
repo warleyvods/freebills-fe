@@ -4,8 +4,8 @@ import { InputFormik } from "../../components/Form/input";
 import NextLink from "next/link";
 import { Formik } from "formik";
 import { createUserValidationSchema } from "../users/create";
-import { useCreateUser } from "../../hooks/users/useCreateUser";
 import { useRouter } from "next/router";
+import { useSignIn } from "../../hooks/users/useSignIn";
 
 const initialValues = {
   name: '',
@@ -18,11 +18,10 @@ const initialValues = {
 export default function SignupCard() {
   const router = useRouter();
   const mainColor = useColorModeValue('white', 'gray.700')
-  const createUser = useCreateUser(() => router.push('/users'))
+  const createUser = useSignIn(() => router.push('/users'))
   const [showPassword, setShowPassword] = useState(false);
 
   const handleCreateUser = async (values) => {
-    console.log("oi")
     await createUser.mutateAsync(values)
   }
 
