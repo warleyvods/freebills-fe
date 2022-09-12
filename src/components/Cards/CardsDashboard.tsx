@@ -1,6 +1,5 @@
-import { Box, Button, Circle, HStack, Icon, IconButton, Text, useColorModeValue, VStack } from "@chakra-ui/react";
+import { Box, Button, Circle, HStack, Icon, Text, useColorModeValue, VStack } from "@chakra-ui/react";
 import React from "react";
-import { RiMore2Fill } from "react-icons/ri";
 import { IconType } from "react-icons";
 import NextLink from "next/link";
 
@@ -50,16 +49,7 @@ export default function CardsDashboard({icon, description, value, color, path}: 
             />
             </NextLink>
           </Circle>
-          //   <IconButton
-          //   color={"white"}
-          //   colorScheme={color}
-          //   isRound={true}
-          //   aria-label={"button account"}
-          //   icon={<RiMore2Fill />}
-          //   size={"lg"}
-          // />
         )}
-
       </HStack>
     </Box>
   )
