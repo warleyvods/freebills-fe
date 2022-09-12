@@ -46,6 +46,7 @@ import { useIsFetching } from "react-query";
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, SearchIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { FaRegCreditCard } from "react-icons/fa";
+import CardsSkeleton from "../../components/Cards/CardsSkeleton";
 
 interface ColumnsProps {
   name: string;
@@ -102,30 +103,43 @@ export default function Transaction() {
   return (
     <SidebarWithHeader>
       <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px' pb={5}>
-        <CardsDashboard description={"Saldo Atual"}
-                        value={numberFormat(dash?.totalBalance)}
-                        color={"blue.600"}
-                        icon={MdOutlineAttachMoney}
-                        path={"/transactions"}
-        />
+        {!!dash ? (
+          <>
+            <CardsDashboard description={"Saldo Atual"}
+                            value={numberFormat(dash?.totalBalance)}
+                            color={"blue.600"}
+                            icon={MdOutlineAttachMoney}
+                            path={"/transactions"}
+            />
 
-        <CardsDashboard description={"Receitas"}
-                        value={numberFormat(dash?.totalRevenue)}
-                        color={"green.10"}
-                        icon={RiArrowUpLine}
-                        path={"/transactions/revenue"}
-        />
-        <CardsDashboard description={"Despesas"}
-                        value={numberFormat(dash?.totalExpensive)}
-                        color={"red.600"}
-                        icon={RiArrowDownLine}
-                        path={"/transactions/expense"}
-        />
-        <CardsDashboard description={"Cartões"}
-                        value={numberFormat(dash?.totalExpensiveCards)}
-                        color={"purple.500"}
-                        icon={FaRegCreditCard}
-        />
+            <CardsDashboard description={"Receitas"}
+                            value={numberFormat(dash?.totalRevenue)}
+                            color={"green.10"}
+                            icon={RiArrowUpLine}
+                            path={"/transactions/revenue"}
+            />
+            <CardsDashboard description={"Despesas"}
+                            value={numberFormat(dash?.totalExpensive)}
+                            color={"red.600"}
+                            icon={RiArrowDownLine}
+                            path={"/transactions/expense"}
+            />
+            <CardsDashboard description={"Cartões"}
+                            value={numberFormat(dash?.totalExpensiveCards)}
+                            color={"purple.500"}
+                            icon={FaRegCreditCard}
+            />
+          </>
+        ) : (
+          <>
+            <CardsSkeleton />
+            <CardsSkeleton />
+            <CardsSkeleton />
+            <CardsSkeleton />
+          </>
+        )}
+
+
       </SimpleGrid>
 
       <Box boxShadow={"lg"} borderRadius={25}>

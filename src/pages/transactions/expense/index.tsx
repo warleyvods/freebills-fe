@@ -46,6 +46,7 @@ import { useTransactionRevenue } from "../../../hooks/transactions/useTransactio
 import { useTransactionExpense } from "../../../hooks/transactions/useTransactionExpense";
 import { MdAccountBalance, MdOutlineAttachMoney } from "react-icons/md";
 import { useDashboardExpense } from "../../../hooks/dashboard/useDashboardExpense";
+import CardsSkeleton from "../../../components/Cards/CardsSkeleton";
 
 interface ColumnsProps {
   name: string;
@@ -103,10 +104,26 @@ export default function TransactionRevenue() {
     <SidebarWithHeader>
 
       <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px' pb={5}>
-        <CardsDashboard description={"Saldo Atual"} value={numberFormat(dash?.totalBalance)} color={"blue.600"} icon={MdOutlineAttachMoney} path={"/transactions"} />
-        <CardsDashboard description={"Despesas Pendentes"} value={numberFormat(dash?.totalExpensePending)} color={"red.600"} icon={RiArrowUpLine} />
-        <CardsDashboard description={"Despesas Pagas"} value={numberFormat(dash?.totalExpenseReceived)} color={"red.600"} icon={RiArrowDownLine} />
-        <CardsDashboard description={"Total"} value={numberFormat(dash?.totalExpense)} color={"red.600"} icon={MdAccountBalance} />
+        {!!dash ? (
+          <>
+            <CardsDashboard description={"Saldo Atual"} value={numberFormat(dash?.totalBalance)} color={"blue.600"}
+                            icon={MdOutlineAttachMoney} path={"/transactions"} />
+            <CardsDashboard description={"Despesas Pendentes"} value={numberFormat(dash?.totalExpensePending)}
+                            color={"red.600"} icon={RiArrowUpLine} />
+            <CardsDashboard description={"Despesas Pagas"} value={numberFormat(dash?.totalExpenseReceived)}
+                            color={"red.600"} icon={RiArrowDownLine} />
+            <CardsDashboard description={"Total"} value={numberFormat(dash?.totalExpense)} color={"red.600"}
+                            icon={MdAccountBalance} />
+          </>
+        ) : (
+          <>
+            <CardsSkeleton />
+            <CardsSkeleton />
+            <CardsSkeleton />
+            <CardsSkeleton />
+          </>
+        )}
+
       </SimpleGrid>
 
       <Box boxShadow={"lg"} borderRadius={25}>

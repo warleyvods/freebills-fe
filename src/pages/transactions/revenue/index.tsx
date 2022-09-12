@@ -44,6 +44,7 @@ import SidebarWithHeader from "../../../components/SideBar";
 import { useTransactionRevenue } from "../../../hooks/transactions/useTransactionRevenue";
 import { MdAccountBalance, MdOutlineAttachMoney } from "react-icons/md";
 import { useDashboardRevenue } from "../../../hooks/dashboard/useDashboardRevenue";
+import CardsSkeleton from "../../../components/Cards/CardsSkeleton";
 
 interface ColumnsProps {
   name: string;
@@ -99,30 +100,39 @@ export default function TransactionRevenue() {
 
   return (
     <SidebarWithHeader>
-
       <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px' pb={5}>
-        <CardsDashboard description={"Saldo Atual"}
-                        value={numberFormat(dash?.totalBalance)}
-                        color={"blue.600"}
-                        icon={MdOutlineAttachMoney}
-                        path={"/transactions"}
-        />
-        <CardsDashboard description={"Receitas Pendentes"}
-                        value={numberFormat(dash?.totalRevenuePending)}
-                        color={"green.10"}
-                        icon={RiArrowUpLine}
-        />
-        <CardsDashboard description={"Receitas Recebidas"}
-                        value={numberFormat(dash?.totalRevenueReceived)}
-                        color={"green.10"}
-                        icon={RiArrowDownLine}
-        />
-        <CardsDashboard description={"Total"}
-                        value={numberFormat(dash?.totalRevenue)}
-                        color={"green.10"}
-                        icon={MdAccountBalance}
-        />
-
+        {!!dash ? (
+          <>
+            <CardsDashboard description={"Saldo Atual"}
+                            value={numberFormat(dash?.totalBalance)}
+                            color={"blue.600"}
+                            icon={MdOutlineAttachMoney}
+                            path={"/transactions"}
+            />
+            <CardsDashboard description={"Receitas Pendentes"}
+                            value={numberFormat(dash?.totalRevenuePending)}
+                            color={"green.10"}
+                            icon={RiArrowUpLine}
+            />
+            <CardsDashboard description={"Receitas Recebidas"}
+                            value={numberFormat(dash?.totalRevenueReceived)}
+                            color={"green.10"}
+                            icon={RiArrowDownLine}
+            />
+            <CardsDashboard description={"Total"}
+                            value={numberFormat(dash?.totalRevenue)}
+                            color={"green.10"}
+                            icon={MdAccountBalance}
+            />
+          </>
+        ) : (
+          <>
+            <CardsSkeleton />
+            <CardsSkeleton />
+            <CardsSkeleton />
+            <CardsSkeleton />
+          </>
+        )}
       </SimpleGrid>
 
       <Box boxShadow={"lg"} borderRadius={25}>
