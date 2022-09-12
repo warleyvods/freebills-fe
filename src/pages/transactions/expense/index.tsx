@@ -106,14 +106,27 @@ export default function TransactionRevenue() {
       <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px' pb={5}>
         {!!dash ? (
           <>
-            <CardsDashboard description={"Saldo Atual"} value={numberFormat(dash?.totalBalance)} color={"blue.600"}
-                            icon={MdOutlineAttachMoney} path={"/transactions"} />
-            <CardsDashboard description={"Despesas Pendentes"} value={numberFormat(dash?.totalExpensePending)}
-                            color={"red.600"} icon={RiArrowUpLine} />
-            <CardsDashboard description={"Despesas Pagas"} value={numberFormat(dash?.totalExpenseReceived)}
-                            color={"red.600"} icon={RiArrowDownLine} />
-            <CardsDashboard description={"Total"} value={numberFormat(dash?.totalExpense)} color={"red.600"}
-                            icon={MdAccountBalance} />
+            <CardsDashboard description={"Saldo Atual"}
+                            value={numberFormat(dash?.totalBalance)}
+                            color={"blue.600"}
+                            icon={MdOutlineAttachMoney}
+                            path={"/transactions"}
+            />
+            <CardsDashboard description={"Despesas Pendentes"}
+                            value={numberFormat(dash?.totalExpensePending)}
+                            color={"red.600"}
+                            icon={RiArrowUpLine}
+            />
+            <CardsDashboard description={"Despesas Pagas"}
+                            value={numberFormat(dash?.totalExpenseReceived)}
+                            color={"red.600"}
+                            icon={RiArrowDownLine}
+            />
+            <CardsDashboard description={"Total"}
+                            value={numberFormat(dash?.totalExpense)}
+                            color={"red.600"}
+                            icon={MdAccountBalance}
+            />
           </>
         ) : (
           <>

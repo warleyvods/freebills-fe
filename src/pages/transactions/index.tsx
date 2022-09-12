@@ -138,8 +138,6 @@ export default function Transaction() {
             <CardsSkeleton />
           </>
         )}
-
-
       </SimpleGrid>
 
       <Box boxShadow={"lg"} borderRadius={25}>
