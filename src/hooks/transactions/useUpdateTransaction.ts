@@ -4,7 +4,8 @@ import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
 
-export type createTransactionData = {
+export type updateTransaction = {
+  id: number
   accountId: number,
   amount: string,
   date: string,
@@ -19,13 +20,13 @@ type ErrorType = {
   details: string;
 }
 
-export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
+export function useUpdateTransaction(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (transaction: createTransactionData) => {
+  return useMutation(async (transaction: updateTransaction) => {
     transaction.amount = transaction.amount.replace(/\D/g, '.');
     transaction.date = transaction.date.replace(/\D/g, '-')
-    const response = await api.post('v1/transactions', {
+    const response = await api.put('v1/transactions', {
       ...transaction
     })
 

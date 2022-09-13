@@ -73,7 +73,7 @@ export const MobileNav = ({onOpen, ...rest}: MobileProps) => {
         fontSize="2xl"
         fontFamily="monospace"
         fontWeight="bold">
-        CRUD BASE
+        FREEBILLS
       </Text>
 
       <HStack spacing={{base: '0', md: '6'}}>

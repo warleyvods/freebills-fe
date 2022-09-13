@@ -32,7 +32,7 @@ import { Pagination } from "../../../components/Pagination";
 import { BiTrash } from "react-icons/bi";
 import { GrEdit } from "react-icons/gr";
 import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
-import { category, NewTransactionModal } from "../../../components/Modals/NewTransaction";
+import { category, NewTransactionModal } from "../../../components/Modals/Transaction";
 import { dateFormat, numberFormat } from "../../../components/Utils/utils";
 import React, { useCallback, useState } from "react";
 import CardsDashboard from "../../../components/Cards/CardsDashboard";
@@ -236,8 +236,11 @@ export default function TransactionRevenue() {
 
 
               </HStack>
-              <LightMode>
-                <NewTransactionModal trigger={(open) =>
+
+              <NewTransactionModal
+                transactionType={'REVENUE'}
+                trigger={(open) =>
+                <LightMode>
                   <Button as={"a"}
                           onClick={open}
                           size={"sm"}
@@ -246,8 +249,9 @@ export default function TransactionRevenue() {
                           leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
                   >Adicionar nova Receita
                   </Button>
-                } />
-              </LightMode>
+                </LightMode>
+              } />
+
             </Flex>
 
             {isLoading ? (
@@ -327,16 +331,22 @@ export default function TransactionRevenue() {
                           <Td pl={0} pr={0} pt={padding} pb={padding}>
                             <Flex justify={"flex-end"}>
                               <HStack>
-                                <LightMode>
-                                  <IconButton
-                                    as={"a"}
-                                    colorScheme={"facebook"}
-                                    aria-label={"edit transaction"}
-                                    size="sm"
-                                    variant={"ghost"}
-                                    icon={<Icon as={GrEdit} fontSize={"16"} color={"red"} />}
-                                  />
-                                </LightMode>
+                                <NewTransactionModal
+                                  transactionType={'REVENUE'}
+                                  transactionId={transaction.id}
+                                  trigger={(open) =>
+                                    <LightMode>
+                                      <IconButton
+                                        onClick={open}
+                                        as={"a"}
+                                        colorScheme={"facebook"}
+                                        aria-label={"edit transaction"}
+                                        size="sm"
+                                        variant={"ghost"}
+                                        icon={<Icon as={GrEdit} fontSize={"16"} color={"red"} />}
+                                      />
+                                    </LightMode>
+                                  } />
 
                                 <LightMode>
                                   <ConfirmationDialog

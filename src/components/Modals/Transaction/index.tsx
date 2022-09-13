@@ -1,38 +1,39 @@
 import {
   Box,
   Button,
-  Center,
-  Divider, FormControl, FormLabel,
+  FormControl,
+  FormLabel,
   HStack,
+  LightMode,
   Modal,
   ModalBody,
   ModalCloseButton,
   ModalContent,
   ModalFooter,
   ModalHeader,
-  ModalOverlay, Select,
-  SimpleGrid, Switch,
+  ModalOverlay,
+  Select,
+  SimpleGrid,
+  Switch,
+  useColorModeValue,
   useDisclosure,
-  VStack,
+  VStack
 } from '@chakra-ui/react'
 import React, { ReactNode, useCallback } from "react";
-import * as yup from "yup";
 import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
-import { useCreateAccount } from "../../../hooks/accounts/useCreateAccount";
 import { useMe } from "../../../hooks/users/useMe";
 import { useCreateTransaction } from "../../../hooks/transactions/useCreateTransaction";
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
-import { IconType } from "react-icons";
-import { RiExchangeBoxLine, RiExchangeDollarLine, RiFundsLine, RiGroupLine } from "react-icons/ri";
+import { useTransactionById } from "../../../hooks/transactions/useTransactionById";
+import { useUpdateTransaction } from "../../../hooks/transactions/useUpdateTransaction";
+import * as yup from "yup";
 
-// const createAddressValidationSchema = yup.object().shape({
-//   amount: yup.number().required('Valor Obrigatório.'),
-//   date: yup.number().required('Valor Obrigatório.'),
-//   description: yup.number().required('Valor Obrigatório.'),
-//   transactionType: yup.number().required('Valor Obrigatório.'),
-//   transactionCategory: yup.number().required('Valor Obrigatório.'),
-// });
+const createTransactionSchema = yup.object().shape({
+  amount: yup.number().required('Valor Obrigatório.'),
+  date: yup.number().required('Data Obrigatória.'),
+  description: yup.number().required('Descrição Obrigatória.')
+});
 
 interface LinkItemProps {
   category: string;
@@ -43,18 +44,40 @@ const allCategory: Array<LinkItemProps> = [
   {category: 'HOUSE', categoryName: 'Casa'},
   {category: 'EDUCATION', categoryName: 'Educação'},
   {category: 'ELECTRONIC', categoryName: 'Eletrônica'},
-  {category: 'LEISURE', categoryName: 'Lazer' },
-  {category: 'RESTAURANT', categoryName: 'Restaurante' },
-  {category: 'HEALTH', categoryName: 'Saúde' },
-  {category: 'SERVICE', categoryName: 'Serviço' },
-  {category: 'SUPERMARKET', categoryName: 'Supermercado' },
-  {category: 'TRANSPORT', categoryName: 'Transporte' },
-  {category: 'CLOTHES', categoryName: 'Roupa' },
-  {category: 'TRIPS', categoryName: 'Viagem' },
-  {category: 'OTHERS', categoryName: 'Outros' },
-  {category: 'AWARD', categoryName: 'Prêmio' },
-  {category: 'GIFT', categoryName: 'Presente' },
-  {category: 'SALARY', categoryName: 'Salário' },
+  {category: 'LEISURE', categoryName: 'Lazer'},
+  {category: 'RESTAURANT', categoryName: 'Restaurante'},
+  {category: 'HEALTH', categoryName: 'Saúde'},
+  {category: 'SERVICE', categoryName: 'Serviço'},
+  {category: 'SUPERMARKET', categoryName: 'Supermercado'},
+  {category: 'TRANSPORT', categoryName: 'Transporte'},
+  {category: 'CLOTHES', categoryName: 'Roupa'},
+  {category: 'TRIPS', categoryName: 'Viagem'},
+  {category: 'OTHERS', categoryName: 'Outros'},
+  {category: 'AWARD', categoryName: 'Prêmio'},
+  {category: 'GIFT', categoryName: 'Presente'},
+  {category: 'SALARY', categoryName: 'Salário'},
+];
+
+const revenueCategory: Array<LinkItemProps> = [
+  {category: 'AWARD', categoryName: 'Prêmio'},
+  {category: 'GIFT', categoryName: 'Presente'},
+  {category: 'SALARY', categoryName: 'Salário'},
+  {category: 'OTHERS', categoryName: 'Outros'},
+];
+
+const expenseCategory: Array<LinkItemProps> = [
+  {category: 'HOUSE', categoryName: 'Casa'},
+  {category: 'EDUCATION', categoryName: 'Educação'},
+  {category: 'ELECTRONIC', categoryName: 'Eletrônica'},
+  {category: 'LEISURE', categoryName: 'Lazer'},
+  {category: 'RESTAURANT', categoryName: 'Restaurante'},
+  {category: 'HEALTH', categoryName: 'Saúde'},
+  {category: 'SERVICE', categoryName: 'Serviço'},
+  {category: 'SUPERMARKET', categoryName: 'Supermercado'},
+  {category: 'TRANSPORT', categoryName: 'Transporte'},
+  {category: 'CLOTHES', categoryName: 'Roupa'},
+  {category: 'TRIPS', categoryName: 'Viagem'},
+  {category: 'OTHERS', categoryName: 'Outros'},
 ];
 
 export const category = {
@@ -84,32 +107,81 @@ const initialValues = {
   paid: false
 }
 
+const initialValuesRevenue = {
+  amount: '',
+  date: '',
+  description: '',
+  transactionType: '',
+  transactionCategory: '',
+  paid: false
+}
+
+const initialValuesExpense = {
+  amount: '',
+  date: '',
+  description: '',
+  transactionType: '',
+  transactionCategory: '',
+  paid: false
+}
+
+
+const colorType = (transactionType: string): string => {
+  if (transactionType === 'TRANSACTION') {
+    return 'blue.500';
+  } else if (transactionType === 'REVENUE') {
+    return 'green.500';
+  } else {
+    return 'red.500'
+  }
+}
+
+const categoryMap = (transactionType: string) => {
+  if (transactionType === 'TRANSACTION') {
+    return allCategory
+  } else if (transactionType === 'REVENUE') {
+    return revenueCategory;
+  } else {
+    return expenseCategory;
+  }
+}
+
 interface ModalTypes {
+  transactionId?: number;
   onOk?: () => void;
   onCancel?: () => void;
   trigger: (onOpen?: () => void, onClose?: () => void) => ReactNode;
   text?: string;
   userId?: number;
+  transactionType?: string;
 }
 
-export function NewTransactionModal({onCancel, trigger}: ModalTypes) {
+export function NewTransactionModal({onCancel, trigger, transactionType, transactionId}: ModalTypes) {
+  const mainColor = useColorModeValue('white', 'gray.800');
   const {isOpen, onOpen, onClose} = useDisclosure();
-  const { data: user } = useMe();
+  const {data: user} = useMe();
   const userId = user?.id;
   const createTransaction = useCreateTransaction();
-  const { data: accounts } = useAccounts(userId);
-
+  const updateTransaction = useUpdateTransaction();
+  const {data: accounts} = useAccounts(userId);
+  const color = colorType(transactionType);
+  const category = categoryMap(transactionType);
+  const {data: transactionFound} = useTransactionById(transactionId);
 
   const handleOk = useCallback(() => {
     onClose();
   }, [onClose]);
 
-  const handleUpdateAddress = async (values) => {
+  const handleUpdateTransaction = async (values) => {
+    console.log("update")
+    updateTransaction.mutate({
+      ...values, id: transactionId
+    });
     handleOk()
   };
 
   const handleCreateAddress = (values) => {
-    console.log(JSON.stringify(values))
+    console.log("create")
     createTransaction.mutate({
       ...values, userId
     });
@@ -131,22 +203,19 @@ export function NewTransactionModal({onCancel, trigger}: ModalTypes) {
         size="xl"
       >
         <ModalOverlay backdropFilter='blur(1px)' />
-        <ModalContent bg="white">
-          <Formik initialValues={initialValues}
-                  onSubmit={handleCreateAddress}
-                  // validationSchema={createAddressValidationSchema}
+        <ModalContent bg={mainColor}>
+          <Formik initialValues={transactionFound || initialValues}
+                  onSubmit={!!transactionId ? handleUpdateTransaction : handleCreateAddress}
+            validationSchema={createTransactionSchema}
                   validateOnChange={false}
           >
             {({handleSubmit, handleChange, values, isSubmitting, errors}) =>
               <>
                 <form onSubmit={handleSubmit}>
-                  <ModalHeader fontSize="25px" fontWeight="bold">Adicionar Nova Transação</ModalHeader>
-                  <Center>
-                    <Divider maxW="550" borderColor="gray.700" />
-                  </Center>
+                  <ModalHeader bg={color} fontSize="25px" fontWeight="bold">Adicionar Nova Transação</ModalHeader>
                   <ModalCloseButton />
                   <ModalBody justifyContent="center">
-                    <Box flex={1} borderRadius={8} bg="white" pt={5} pl={5} pr={5} pb={8}>
+                    <Box flex={1} borderRadius={8} bg={mainColor} pt={5} pl={5} pr={5} pb={8}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
                           <InputFormik placeholder="Valor"
@@ -157,6 +226,7 @@ export function NewTransactionModal({onCancel, trigger}: ModalTypes) {
                                        error={errors.amount}
                           />
                           <InputFormik placeholder="Data"
+                                       mask={"99/99/9999"}
                                        name="date"
                                        type="text"
                                        onChange={handleChange}
@@ -170,7 +240,6 @@ export function NewTransactionModal({onCancel, trigger}: ModalTypes) {
                                        value={values.description}
                                        error={errors.description}
                           />
-
                           <Select placeholder={"Selecione uma Conta"}
                                   id={"accountId"}
                                   name={"accountId"}
@@ -188,7 +257,7 @@ export function NewTransactionModal({onCancel, trigger}: ModalTypes) {
                                   value={values.transactionCategory}
                                   onChange={handleChange}>
 
-                            {allCategory.map((cat) => (
+                            {category.map((cat) => (
                               <option key={cat.category} value={cat.category}>{cat.categoryName}</option>
                             ))}
                           </Select>
@@ -203,14 +272,16 @@ export function NewTransactionModal({onCancel, trigger}: ModalTypes) {
                             <option value='EXPENSE'>Despesa</option>
                           </Select>
 
-                          <FormControl as={SimpleGrid} columns={{ base: 1, lg: 9 }}>
-                          <FormLabel htmlFor='paid'>Pago</FormLabel>
-                          <Switch
-                            id="paid"
-                                  name="paid"
-                                  isChecked={values.paid}
-                                  onChange={handleChange}
-                          />
+                          <FormControl as={SimpleGrid} columns={{base: 1, lg: 9}}>
+                            <FormLabel htmlFor='paid'>Pago</FormLabel>
+                            <LightMode>
+                              <Switch
+                                id="paid"
+                                name="paid"
+                                isChecked={values.paid}
+                                onChange={handleChange}
+                              />
+                            </LightMode>
                           </FormControl>
                         </SimpleGrid>
                       </VStack>
@@ -218,7 +289,9 @@ export function NewTransactionModal({onCancel, trigger}: ModalTypes) {
                   </ModalBody>
                   <ModalFooter>
                     <HStack spacing={2}>
-                      <Button isLoading={isSubmitting} colorScheme="blue" type="submit">Salvar</Button>
+                      <LightMode>
+                        <Button isLoading={isSubmitting} colorScheme="blue" type="submit">Salvar</Button>
+                      </LightMode>
                     </HStack>
                   </ModalFooter>
                 </form>

@@ -7,7 +7,8 @@ import {
   Heading,
   HStack,
   Icon,
-  IconButton, Image,
+  IconButton,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -22,27 +23,25 @@ import {
   Thead,
   Tooltip,
   Tr,
-  useColorModeValue, VStack
+  useColorModeValue,
+  VStack
 } from "@chakra-ui/react";
 import { RiAddLine, RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
 import TagW from "../../../components/Tag";
-import { useTransaction } from "../../../hooks/transactions/useTransaction";
 import { useMe } from "../../../hooks/users/useMe";
 import { ConfirmationDialog } from "../../../components/Dialog/ConfirmationDialog";
 import { Pagination } from "../../../components/Pagination";
 import { BiTrash } from "react-icons/bi";
 import { GrEdit } from "react-icons/gr";
 import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
-import { category, NewTransactionModal } from "../../../components/Modals/NewTransaction";
+import { category, NewTransactionModal } from "../../../components/Modals/Transaction";
 import { dateFormat, numberFormat } from "../../../components/Utils/utils";
 import React, { useCallback, useState } from "react";
 import CardsDashboard from "../../../components/Cards/CardsDashboard";
-import { useDashboard } from "../../../hooks/dashboard/useDashboard";
 import { Formik } from 'formik';
 import { useIsFetching } from "react-query";
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, SearchIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import SidebarWithHeader from "../../../components/SideBar";
-import { useTransactionRevenue } from "../../../hooks/transactions/useTransactionRevenue";
 import { useTransactionExpense } from "../../../hooks/transactions/useTransactionExpense";
 import { MdAccountBalance, MdOutlineAttachMoney } from "react-icons/md";
 import { useDashboardExpense } from "../../../hooks/dashboard/useDashboardExpense";
@@ -237,8 +236,9 @@ export default function TransactionRevenue() {
                   }
                 </Formik>
               </HStack>
-              <LightMode>
-                <NewTransactionModal trigger={(open) =>
+
+              <NewTransactionModal trigger={(open) =>
+                <LightMode>
                   <Button as={"a"}
                           onClick={open}
                           size={"sm"}
@@ -247,8 +247,9 @@ export default function TransactionRevenue() {
                           leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
                   >Adicionar nova despesa
                   </Button>
-                } />
-              </LightMode>
+                </LightMode>
+              } />
+
             </Flex>
 
             {isLoading ? (
@@ -328,16 +329,21 @@ export default function TransactionRevenue() {
                           <Td pl={0} pr={0} pt={padding} pb={padding}>
                             <Flex justify={"flex-end"}>
                               <HStack>
-                                <LightMode>
-                                  <IconButton
-                                    as={"a"}
-                                    colorScheme={"facebook"}
-                                    aria-label={"edit transaction"}
-                                    size="sm"
-                                    variant={"ghost"}
-                                    icon={<Icon as={GrEdit} fontSize={"16"} color={"red"} />}
-                                  />
-                                </LightMode>
+                                <NewTransactionModal
+                                  transactionId={transaction.id}
+                                  trigger={(open) =>
+                                    <LightMode>
+                                      <IconButton
+                                        onClick={open}
+                                        as={"a"}
+                                        colorScheme={"facebook"}
+                                        aria-label={"edit transaction"}
+                                        size="sm"
+                                        variant={"ghost"}
+                                        icon={<Icon as={GrEdit} fontSize={"16"} color={"red"} />}
+                                      />
+                                    </LightMode>
+                                  } />
 
                                 <LightMode>
                                   <ConfirmationDialog

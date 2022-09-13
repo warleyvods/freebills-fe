@@ -26,7 +26,7 @@ export default function SidebarWithHeader({children}: { children?: ReactNode; })
         onClose={onClose}
         returnFocusOnClose={false}
         onOverlayClick={onClose}
-        size="full">
+        size={"sm"}>
         <DrawerContent>
           <SidebarContent onClose={onClose} />
         </DrawerContent>

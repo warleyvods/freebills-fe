@@ -16,6 +16,8 @@ export function useDeleteTransaction() {
         duration: 2000,
         isClosable: true,
       })
+      await queryClient.invalidateQueries(['transaction-expense'])
+      await queryClient.invalidateQueries(['transaction-revenue'])
       await queryClient.invalidateQueries(['transaction'])
       await queryClient.invalidateQueries(['balance'])
     }, onError: (err: any) => {

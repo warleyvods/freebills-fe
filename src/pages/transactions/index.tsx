@@ -36,7 +36,7 @@ import { Pagination } from "../../components/Pagination";
 import { BiTrash } from "react-icons/bi";
 import { GrEdit } from "react-icons/gr";
 import { useDeleteTransaction } from "../../hooks/transactions/useDeleteTransaction";
-import { category, NewTransactionModal } from "../../components/Modals/NewTransaction";
+import { category, NewTransactionModal } from "../../components/Modals/Transaction";
 import { dateFormat, numberFormat } from "../../components/Utils/utils";
 import React, { useCallback, useState } from "react";
 import CardsDashboard from "../../components/Cards/CardsDashboard";
@@ -47,6 +47,7 @@ import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, SearchIcon, SmallCloseIco
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { FaRegCreditCard } from "react-icons/fa";
 import CardsSkeleton from "../../components/Cards/CardsSkeleton";
+import { PayTransactionModal } from "../../components/Modals/Transaction/PayTransaction";
 
 interface ColumnsProps {
   name: string;
@@ -98,6 +99,10 @@ export default function Transaction() {
 
   function handleDeleteTransaction(transactionId: number) {
     deleteTransaction(transactionId)
+  }
+
+  function handlePayTransaction(transactionId: number) {
+    console.log("pagar")
   }
 
   return (
@@ -238,18 +243,22 @@ export default function Transaction() {
                   }
                 </Formik>
               </HStack>
-              <LightMode>
-                <NewTransactionModal trigger={(open) =>
-                  <Button as={"a"}
-                          onClick={open}
-                          size={"sm"}
-                          fontSize={"sm"}
-                          colorScheme={"facebook"}
-                          leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
-                  >Adicionar nova transação
-                  </Button>
+
+              <NewTransactionModal
+                transactionType={'TRANSACTION'}
+                trigger={(open) =>
+                  <LightMode>
+                    <Button as={"a"}
+                            onClick={open}
+                            size={"sm"}
+                            fontSize={"sm"}
+                            colorScheme={"facebook"}
+                            leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
+                    >Adicionar nova transação
+                    </Button>
+                  </LightMode>
                 } />
-              </LightMode>
+
             </Flex>
 
             {isLoading ? (
@@ -329,17 +338,44 @@ export default function Transaction() {
                           <Td pl={0} pr={0} pt={padding} pb={padding}>
                             <Flex justify={"flex-end"}>
                               <HStack>
-                                <LightMode>
-                                  <IconButton
-                                    as={"a"}
-                                    colorScheme={"facebook"}
-                                    aria-label={"edit transaction"}
-                                    size="sm"
-                                    variant={"ghost"}
-                                    icon={<Icon as={GrEdit} fontSize={"16"} color={"red"} />}
-                                  />
-                                </LightMode>
+                                {transaction.paid ? null : (
 
+                                  <PayTransactionModal
+                                    onOk={() => handlePayTransaction(transaction.id)}
+                                    trigger={(onOpen) =>
+                                      <LightMode>
+                                        <Tooltip label='Pagar' placement='auto-start'>
+                                          <IconButton
+                                            as={Button}
+                                            isRound={true}
+                                            variant={"ghost"}
+                                            colorScheme={mainColor}
+                                            aria-label={"pay"}
+                                            size="sm"
+                                            icon={<Icon as={CheckIcon} fontSize={"12"} />}
+                                            onClick={onOpen} />
+                                        </Tooltip>
+                                      </LightMode>
+                                    }
+                                    title={"Pagar Transação"} mainColor={mainColor} buttonText={"Pagar"}
+                                    description={"Deseja pagar esta transação?"} />
+                                )
+                                }
+                                <NewTransactionModal
+                                  transactionType={'TRANSACTION'}
+                                  transactionId={transaction.id}
+                                  trigger={(open) =>
+                                    <LightMode>
+                                      <IconButton
+                                        onClick={open}
+                                        colorScheme={mainColor}
+                                        aria-label={"edit transaction"}
+                                        size="sm"
+                                        variant={"ghost"}
+                                        icon={<Icon as={GrEdit} fontSize={"16"} />}
+                                      />
+                                    </LightMode>
+                                  } />
                                 <LightMode>
                                   <ConfirmationDialog
                                     onOk={() => handleDeleteTransaction(transaction.id)}
