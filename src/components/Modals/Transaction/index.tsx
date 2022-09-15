@@ -31,8 +31,8 @@ import * as yup from "yup";
 
 const createTransactionSchema = yup.object().shape({
   amount: yup.number().required('Valor Obrigatório.'),
-  date: yup.number().required('Data Obrigatória.'),
-  description: yup.number().required('Descrição Obrigatória.')
+  date: yup.string().required('Data Obrigatória.'),
+  description: yup.string().required('Descrição Obrigatória.')
 });
 
 interface LinkItemProps {
