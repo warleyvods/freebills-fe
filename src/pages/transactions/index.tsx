@@ -333,7 +333,7 @@ export default function Transaction() {
                               <TagW colorScheme={"red"} label={"DESPESA"} />)}
                           </Td>
                           <Td textAlign={"center"}>
-                            <Text fontWeight={"bold"}>{numberFormat(transaction.amount)}</Text>
+                            <Text fontWeight={"bold"}>{numberFormat(transaction.amount / 100)}</Text>
                           </Td>
                           <Td pl={0} pr={0} pt={padding} pb={padding}>
                             <Flex justify={"flex-end"}>

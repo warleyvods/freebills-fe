@@ -27,10 +27,12 @@ import { useCreateTransaction } from "../../../hooks/transactions/useCreateTrans
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
 import { useTransactionById } from "../../../hooks/transactions/useTransactionById";
 import { useUpdateTransaction } from "../../../hooks/transactions/useUpdateTransaction";
+import NumberFormat from "react-number-format";
 import * as yup from "yup";
+import MaskMoney from "../../Form/MaskMoney";
 
 const createTransactionSchema = yup.object().shape({
-  amount: yup.number().required('Valor Obrigatório.'),
+  // amount: yup.number().required('Valor Obrigatório.'),
   date: yup.string().required('Data Obrigatória.'),
   description: yup.string().required('Descrição Obrigatória.')
 });
@@ -99,7 +101,7 @@ export const category = {
 }
 
 const initialValues = {
-  amount: '',
+  amount: 0,
   date: '',
   description: '',
   transactionType: '',
@@ -206,10 +208,10 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
         <ModalContent bg={mainColor}>
           <Formik initialValues={transactionFound || initialValues}
                   onSubmit={!!transactionId ? handleUpdateTransaction : handleCreateAddress}
-            validationSchema={createTransactionSchema}
+                  validationSchema={createTransactionSchema}
                   validateOnChange={false}
           >
-            {({handleSubmit, handleChange, values, isSubmitting, errors}) =>
+            {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
               <>
                 <form onSubmit={handleSubmit}>
                   <ModalHeader bg={color} fontSize="25px" fontWeight="bold">Adicionar Nova Transação</ModalHeader>
@@ -218,13 +220,13 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                     <Box flex={1} borderRadius={8} bg={mainColor} pt={5} pl={5} pr={5} pb={8}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
-                          <InputFormik placeholder="Valor"
-                                       name="amount"
-                                       type="text"
-                                       onChange={handleChange}
-                                       value={values.amount}
-                                       error={errors.amount}
+                          <MaskMoney
+                            onChange={(value) => {
+                              setFieldValue("amount", value);
+                            }}
+                            value={values.amount}
                           />
+
                           <InputFormik placeholder="Data"
                                        mask={"99/99/9999"}
                                        name="date"

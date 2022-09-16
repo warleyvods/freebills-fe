@@ -24,7 +24,6 @@ export function useUpdateTransaction(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
   return useMutation(async (transaction: updateTransaction) => {
-    transaction.amount = transaction.amount.replace(/\D/g, '.');
     transaction.date = transaction.date.replace(/\D/g, '-')
     const response = await api.put('v1/transactions', {
       ...transaction

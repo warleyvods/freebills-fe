@@ -19,7 +19,7 @@ export function phoneMask(v) {
 export function numberFormat(value: number) {
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
-    currency: 'BRL'
+    currency: 'BRL',
   }).format(value);
 }
 

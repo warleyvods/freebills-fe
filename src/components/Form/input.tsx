@@ -35,9 +35,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({
   return (
     <FormControl isInvalid={!!error}>
       {
-        !!label && <FormLabel htmlFor={name}>{label}
-              <span style={{color: "red"}}>{important}</span>
-        </FormLabel>
+        !!label && <FormLabel htmlFor={name}>{label}<span style={{color: "red"}}>{important}</span></FormLabel>
       }
       <InputMask
         mask={mask}
