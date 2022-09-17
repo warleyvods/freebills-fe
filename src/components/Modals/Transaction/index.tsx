@@ -220,6 +220,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                     <Box flex={1} borderRadius={8} bg={mainColor} pt={5} pl={5} pr={5} pb={8}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
+
                           <MaskMoney
                             onChange={(value) => {
                               setFieldValue("amount", value);

@@ -22,7 +22,7 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error }: Inpu
   };
 
   return (
-    <Box display="flex" borderRadius="lg" border="1px" borderColor="#9699B0" backgroundColor="#D1D2DC">
+    <Box display="flex" borderRadius="lg" border="1px" borderColor="#969 9B0" backgroundColor="#D1D2DC">
       <Box display="flex" alignItems="center" paddingLeft="16px" borderRight="1px" borderColor="#9699B0"><Box userSelect="none" paddingRight="8px">R$</Box></Box>
       <NumberFormat
         style={{
@@ -34,6 +34,7 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error }: Inpu
           borderTopRightRadius: '0.5rem',
           backgroundColor: "#f6f6f8"
         }}
+        placeholder={"0,00"}
         format={formatCurrencyByEnd}
         allowNegative={true}
         fixedDecimalScale
