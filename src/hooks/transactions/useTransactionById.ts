@@ -13,7 +13,17 @@ type Transaction = {
 
 async function getTransactionById(transactionId: number): Promise<Transaction> {
   const response = await api.get<Transaction>(`v1/transactions/${transactionId}`)
-  return response.data;
+
+  const dados = response.data;
+  return {
+    id: dados.id,
+    amount: dados.amount,
+    paid: dados.paid,
+    date: dados.date,
+    description: dados.description,
+    transactionType: dados.transactionType,
+    transactionCategory: dados.transactionCategory
+  }
 }
 
 export function useTransactionById(transactionId: number) {

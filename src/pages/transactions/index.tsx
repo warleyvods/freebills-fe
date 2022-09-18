@@ -33,7 +33,7 @@ import { useTransaction } from "../../hooks/transactions/useTransaction";
 import { useMe } from "../../hooks/users/useMe";
 import { ConfirmationDialog } from "../../components/Dialog/ConfirmationDialog";
 import { Pagination } from "../../components/Pagination";
-import { BiTrash } from "react-icons/bi";
+import { BiEdit, BiTrash } from "react-icons/bi";
 import { GrEdit } from "react-icons/gr";
 import { useDeleteTransaction } from "../../hooks/transactions/useDeleteTransaction";
 import { category, NewTransactionModal } from "../../components/Modals/Transaction";
@@ -303,18 +303,18 @@ export default function Transaction() {
                               <Text fontWeight={"bold"}>{transaction.description}</Text>
                             </Flex>
                           </Td>
-                          <Td p={padding} textAlign={"center"}>
+                          <Td p={"14px"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
                             {transaction.paid ? (
                               <Tooltip label='Pago' placement='auto-start'>
-                                <Circle size='24px' bg='green' color='white'>
+                                <Circle size='24px' bg='#38A169' color='white'>
                                   <CheckIcon h={"12px"} />
                                 </Circle>
                               </Tooltip>
 
                             ) : (
                               <Tooltip label='Pendente' placement='auto-start'>
-                                <Circle size='24px' bg='red' color='white'>
-                                  <SmallCloseIcon h={"12px"} />
+                                <Circle size='24px' bg='#C53030' color='white'>
+                                  <SmallCloseIcon h={"14px"} />
                                 </Circle>
                               </Tooltip>
                             )}
@@ -333,7 +333,7 @@ export default function Transaction() {
                               <TagW colorScheme={"red"} label={"DESPESA"} />)}
                           </Td>
                           <Td textAlign={"center"}>
-                            <Text fontWeight={"bold"}>{numberFormat(transaction.amount / 100)}</Text>
+                            <Text fontWeight={"bold"}>{numberFormat(transaction.amount)}</Text>
                           </Td>
                           <Td pl={0} pr={0} pt={padding} pb={padding}>
                             <Flex justify={"flex-end"}>
@@ -368,11 +368,10 @@ export default function Transaction() {
                                     <LightMode>
                                       <IconButton
                                         onClick={open}
-                                        colorScheme={mainColor}
+                                        colorScheme={"facebook"}
                                         aria-label={"edit transaction"}
                                         size="sm"
-                                        variant={"ghost"}
-                                        icon={<Icon as={GrEdit} fontSize={"16"} />}
+                                        icon={<Icon as={BiEdit} fontSize={"16"} />}
                                       />
                                     </LightMode>
                                   } />

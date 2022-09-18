@@ -29,7 +29,7 @@ import TagW from "../../../components/Tag";
 import { useMe } from "../../../hooks/users/useMe";
 import { ConfirmationDialog } from "../../../components/Dialog/ConfirmationDialog";
 import { Pagination } from "../../../components/Pagination";
-import { BiTrash } from "react-icons/bi";
+import { BiEdit, BiTrash } from "react-icons/bi";
 import { GrEdit } from "react-icons/gr";
 import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
 import { category, NewTransactionModal } from "../../../components/Modals/Transaction";
@@ -240,17 +240,17 @@ export default function TransactionRevenue() {
               <NewTransactionModal
                 transactionType={'REVENUE'}
                 trigger={(open) =>
-                <LightMode>
-                  <Button as={"a"}
-                          onClick={open}
-                          size={"sm"}
-                          fontSize={"sm"}
-                          colorScheme={"green"}
-                          leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
-                  >Adicionar nova Receita
-                  </Button>
-                </LightMode>
-              } />
+                  <LightMode>
+                    <Button as={"a"}
+                            onClick={open}
+                            size={"sm"}
+                            fontSize={"sm"}
+                            colorScheme={"green"}
+                            leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
+                    >Adicionar nova Receita
+                    </Button>
+                  </LightMode>
+                } />
 
             </Flex>
 
@@ -296,18 +296,18 @@ export default function TransactionRevenue() {
                               <Text fontWeight={"bold"}>{transaction.description}</Text>
                             </Flex>
                           </Td>
-                          <Td p={padding} textAlign={"center"}>
+                          <Td p={"14px"} display={"flex"} justifyContent={"center"} alignItems={"center"}>
                             {transaction.paid ? (
                               <Tooltip label='Pago' placement='auto-start'>
-                                <Circle size='24px' bg='green' color='white'>
+                                <Circle size='24px' bg='#38A169' color='white'>
                                   <CheckIcon h={"12px"} />
                                 </Circle>
                               </Tooltip>
 
                             ) : (
                               <Tooltip label='Pendente' placement='auto-start'>
-                                <Circle size='24px' bg='red' color='white'>
-                                  <SmallCloseIcon h={"12px"} />
+                                <Circle size='24px' bg='#C53030' color='white'>
+                                  <SmallCloseIcon h={"14px"} />
                                 </Circle>
                               </Tooltip>
                             )}
@@ -338,16 +338,13 @@ export default function TransactionRevenue() {
                                     <LightMode>
                                       <IconButton
                                         onClick={open}
-                                        as={"a"}
                                         colorScheme={"facebook"}
                                         aria-label={"edit transaction"}
                                         size="sm"
-                                        variant={"ghost"}
-                                        icon={<Icon as={GrEdit} fontSize={"16"} color={"red"} />}
+                                        icon={<Icon as={BiEdit} fontSize={"16"} />}
                                       />
                                     </LightMode>
                                   } />
-
                                 <LightMode>
                                   <ConfirmationDialog
                                     onOk={() => handleDeleteTransaction(transaction.id)}

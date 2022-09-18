@@ -31,9 +31,9 @@ import { useMe } from "../../../hooks/users/useMe";
 import { InfoIcon } from "@chakra-ui/icons";
 import { useAccountById } from "../../../hooks/accounts/useAccountById";
 import { useUpdateAccount } from "../../../hooks/accounts/useUpdateAccount";
+import MaskMoney from "../../Form/MaskMoney";
 
 const createAddressValidationSchema = yup.object().shape({
-  amount: yup.number().required('Valor Obrigatório.'),
   description: yup.string().required('Descrição Obrigatória.'),
   accountType: yup.string().required('Tipo da conta obrigatória.'),
   bankType: yup.string().required('Tipo do banco obrigatório.')
@@ -106,7 +106,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                   validationSchema={createAddressValidationSchema}
                   validateOnChange={false}
           >
-            {({handleSubmit, handleChange, values, isSubmitting, errors}) =>
+            {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
               <>
                 <form onSubmit={handleSubmit}>
                   <ModalHeader fontSize="25px" fontWeight="bold">{text} Conta</ModalHeader>
@@ -118,16 +118,15 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                     <Box flex={1} color={inverseMainColor} borderRadius={8} pt={5} pl={5} pr={5} pb={8}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
-                          <InputFormik label="Valor"
-                                       isDisabled={!!accountId}
-                                       important={"*"}
-                                       name="amount"
-                                       type="text"
-                                       onChange={handleChange}
-                                       value={values.amount}
-                                       error={errors.amount}
+
+                          <MaskMoney
+                            onChange={(value) => {
+                              setFieldValue("amount", value);
+                            }}
+                            value={values.amount}
                           />
-                          <InputFormik label="Descrição"
+
+                          <InputFormik placeholder={"Descrição"}
                                        important={"*"}
                                        name="description"
                                        type="text"

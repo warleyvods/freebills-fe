@@ -1,16 +1,19 @@
 import React from "react";
 
 import NumberFormat from "react-number-format";
-import { Box, Input } from "@chakra-ui/react";
+import { Box, FormControl, FormErrorMessage, Input, useColorModeValue } from "@chakra-ui/react";
 
 interface InputProps {
   label?: string;
   error?: any;
-  onChange: (value: number) => void;
+  onChange: (value: any) => void;
   value: number;
 }
 
-const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error }: InputProps) => {
+const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, ...rest }: InputProps) => {
+  const mainColor = useColorModeValue('gray.10', 'gray.900');
+  const inverseMainColor = useColorModeValue('#B3B5C6', 'gray.600');
+
   const formatCurrencyByEnd = (value: string): string => {
     if (!Number(value)) return "";
 
@@ -22,17 +25,19 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error }: Inpu
   };
 
   return (
-    <Box display="flex" borderRadius="lg" border="1px" borderColor="#969 9B0" backgroundColor="#D1D2DC">
-      <Box display="flex" alignItems="center" paddingLeft="16px" borderRight="1px" borderColor="#9699B0"><Box userSelect="none" paddingRight="8px">R$</Box></Box>
+    <Box display="flex" borderRadius="lg" border="1px" borderColor={inverseMainColor} backgroundColor={mainColor}>
+      <Box display="flex" alignItems="center" paddingLeft="16px" borderRight="1px" borderColor="#9699B0">
+        <Box userSelect="none" paddingRight="8px">R$</Box>
+      </Box>
+      <FormControl isInvalid={!!error}>
       <NumberFormat
         style={{
           outline: 'none',
           padding: "8px",
           width: "100%",
-          background: 'transparent',
+          background: 'inherit',
           borderBottomRightRadius: '0.5rem',
           borderTopRightRadius: '0.5rem',
-          backgroundColor: "#f6f6f8"
         }}
         placeholder={"0,00"}
         format={formatCurrencyByEnd}
@@ -41,12 +46,16 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error }: Inpu
         decimalScale={2}
         inputMode="numeric"
         name="amount"
-        value={value}
+        value={value * 100}
         thousandSeparator={true}
         onValueChange={(values) => {
-          onChange(values.floatValue);
+          onChange(!!values.floatValue ? (parseFloat(String(values.floatValue)) / 100).toFixed(2) : 0);
         }}
       />
+        <FormErrorMessage>
+          {error}
+        </FormErrorMessage>
+      </FormControl>
     </Box>
 
   );

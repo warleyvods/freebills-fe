@@ -32,7 +32,7 @@ import * as yup from "yup";
 import MaskMoney from "../../Form/MaskMoney";
 
 const createTransactionSchema = yup.object().shape({
-  // amount: yup.number().required('Valor Obrigatório.'),
+  amount: yup.number().required('Valor Obrigatório.'),
   date: yup.string().required('Data Obrigatória.'),
   description: yup.string().required('Descrição Obrigatória.')
 });
@@ -220,14 +220,12 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                     <Box flex={1} borderRadius={8} bg={mainColor} pt={5} pl={5} pr={5} pb={8}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
-
                           <MaskMoney
                             onChange={(value) => {
                               setFieldValue("amount", value);
                             }}
                             value={values.amount}
                           />
-
                           <InputFormik placeholder="Data"
                                        mask={"99/99/9999"}
                                        name="date"
