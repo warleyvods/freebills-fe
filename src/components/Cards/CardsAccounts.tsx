@@ -19,6 +19,7 @@ import { EditIcon, ExternalLinkIcon, RepeatIcon } from "@chakra-ui/icons";
 import { NewAccountModal } from "../Modals/NewAccount";
 import { ConfirmationDialog } from "../Dialog/ConfirmationDialog";
 import { useUpdateArchiveAccount } from "../../hooks/accounts/useUpdateArchiveAcc";
+import { ReadjustmentAccountModal } from "../Modals/ReajustAccount";
 
 type AccountProps = {
   amount: number;
@@ -72,9 +73,14 @@ export default function CardsAccount({amount, description, accId}: AccountProps)
                 </MenuItem>
               } />
 
-            <MenuItem icon={<RepeatIcon />}>
-              Reajuste de Saldo
-            </MenuItem>
+            <ReadjustmentAccountModal accountId={accId} trigger={(onOpen) =>
+              <MenuItem icon={<RepeatIcon />} onClick={onOpen}>
+                Reajuste de Saldo
+              </MenuItem>
+            } />
+
+
+
           </MenuList>
         </Menu>
       </HStack>

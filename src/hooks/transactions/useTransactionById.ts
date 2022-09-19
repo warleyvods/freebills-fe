@@ -1,7 +1,7 @@
 import { api } from "../../services/api";
 import { useQuery } from "react-query";
 
-type Transaction = {
+export type Transaction = {
   id: number;
   amount: number;
   paid: boolean;

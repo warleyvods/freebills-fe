@@ -15,7 +15,7 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, ...res
   const inverseMainColor = useColorModeValue('#B3B5C6', 'gray.600');
 
   const formatCurrencyByEnd = (value: string): string => {
-    if (!Number(value)) return "";
+    // if (!Number(value)) return "";
 
     const amount = new Intl.NumberFormat("pt-BR", {
       style: "decimal",
@@ -41,13 +41,13 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, ...res
         }}
         placeholder={"0,00"}
         format={formatCurrencyByEnd}
-        allowNegative={true}
-        fixedDecimalScale
-        decimalScale={2}
-        inputMode="numeric"
+        // allowNegative={true}
+        // fixedDecimalScale
+        // decimalScale={2}
+        inputMode="text"
         name="amount"
         value={value * 100}
-        thousandSeparator={true}
+        // thousandSeparator={true}
         onValueChange={(values) => {
           onChange(!!values.floatValue ? (parseFloat(String(values.floatValue)) / 100).toFixed(2) : 0);
         }}
