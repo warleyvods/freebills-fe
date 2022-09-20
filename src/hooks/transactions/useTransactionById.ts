@@ -9,6 +9,8 @@ export type Transaction = {
   description: string;
   transactionType: string;
   transactionCategory: string;
+  bankSlip: boolean;
+  barCode: string;
 }
 
 async function getTransactionById(transactionId: number): Promise<Transaction> {
@@ -22,7 +24,9 @@ async function getTransactionById(transactionId: number): Promise<Transaction> {
     date: dados.date,
     description: dados.description,
     transactionType: dados.transactionType,
-    transactionCategory: dados.transactionCategory
+    transactionCategory: dados.transactionCategory,
+    bankSlip: dados.bankSlip,
+    barCode: dados.barCode
   }
 }
 

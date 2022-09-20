@@ -19,7 +19,7 @@ import {
   useDisclosure,
   VStack
 } from '@chakra-ui/react'
-import React, { ReactNode, useCallback } from "react";
+import React, { ReactNode, useCallback, useState } from "react";
 import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
 import { useMe } from "../../../hooks/users/useMe";
@@ -106,7 +106,9 @@ const initialValues = {
   description: '',
   transactionType: '',
   transactionCategory: '',
-  paid: false
+  paid: false,
+  barCode: '',
+  bankSlip: false
 }
 
 const initialValuesRevenue = {
@@ -124,7 +126,8 @@ const initialValuesExpense = {
   description: '',
   transactionType: '',
   transactionCategory: '',
-  paid: false
+  paid: false,
+  barcode: ''
 }
 
 
@@ -273,6 +276,33 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                             <option value='EXPENSE'>Despesa</option>
                           </Select>
 
+                          {values.bankSlip ?
+                            <HStack justify={"space-between"}>
+                              <InputFormik id="barCode"
+                                           placeholder="Código de Barras"
+                                           type="barCode"
+                                           name="barCode"
+                                           value={values.barCode}
+                                           onChange={handleChange}
+                              />
+                            </HStack>
+                            : null
+                          }
+
+                          <HStack justify={"space-between"}>
+                            <FormControl as={SimpleGrid} columns={{base: 1, lg: 8}}>
+                              <FormLabel htmlFor='barCode'>Boleto</FormLabel>
+                              <LightMode>
+                                <Switch
+                                  id="bankSlip"
+                                  name="bankSlip"
+                                  isChecked={values.bankSlip}
+                                  onChange={handleChange}
+                                />
+                              </LightMode>
+                            </FormControl>
+                          </HStack>
+
                           <FormControl as={SimpleGrid} columns={{base: 1, lg: 9}}>
                             <FormLabel htmlFor='paid'>Pago</FormLabel>
                             <LightMode>
@@ -284,6 +314,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                               />
                             </LightMode>
                           </FormControl>
+
                         </SimpleGrid>
                       </VStack>
                     </Box>

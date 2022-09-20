@@ -11,7 +11,9 @@ export type createTransactionData = {
   paid: boolean,
   description: string,
   transactionType: string,
-  transactionCategory: string
+  transactionCategory: string,
+  barCode: string,
+  bankSlip: boolean
 }
 
 type ErrorType = {

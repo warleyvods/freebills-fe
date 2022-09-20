@@ -43,11 +43,12 @@ import CardsDashboard from "../../components/Cards/CardsDashboard";
 import { useDashboard } from "../../hooks/dashboard/useDashboard";
 import { Formik } from 'formik';
 import { useIsFetching } from "react-query";
-import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, SearchIcon, SmallCloseIcon } from "@chakra-ui/icons";
+import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, InfoIcon, SearchIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import { MdOutlineAttachMoney } from "react-icons/md";
 import { FaRegCreditCard } from "react-icons/fa";
 import CardsSkeleton from "../../components/Cards/CardsSkeleton";
 import { PayTransactionModal } from "../../components/Modals/Transaction/PayTransaction";
+import { BankSlipModal } from "../../components/Modals/Transaction/BankSlip";
 
 interface ColumnsProps {
   name: string;
@@ -339,7 +340,6 @@ export default function Transaction() {
                             <Flex justify={"flex-end"}>
                               <HStack>
                                 {transaction.paid ? null : (
-
                                   <PayTransactionModal
                                     onOk={() => handlePayTransaction(transaction.id)}
                                     trigger={(onOpen) =>
@@ -348,18 +348,38 @@ export default function Transaction() {
                                           <IconButton
                                             as={Button}
                                             isRound={true}
-                                            variant={"ghost"}
-                                            colorScheme={mainColor}
+                                            variant={"solid"}
+                                            colorScheme={"green"}
                                             aria-label={"pay"}
-                                            size="sm"
+                                            size={"sm"}
                                             icon={<Icon as={CheckIcon} fontSize={"12"} />}
                                             onClick={onOpen} />
                                         </Tooltip>
                                       </LightMode>
                                     }
                                     title={"Pagar Transação"} mainColor={mainColor} buttonText={"Pagar"}
-                                    description={"Deseja pagar esta transação?"} />
-                                )
+                                    description={"Deseja pagar esta transação?"} />)
+                                }
+                                {!transaction.bankSlip ? null : (
+                                  <BankSlipModal
+                                    onOk={() => handlePayTransaction(transaction.id)}
+                                    trigger={(onOpen) =>
+                                      <LightMode>
+                                        <Tooltip label='Pagar' placement='auto-start'>
+                                          <IconButton
+                                            as={Button}
+                                            // isRound={true}
+                                            // variant={"ghost"}
+                                            colorScheme={"purple"}
+                                            aria-label={"pay"}
+                                            size={"sm"}
+                                            icon={<Icon as={InfoIcon} fontSize={"12"} />}
+                                            onClick={onOpen} />
+                                        </Tooltip>
+                                      </LightMode>
+                                    }
+                                    mainColor={mainColor}
+                                    barCode={transaction.barCode} />)
                                 }
                                 <NewTransactionModal
                                   transactionType={'TRANSACTION'}

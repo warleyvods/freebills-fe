@@ -9,6 +9,8 @@ type TransactionType = {
   description: string;
   transactionType: string;
   transactionCategory: string;
+  bankSlip: boolean;
+  barCode: string;
 }
 
 type getTransactionResponse = {
