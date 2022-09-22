@@ -79,8 +79,6 @@ export default function CardsAccount({amount, description, accId}: AccountProps)
               </MenuItem>
             } />
 
-
-
           </MenuList>
         </Menu>
       </HStack>

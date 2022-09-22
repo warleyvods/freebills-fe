@@ -58,7 +58,16 @@ export function BankSlipModal({
           <ModalBody justifyContent={"center"} >
             <VStack spacing={5} >
               <Text fontWeight={"bold"} fontFamily={"Poppins"}>Código de Barras</Text>
-              <Flex p={3} bg={"gray.100"} h={"40px"} w={"100%"} maxW={"auto"} justify={"center"} alignItems={"center"} border={"1px"} borderColor={"gray.200"} borderRadius={"lg"} boxShadow={"lg"}>
+              <Flex p={3}
+                    bg={"gray.100"}
+                    h={"40px"} w={"100%"}
+                    maxW={"auto"}
+                    justify={"center"}
+                    alignItems={"center"}
+                    border={"1px"}
+                    borderColor={"gray.200"}
+                    borderRadius={"lg"}
+                    boxShadow={"lg"}>
                 <Text color={"black"} textAlign={"center"} fontSize={"18px"} fontWeight={"bold"} fontFamily={"Poppins"}>{barCode}</Text>
               </Flex>
             </VStack>

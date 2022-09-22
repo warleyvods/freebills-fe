@@ -1,6 +1,13 @@
 import { Box, BoxProps, CloseButton, Flex, Text, useColorModeValue } from "@chakra-ui/react";
 import React from "react";
-import { RiExchangeBoxLine, RiExchangeDollarLine, RiFundsLine, RiGroupLine, RiUser3Line } from "react-icons/ri";
+import {
+  RiBankCard2Line,
+  RiExchangeBoxLine,
+  RiExchangeDollarLine,
+  RiFundsLine,
+  RiGroupLine,
+  RiUser3Line
+} from "react-icons/ri";
 import { IconType } from "react-icons";
 import { NavItem } from "./NavItem";
 import { useMe } from "../../hooks/users/useMe";
@@ -20,12 +27,14 @@ const LinkItemsAdmin: Array<LinkItemProps> = [
   {name: 'Dashboard', icon: RiFundsLine, ref: '/dashboard'},
   {name: 'Transações', icon: RiExchangeBoxLine, ref: '/transactions'},
   {name: 'Usuários', icon: RiGroupLine, ref: '/users'},
+  {name: 'Cartões', icon: RiBankCard2Line, ref: '/cards'},
 ];
 
 const LinkItemsUser: Array<LinkItemProps> = [
   {name: 'Contas', icon: RiGroupLine, ref: '/accounts'},
   {name: 'Dashboard', icon: RiGroupLine, ref: '/dashboard'},
   {name: 'Transações', icon: RiUser3Line, ref: '/transactions'},
+  {name: 'Cartões', icon: RiUser3Line, ref: '/transactions'},
 ];
 
 export const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
