@@ -42,8 +42,7 @@ export default function Accounts() {
                           onClick={onOpen}
                           fontSize={"sm"}
                           colorScheme={"facebook"}
-                          leftIcon={<Icon as={RiAddLine} fontSize={"20"} />
-                          }
+                          leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
                   >Adicionar novo
                   </Button>
                 </LightMode>
@@ -92,7 +91,7 @@ export default function Accounts() {
                 </Box>
               ) : (
                 accounts?.map(acc => (
-                  <CardsAccount key={acc.id} amount={acc.amount} description={acc.description} accId={acc.id} />
+                  <CardsAccount key={acc.id} amount={acc.amount} description={acc.description} accId={acc.id} bankType={acc.bankType}/>
                 ))
               )}
             </SimpleGrid>

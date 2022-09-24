@@ -1,6 +1,8 @@
 import {
+  Avatar,
+  Image,
   Box,
-  Button,
+  Button, Circle,
   Flex,
   HStack,
   IconButton,
@@ -24,10 +26,11 @@ import { ReadjustmentAccountModal } from "../Modals/ReajustAccount";
 type AccountProps = {
   amount: number;
   description: string;
+  bankType: string;
   accId?: number;
 }
 
-export default function CardsAccount({amount, description, accId}: AccountProps) {
+export default function CardsAccount({amount, description, accId, bankType}: AccountProps) {
   const mainColor = useColorModeValue('white', 'gray.800');
   const updateArchiveAcc = useUpdateArchiveAccount();
   const descriptionArchive = "Arquivar conta é uma opção muito útil quando temos aquela conta que não movimentamos mais e desejamos apenas tirá-la da relação de contas," +
@@ -38,11 +41,38 @@ export default function CardsAccount({amount, description, accId}: AccountProps)
     await updateArchiveAcc.mutate({id, archived})
   }
 
+  function bank(type: string) {
+    if (bankType === 'INTER') {
+      return 'https://portalvhdshl0fsz1rywfcp.blob.core.windows.net/instituicoes-bancarias-logo/intermedium.png'
+    } else if (bankType === 'NUBANK') {
+      return 'https://portalvhdshl0fsz1rywfcp.blob.core.windows.net/instituicoes-bancarias-logo/nubank.png'
+    } else if (bankType === 'CAIXA') {
+      return 'https://portalvhdshl0fsz1rywfcp.blob.core.windows.net/instituicoes-bancarias-logo/caixa.png'
+    } else if (bankType === 'BRADESCO') {
+      return 'https://portalvhdshl0fsz1rywfcp.blob.core.windows.net/instituicoes-bancarias-logo/bradesco.png'
+    } else if (bankType === 'BB') {
+      return 'https://portalvhdshl0fsz1rywfcp.blob.core.windows.net/instituicoes-bancarias-logo/bb.png'
+    } else if (bankType === 'SANTANDER') {
+      return 'https://portalvhdshl0fsz1rywfcp.blob.core.windows.net/instituicoes-bancarias-logo/santander.png'
+    } else if (bankType === 'OTHERS') {
+      return 'https://portalvhdshl0fsz1rywfcp.blob.core.windows.net/instituicoes-bancarias-logo/default.jpg'
+    } else if (bankType === 'ITAU') {
+      return 'https://portalvhdshl0fsz1rywfcp.blob.core.windows.net/instituicoes-bancarias-logo/itau.png'
+    }
+  }
+
   return (
     <Box bg={mainColor} w={"auto"} minH={"auto"} borderRadius={25} p={"20px"} boxShadow={"lg"}>
       <HStack justifyContent={"space-between"} align={"center"}>
-        <Text fontWeight="bold" fontSize={"1.3rem"}>{description}</Text>
-
+        <HStack spacing={3}>
+          <Image
+            borderRadius='full'
+            boxSize='40px'
+            src={bank(bankType)}
+            alt='inter'
+          />
+          <Text fontWeight="bold" fontSize={"1.3rem"}>{description}</Text>
+        </HStack>
         <Menu>
           <MenuButton
             as={IconButton}
