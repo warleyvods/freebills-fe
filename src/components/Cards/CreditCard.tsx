@@ -17,17 +17,32 @@ import {
 import React from "react";
 import { RiMastercardFill, RiMore2Fill } from "react-icons/ri";
 import { EditIcon, ExternalLinkIcon, RepeatIcon } from "@chakra-ui/icons";
+import { numberFormat } from "../Utils/utils";
 
-type AccountProps = {
-  amount: number;
+type CardProps = {
   description: string;
-  accId?: number;
+  closingDay: string;
+  cardLimit: number;
+  ccId?: number;
 }
 
-export default function CreditCard() {
+export default function CreditCard({description, closingDay, cardLimit } : CardProps) {
   const mainColor = useColorModeValue('white', 'gray.800');
 
   const handleArchiveChange = async () => {
+  }
+
+  function getNextMonth() {
+    const currentMonth = new Date().getMonth() + 2;
+    const month = new Date(`"${currentMonth}"`).toLocaleDateString('pt-BR', {
+      month: 'long'
+    }).toString().replace(/\b\w/g, x => x.toUpperCase())
+
+    const year =  new Date().toLocaleDateString('pt-BR', {
+      year: 'numeric'
+    }).replace(/\b\w/g, x => x.toUpperCase())
+
+    return `${month} ${year}`
   }
 
   return (
@@ -35,7 +50,7 @@ export default function CreditCard() {
       <HStack justifyContent={"space-between"} align={"center"}>
         <HStack spacing={3}>
           <RiMastercardFill size={"40px"} />
-          <Text fontWeight="bold" fontSize={"1.3rem"}>Cartão Caixa</Text>
+          <Text fontWeight="bold" fontSize={"1.3rem"}>{description}</Text>
         </HStack>
         <Menu>
           <MenuButton
@@ -50,10 +65,7 @@ export default function CreditCard() {
               Editar
             </MenuItem>
             <MenuItem icon={<ExternalLinkIcon />}>
-              Arquivar Conta
-            </MenuItem>
-            <MenuItem icon={<RepeatIcon />}>
-              Reajuste de Saldo
+              Arquivar Cartão
             </MenuItem>
           </MenuList>
         </Menu>
@@ -69,10 +81,12 @@ export default function CreditCard() {
       </HStack>
       <HStack justify={"space-between"} spacing={20} mt={"05px"} mb={"15px"}>
         <Text fontWeight="bold" fontSize={"1.0rem"}>Fecha em</Text>
-        <Text fontWeight="bold" fontSize={"1.0rem"} color="green">30 de Setembro de 2022</Text>
+        <Text fontWeight="bold" fontSize={"1.0rem"} color="green">{closingDay} de {
+          getNextMonth()
+        }</Text>
       </HStack>
 
-      <Text fontWeight="bold" fontSize={"0.9rem"}>R$ 100,00 de R$ 8.000,00</Text>
+      <Text fontWeight="bold" fontSize={"0.9rem"}>R$ 100,00 de {numberFormat(cardLimit)}</Text>
       <Progress value={20} borderRadius={"10px"} />
       <Text fontWeight="normal" fontSize={"0.8rem"} mb={"15px"}>Limite Disponível R$ 7.900,00</Text>
 

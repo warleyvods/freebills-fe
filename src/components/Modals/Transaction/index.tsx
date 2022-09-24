@@ -228,7 +228,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                               setFieldValue("amount", value);
                             }}
                             value={values.amount}
-                          />
+                           name={"amount"}/>
                           <InputFormik placeholder="Data"
                                        mask={"99/99/9999"}
                                        name="date"

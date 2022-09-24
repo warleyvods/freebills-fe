@@ -62,7 +62,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
   const selectBgColor = useColorModeValue('gray.10', 'gray.900');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const createAccount = useCreateAccount();
-  const {data: accountFound } = useAccountById(accountId);
+  const {data: accountFound} = useAccountById(accountId);
   const updateAccount = useUpdateAccount();
   const {data: user} = useMe();
   const userId = user?.id;
@@ -101,7 +101,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
       >
         <ModalOverlay backdropFilter='blur(1px)' />
         <ModalContent bg={mainColor}>
-          <Formik initialValues={ accountFound || initialValues }
+          <Formik initialValues={accountFound || initialValues}
                   onSubmit={!!accountId ? handleUpdateAccount : handleCreateAccount}
                   validationSchema={createAddressValidationSchema}
                   validateOnChange={false}
@@ -124,7 +124,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                               setFieldValue("amount", value);
                             }}
                             value={values.amount}
-                          />
+                            name={"amount"} />
 
                           <InputFormik placeholder={"Descrição"}
                                        important={"*"}

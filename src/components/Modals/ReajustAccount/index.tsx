@@ -92,7 +92,7 @@ export function ReadjustmentAccountModal({onCancel, trigger, text, accountId}: M
                               setFieldValue("amount", value);
                             }}
                             value={values.amount}
-                          />
+                           name={"amount"}/>
                           <RadioGroup defaultValue='1'>
                             <VStack border={"1px"} alignItems={"center"} borderRadius={"15px"} p={3}>
                               <VStack spacing={"2px"}>

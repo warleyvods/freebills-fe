@@ -8,9 +8,10 @@ interface InputProps {
   error?: any;
   onChange: (value: any) => void;
   value: number;
+  name: string;
 }
 
-const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, ...rest }: InputProps) => {
+const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, name, ...rest }: InputProps) => {
   const mainColor = useColorModeValue('gray.10', 'gray.900');
   const inverseMainColor = useColorModeValue('#B3B5C6', 'gray.600');
 
@@ -45,7 +46,7 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, ...res
         // fixedDecimalScale
         // decimalScale={2}
         inputMode="text"
-        name="amount"
+        name={name}
         value={value * 100}
         // thousandSeparator={true}
         onValueChange={(values) => {
