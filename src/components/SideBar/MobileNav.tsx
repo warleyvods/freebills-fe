@@ -71,7 +71,7 @@ export const MobileNav = ({onOpen, ...rest}: MobileProps) => {
       <Text
         display={{base: 'flex', md: 'none'}}
         fontSize="2xl"
-        fontFamily="monospace"
+        fontFamily="Roboto"
         fontWeight="bold">
         FREEBILLS
       </Text>

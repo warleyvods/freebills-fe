@@ -5,12 +5,15 @@ import NextLink from "next/link";
 
 interface NavItemProps extends FlexProps {
   href: string
-  icon: IconType;
-  children: any;
+  icon?: IconType;
+  children: ReactText;
   onToggle?: () => void;
+  color: string;
 }
 
-export const NavItem = ({ icon, children, href, onToggle, ...rest}: NavItemProps) => {
+export const SubNavItem = ({ icon, children, href, onToggle, color, ...rest}: NavItemProps) => {
+  // const cored = 'red.500';
+
   return (
     <Link as={NextLink} href={href} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex
@@ -21,7 +24,7 @@ export const NavItem = ({ icon, children, href, onToggle, ...rest}: NavItemProps
         role="group"
         cursor="pointer"
         _hover={{
-          bg: 'blue.400',
+          bg: color,
           color: 'white',
         }}
         {...rest}>

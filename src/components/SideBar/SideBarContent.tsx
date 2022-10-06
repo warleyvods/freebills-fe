@@ -1,4 +1,14 @@
-import { Box, BoxProps, CloseButton, Flex, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  BoxProps,
+  CloseButton,
+  Collapse,
+  Flex,
+  Icon,
+  Text,
+  useColorModeValue,
+  useDisclosure
+} from "@chakra-ui/react";
 import React from "react";
 import {
   RiBankCard2Line,
@@ -11,6 +21,9 @@ import {
 import { IconType } from "react-icons";
 import { NavItem } from "./NavItem";
 import { useMe } from "../../hooks/users/useMe";
+import { HiCode } from "react-icons/hi";
+import { MdKeyboardArrowRight } from "react-icons/md";
+import { SubNavItem } from "./SubNavItem";
 
 interface SidebarProps extends BoxProps {
   onClose: () => void;
@@ -22,31 +35,15 @@ interface LinkItemProps {
   icon: IconType;
 }
 
-const LinkItemsAdmin: Array<LinkItemProps> = [
-  {name: 'Contas', icon: RiExchangeDollarLine, ref: '/accounts'},
-  {name: 'Dashboard', icon: RiFundsLine, ref: '/dashboard'},
-  {name: 'Transações', icon: RiExchangeBoxLine, ref: '/transactions'},
-  {name: 'Usuários', icon: RiGroupLine, ref: '/users'},
-  {name: 'Cartões', icon: RiBankCard2Line, ref: '/cards'},
-];
-
-const LinkItemsUser: Array<LinkItemProps> = [
-  {name: 'Contas', icon: RiGroupLine, ref: '/accounts'},
-  {name: 'Dashboard', icon: RiGroupLine, ref: '/dashboard'},
-  {name: 'Transações', icon: RiUser3Line, ref: '/transactions'},
-  {name: 'Cartões', icon: RiUser3Line, ref: '/transactions'},
-];
-
 export const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
   const {data: user, isLoading} = useMe();
   const bg = useColorModeValue('white', 'gray.900');
   const br = useColorModeValue('gray.200', 'gray.700');
+  const integrations = useDisclosure();
 
   if (isLoading) {
     return null;
   }
-
-  const itemsList = user.admin ? LinkItemsAdmin : LinkItemsUser;
 
   return (
     <Box
@@ -59,18 +56,54 @@ export const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
       h="full"
       {...rest}>
       <Flex h="20" alignItems="center" mx="8" justifyContent="space-between">
-        <Text fontSize="2xl" fontFamily="monospace" fontWeight="bold">
-          $$ FREEBILLS
+        <Text
+          fontSize="2xl"
+          ml="2"
+          color="brand.500"
+          _dark={{
+            color: "white",
+          }}
+          fontWeight="bold"
+        >
+          Freebills
         </Text>
         <CloseButton display={{base: 'flex', md: 'none'}} onClick={onClose} />
       </Flex>
-      {
-        itemsList.map((link) => (
-          <NavItem key={link.name} icon={link.icon} href={link.ref}>
-            {link.name}
-          </NavItem>
-        ))
-      }
+      <NavItem icon={RiFundsLine} href={"/dashboard"}>
+        Dashboard
+      </NavItem>
+      <NavItem icon={RiExchangeDollarLine} href={"/accounts"}>
+        Contas
+      </NavItem>
+      <NavItem icon={RiExchangeBoxLine} onClick={integrations.onToggle} href={""}>
+        Transações
+        <Icon
+          as={MdKeyboardArrowRight}
+          ml="auto"
+          transform={integrations.isOpen && "rotate(90deg)"}
+        />
+      </NavItem>
+      <Collapse in={integrations.isOpen}>
+        <SubNavItem pl="12" py="2" color={"green.500"} href={"/transactions/revenue"}>
+          Receitas
+        </SubNavItem>
+        <SubNavItem pl="12" py="2" color={"red.500"} href={"/transactions/expense"}>
+          Despesas
+        </SubNavItem>
+      </Collapse>
+      <NavItem icon={RiBankCard2Line} href={"/cards"}>
+        Cartões
+      </NavItem>
+
+      {user?.admin ? (
+        <NavItem icon={RiGroupLine} href={"/users"}>
+          Usuário
+        </NavItem>
+      ) : (
+        <>
+        </>
+      )}
+
     </Box>
   );
 };

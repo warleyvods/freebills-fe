@@ -178,7 +178,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   }, [onClose]);
 
   const handleUpdateTransaction = async (values) => {
-    console.log("update")
+    console.log(values)
     updateTransaction.mutate({
       ...values, id: transactionId
     });
@@ -244,7 +244,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                                        value={values.description}
                                        error={errors.description}
                           />
-                          <Select placeholder={"Selecione uma Conta"}
+                          <Select placeholder={"Selecione uma Conta" }
                                   id={"accountId"}
                                   name={"accountId"}
                                   value={values.accountId}
