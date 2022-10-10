@@ -77,7 +77,7 @@ export const Card = () => {
                 <Box bg={mainColor} minW={"350px"} minH={"200px"} borderRadius={25} p={"20px"} boxShadow={"lg"}>
                   <VStack justify={"center"} w={"100%"} h={"100%"}>
                     <Text fontWeight="bold" fontSize={"25px"}>Novo cartão de crédito</Text>
-                    <NewAccountModal
+                    <NewCreditCard
                       trigger={open =>
                         <IconButton
                           onClick={open}
