@@ -9,6 +9,7 @@ type User = {
   admin: boolean;
   active: boolean;
   createdAt: string;
+  lastAccess: string;
 }
 
 type getUsersResponse = {
@@ -38,6 +39,13 @@ export async function getUsers(page: number): Promise<getUsersResponse> {
           day: '2-digit',
           month: '2-digit',
           year: 'numeric'
+        }),
+        lastAccess: new Date(user.lastAccess).toLocaleDateString('pt-BR', {
+          day: '2-digit',
+          month: '2-digit',
+          year: 'numeric',
+          hour: 'numeric',
+          minute: 'numeric'
         })
       };
     });

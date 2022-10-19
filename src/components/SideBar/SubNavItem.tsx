@@ -12,8 +12,6 @@ interface NavItemProps extends FlexProps {
 }
 
 export const SubNavItem = ({ icon, children, href, onToggle, color, ...rest}: NavItemProps) => {
-  // const cored = 'red.500';
-
   return (
     <Link as={NextLink} href={href} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
       <Flex

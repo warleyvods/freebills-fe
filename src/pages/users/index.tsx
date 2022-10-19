@@ -41,6 +41,7 @@ const LinkItems: Array<ColumnsProps> = [
   {name: 'Admin'},
   {name: 'Status'},
   {name: 'Dt. Criação'},
+  {name: 'Dt. Ult. Acesso'},
   {name: 'Opções'},
 ];
 
@@ -169,6 +170,11 @@ export default function UserList() {
                           <Td pl={0} pr={0}>
                             <Flex justify={"center"}>
                               <Text fontWeight={"bold"}>{user.createdAt}</Text>
+                            </Flex>
+                          </Td>
+                          <Td pl={0} pr={0}>
+                            <Flex justify={"center"}>
+                              <Text fontWeight={"bold"}>{user.lastAccess}</Text>
                             </Flex>
                           </Td>
                           <Td pl={0} pr={0}>
