@@ -16,16 +16,17 @@ type getTransactionResponse = {
   content: TransactionType[];
 }
 
-export async function getAllTransactionsExpense(page: number, keyword: string, month: string, year: string, userId?: number): Promise<getTransactionResponse> {
+export async function getAllTransactionsExpense(page: number, keyword: string, month: string, year: string, userId?: number, transactionType = 'EXPENSE'): Promise<getTransactionResponse> {
   const size = 8;
-  const response = await api.get('v1/transactions/expense', {
+  const response = await api.get('v1/transactions/filter', {
     params: {
       page,
       userId: userId,
       size,
       keyword,
       month,
-      year
+      year,
+      transactionType
     }
   });
 
