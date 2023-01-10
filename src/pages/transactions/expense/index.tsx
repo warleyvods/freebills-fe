@@ -240,7 +240,9 @@ export default function TransactionRevenue() {
                 </Formik>
               </HStack>
 
-              <NewTransactionModal trigger={(open) =>
+              <NewTransactionModal
+                transactionType={'EXPENSE'}
+                trigger={(open) =>
                 <LightMode>
                   <Button as={"a"}
                           onClick={open}
@@ -341,7 +343,9 @@ export default function TransactionRevenue() {
                             <Flex justify={"flex-end"}>
                               <HStack>
                                 <NewTransactionModal
+                                  transactionType={'EXPENSE'}
                                   transactionId={transaction.id}
+                                  edit={true}
                                   trigger={(open) =>
                                     <LightMode>
                                       <IconButton

@@ -100,36 +100,27 @@ export const category = {
   "SALARY": "Salário"
 }
 
-const initialValues = {
+const revenueInitialValues = {
   amount: 0,
   date: '',
   description: '',
-  transactionType: '',
+  transactionType: 'REVENUE',
   transactionCategory: '',
   paid: false,
   barCode: '',
   bankSlip: false
 }
 
-const initialValuesRevenue = {
-  amount: '',
+const expenseInitialValues = {
+  amount: 0,
   date: '',
   description: '',
-  transactionType: '',
-  transactionCategory: '',
-  paid: false
-}
-
-const initialValuesExpense = {
-  amount: '',
-  date: '',
-  description: '',
-  transactionType: '',
+  transactionType: 'EXPENSE',
   transactionCategory: '',
   paid: false,
-  barcode: ''
+  barCode: '',
+  bankSlip: false
 }
-
 
 const colorType = (transactionType: string): string => {
   if (transactionType === 'TRANSACTION') {
@@ -159,9 +150,10 @@ interface ModalTypes {
   text?: string;
   userId?: number;
   transactionType?: string;
+  edit?: boolean;
 }
 
-export function NewTransactionModal({onCancel, trigger, transactionType, transactionId}: ModalTypes) {
+export function NewTransactionModal({onCancel, trigger, transactionType, transactionId, edit}: ModalTypes) {
   const mainColor = useColorModeValue('white', 'gray.800');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const {data: user} = useMe();
@@ -208,7 +200,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
       >
         <ModalOverlay backdropFilter='blur(1px)' />
         <ModalContent bg={mainColor}>
-          <Formik initialValues={transactionFound || initialValues}
+          <Formik initialValues={transactionFound ? transactionFound : (transactionType === 'REVENUE' ? revenueInitialValues : expenseInitialValues)}
                   onSubmit={!!transactionId ? handleUpdateTransaction : handleCreateAddress}
                   validationSchema={createTransactionSchema}
                   validateOnChange={false}
@@ -216,7 +208,10 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
             {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
               <>
                 <form onSubmit={handleSubmit}>
-                  <ModalHeader bg={color} fontSize="25px" fontWeight="bold">Adicionar Nova Transação</ModalHeader>
+                  <ModalHeader bg={color}
+                               fontSize="25px"
+                               fontWeight="bold">{!!transactionType && `${edit ? "Editar" : "Adicionar"} ${transactionType === 'REVENUE' ? 'receita' : 'despesa'}`}
+                  </ModalHeader>
                   <ModalCloseButton />
                   <ModalBody justifyContent="center">
                     <Box flex={1} borderRadius={8} bg={mainColor} pt={5} pl={5} pr={5} pb={8}>
@@ -266,15 +261,19 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                             ))}
                           </Select>
 
-                          <Select placeholder={"Selecione um Tipo"}
-                                  id={"transactionType"}
-                                  name={"transactionType"}
-                                  value={values.transactionType}
-                                  onChange={handleChange}>
+                          {
+                            edit ? (
+                              <Select placeholder={"Selecione um Tipo"}
+                                      id={"transactionType"}
+                                      name={"transactionType"}
+                                      value={values.transactionType}
+                                      onChange={handleChange}>
 
-                            <option value='REVENUE'>Receita</option>
-                            <option value='EXPENSE'>Despesa</option>
-                          </Select>
+                                <option value='REVENUE'>Receita</option>
+                                <option value='EXPENSE'>Despesa</option>
+                              </Select>
+                            ) : null
+                          }
 
                           {values.bankSlip ?
                             <HStack justify={"space-between"}>

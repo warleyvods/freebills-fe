@@ -345,6 +345,7 @@ export default function TransactionRevenue() {
                             <Flex justify={"flex-end"}>
                               <HStack>
                                 <NewTransactionModal
+                                  edit={true}
                                   transactionType={'REVENUE'}
                                   transactionId={transaction.id}
                                   trigger={(open) =>

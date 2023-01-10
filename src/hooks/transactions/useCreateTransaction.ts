@@ -34,6 +34,8 @@ export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
     return response.data.transaction;
   }, {
     onSuccess: async () => {
+      await queryClient.invalidateQueries(['balance-expense'])
+      await queryClient.invalidateQueries(['balance-revenue'])
       await queryClient.invalidateQueries(['transaction-expense'])
       await queryClient.invalidateQueries(['transaction-revenue'])
       await queryClient.invalidateQueries(['transaction'])
