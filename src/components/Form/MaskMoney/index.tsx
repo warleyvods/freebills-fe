@@ -1,5 +1,4 @@
 import React from "react";
-
 import NumberFormat from "react-number-format";
 import { Box, FormControl, FormErrorMessage, Input, useColorModeValue } from "@chakra-ui/react";
 
@@ -16,8 +15,6 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, name, 
   const inverseMainColor = useColorModeValue('#B3B5C6', 'gray.600');
 
   const formatCurrencyByEnd = (value: string): string => {
-    // if (!Number(value)) return "";
-
     const amount = new Intl.NumberFormat("pt-BR", {
       style: "decimal",
       minimumFractionDigits: 2
@@ -31,34 +28,32 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, name, 
         <Box userSelect="none" paddingRight="8px">R$</Box>
       </Box>
       <FormControl isInvalid={!!error}>
-      <NumberFormat
-        style={{
-          outline: 'none',
-          padding: "8px",
-          width: "100%",
-          background: 'inherit',
-          borderBottomRightRadius: '0.5rem',
-          borderTopRightRadius: '0.5rem',
-        }}
-        placeholder={"0,00"}
-        format={formatCurrencyByEnd}
-        // allowNegative={true}
-        // fixedDecimalScale
-        // decimalScale={2}
-        inputMode="text"
-        name={name}
-        value={value * 100}
-        // thousandSeparator={true}
-        onValueChange={(values) => {
-          onChange(!!values.floatValue ? (parseFloat(String(values.floatValue)) / 100).toFixed(2) : 0);
-        }}
-      />
+        <NumberFormat
+          allowNegative={true}
+          prefix="-"
+          style={{
+            outline: 'none',
+            padding: "8px",
+            width: "100%",
+            background: 'inherit',
+            borderBottomRightRadius: '0.5rem',
+            borderTopRightRadius: '0.5rem',
+
+          }}
+          placeholder={"0,00"}
+          format={formatCurrencyByEnd}
+          inputMode="text"
+          name={name}
+          value={value * 100}
+          onValueChange={(values) => {
+            onChange(!!values.floatValue ? (parseFloat(String(values.floatValue)) / 100).toFixed(2) : 0);
+          }}
+        />
         <FormErrorMessage>
           {error}
         </FormErrorMessage>
       </FormControl>
     </Box>
-
   );
 };
 

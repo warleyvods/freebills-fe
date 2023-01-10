@@ -45,6 +45,8 @@ import { useTransactionRevenue } from "../../../hooks/transactions/useTransactio
 import { MdAccountBalance, MdOutlineAttachMoney } from "react-icons/md";
 import { useDashboardRevenue } from "../../../hooks/dashboard/useDashboardRevenue";
 import CardsSkeleton from "../../../components/Cards/CardsSkeleton";
+import { useAccountById } from "../../../hooks/accounts/useAccountById";
+import { useAccounts } from "../../../hooks/accounts/useAccounts";
 
 interface ColumnsProps {
   name: string;
@@ -53,6 +55,7 @@ interface ColumnsProps {
 const LinkItems: Array<ColumnsProps> = [
   {name: 'Descrição'},
   {name: 'Situação'},
+  {name: 'Conta'},
   {name: 'Data'},
   {name: 'Categoria'},
   {name: 'Tipo'},
@@ -73,6 +76,7 @@ export default function TransactionRevenue() {
   const {data: user} = useMe();
   const {data: dash} = useDashboardRevenue(user?.id, month, year);
   const {data: transactions, isLoading, error} = useTransactionRevenue(page, keyword, month, year);
+  const {data: accounts} = useAccounts(user?.id)
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const padding = "1px";
 
@@ -311,6 +315,15 @@ export default function TransactionRevenue() {
                                 </Circle>
                               </Tooltip>
                             )}
+                          </Td>
+                          <Td p={padding}>
+                            <Flex justify={"center"}>
+                              <Text fontWeight={"bold"}>
+                                {accounts?.filter(acc => acc.id === transaction.accountId).map((acc) => (
+                                  acc.description
+                                ))}
+                              </Text>
+                            </Flex>
                           </Td>
                           <Td textAlign={"center"} p={padding}>
                             {dateFormat(transaction.date)}

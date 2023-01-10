@@ -19,7 +19,7 @@ import {
   useDisclosure,
   VStack
 } from '@chakra-ui/react'
-import React, { ReactNode, useCallback, useState } from "react";
+import React, { ReactNode, useCallback, useMemo, useState } from "react";
 import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
 import { useMe } from "../../../hooks/users/useMe";
@@ -186,7 +186,6 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   };
 
   const handleCreateAddress = (values) => {
-    console.log("create")
     createTransaction.mutate({
       ...values, userId
     });
@@ -253,6 +252,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                             {accounts?.map((acc) => (
                               <option key={acc.id} value={acc.id}>{acc.description}</option>
                             ))}
+
                           </Select>
 
                           <Select placeholder={"Selecione uma Categoria"}

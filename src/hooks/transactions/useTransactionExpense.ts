@@ -9,6 +9,7 @@ type TransactionType = {
   description: string;
   transactionType: string;
   transactionCategory: string;
+  accountId: number;
 }
 
 type getTransactionResponse = {

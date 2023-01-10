@@ -11,22 +11,24 @@ export type Transaction = {
   transactionCategory: string;
   bankSlip: boolean;
   barCode: string;
+  accountId: number;
 }
 
 async function getTransactionById(transactionId: number): Promise<Transaction> {
   const response = await api.get<Transaction>(`v1/transactions/${transactionId}`)
 
-  const dados = response.data;
+  const data = response.data;
   return {
-    id: dados.id,
-    amount: dados.amount,
-    paid: dados.paid,
-    date: dados.date,
-    description: dados.description,
-    transactionType: dados.transactionType,
-    transactionCategory: dados.transactionCategory,
-    bankSlip: dados.bankSlip,
-    barCode: dados.barCode
+    id: data.id,
+    amount: data.amount,
+    paid: data.paid,
+    date: data.date,
+    description: data.description,
+    transactionType: data.transactionType,
+    transactionCategory: data.transactionCategory,
+    bankSlip: data.bankSlip,
+    barCode: data.barCode,
+    accountId: data.accountId
   }
 }
 
