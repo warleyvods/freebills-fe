@@ -65,8 +65,8 @@ export default function SignIn() {
       if (err.response.status === 401) {
         setLoading(false)
         return toast({
-          title: 'Login Error',
-          description: "Login ou senha incorretos",
+          title: 'Erro na autenticação',
+          description: "login ou senha incorretos.",
           status: 'error',
           duration: 3000,
           isClosable: true,
@@ -76,8 +76,8 @@ export default function SignIn() {
       if (err.data === undefined) {
         setLoading(false)
         return toast({
-          title: 'Server Error 500',
-          description: "Servidor não encontrado!",
+          title: 'Erro 500',
+          description: "Um erro aconteceu ao tentar concluir sua solicação, tenta novamente mais tarde.",
           status: 'error',
           duration: 3000,
           isClosable: true,
