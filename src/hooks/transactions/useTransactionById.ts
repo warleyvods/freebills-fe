@@ -22,7 +22,7 @@ async function getTransactionById(transactionId: number): Promise<Transaction> {
     id: data.id,
     amount: data.amount,
     paid: data.paid,
-    date: data.date,
+    date: formatDate(data.date),
     description: data.description,
     transactionType: data.transactionType,
     transactionCategory: data.transactionCategory,
@@ -30,6 +30,11 @@ async function getTransactionById(transactionId: number): Promise<Transaction> {
     barCode: data.barCode,
     accountId: data.accountId
   }
+}
+
+export function formatDate(date: string): string {
+  const data = new Date(date);
+  return data.toLocaleDateString('pt-BR');
 }
 
 export function useTransactionById(transactionId: number) {

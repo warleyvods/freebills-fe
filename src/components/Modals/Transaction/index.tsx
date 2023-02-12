@@ -102,7 +102,11 @@ export const category = {
 
 const revenueInitialValues = {
   amount: 0,
-  date: '',
+  date: new Date().toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  }),
   description: '',
   transactionType: 'REVENUE',
   transactionCategory: '',
@@ -113,7 +117,11 @@ const revenueInitialValues = {
 
 const expenseInitialValues = {
   amount: 0,
-  date: '',
+  date: new Date().toLocaleDateString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric"
+  }),
   description: '',
   transactionType: 'EXPENSE',
   transactionCategory: '',
