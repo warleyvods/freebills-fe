@@ -167,6 +167,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                               <option value='BRADESCO'>Bradesco</option>
                               <option value='BB'>Banco do Brasil</option>
                               <option value='ITAU'>Itaú</option>
+                              <option value='SICOOB'>Sicoob</option>
                               <option value='OTHERS'>Outros</option>
                             </Select>
                           </FormControl>
