@@ -1,11 +1,11 @@
 export function getChartDataOptions(labels: string[], transactionType: string) {
 
   const revenueColors = [
-    "#C53030",
-    "#2B6CB0",
     "#38A169",
-    "#805AD5",
-    "#fff900",
+    "#6594cb",
+    "#67e19a",
+    "#8e72c7",
+    "#f5f287",
   ]
 
   const expenseColors = [
