@@ -10,6 +10,9 @@ import { RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
 import { FaRegCreditCard } from "react-icons/fa";
 import CardsSkeleton from "../../components/Cards/CardsSkeleton";
 import dynamic from 'next/dynamic'
+import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
+import { getChartDataOptions } from "../../utils/chartData";
+import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false
@@ -20,63 +23,9 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
 export default function Dashboard() {
   const {data: user} = useMe();
   const {data: dash} = useDashboard(user?.id);
+  const {data: expenseDash} = useDashboardExpenseGraph(user?.id);
+  const {data: revenueDash} = useDashboardRevenueGraph(user?.id);
   const mainColor = useColorModeValue('white', 'gray.800');
-
-  const lab = ['Apple', 'Mango', 'Orange', 'Watermelon']
-
-  const chartData = {
-    options: {
-      labels: lab,
-      chart: {
-      },
-      legend: {
-        show: false
-      },
-      dataLabels: {
-        enabled: true
-      },
-      tooltip: {
-        enabled: true
-      },
-      fill: {
-        colors: [
-          "#C53030",
-          "#2B6CB0",
-          "#38A169",
-          "#805AD5",
-          "#fff900",
-        ]
-      },
-      states: {
-        hover: {filter: {type: "lighten", value: 0.5}},
-        active: {filter: {type: "none", value: 0}}
-      },
-      stroke: {
-        width: 0
-      },
-      plotOptions: {
-        pie: {
-          expandOnClick: false,
-          donut: {
-            size: "70%",
-            labels: {
-              show: true,
-              name: {show: true},
-              total: {
-                show: true,
-                showAlways: true,
-              }
-            }
-          }
-        }
-      }
-    }
-  };
-
-
-  const series1 = [3200, 1320, 480, 920, 150]
-  const series2 = [0, 1100, 6300, 0, 100]
-  const labels = ['Apple', 'Mango', 'Orange', 'Watermelon']
 
   return (
     <SidebarWithHeader>
@@ -127,8 +76,8 @@ export default function Dashboard() {
               <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Despesas por categoria</Text>
               <Box h={"100%"} w={"70%"}>
                 <ReactApexChart
-                  options={chartData.options}
-                  series={series1}
+                  options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
+                  series={expenseDash?.series?.length ? expenseDash.series : [0]}
                   type="donut"
                 />
               </Box>
@@ -137,8 +86,8 @@ export default function Dashboard() {
               <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Receitas por categoria</Text>
               <Box h={"100%"} w={"70%"}>
                 <ReactApexChart
-                  options={chartData.options}
-                  series={series2}
+                  options={getChartDataOptions(revenueDash?.labels?.length ? revenueDash.labels : [], 'REVENUE').options}
+                  series={revenueDash?.series?.length ? revenueDash.series : [0]}
                   type="donut"
                 />
               </Box>
