@@ -80,6 +80,10 @@ export default function TransactionRevenue() {
   const {data: accounts} = useAccounts(user?.id)
   const padding = "1px";
 
+  function capitalizeFirstLetter(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
   const incrementMonth = useCallback(() => {
     setMonth((month) => {
       if (month >= 1 && month < 12) {
@@ -156,9 +160,9 @@ export default function TransactionRevenue() {
               />
               <HStack p={0}>
                 <Text fontWeight={"bold"}>{
-                  new Date(`"${month}"`).toLocaleDateString('pt-BR', {
+                  capitalizeFirstLetter(new Date(`"${month}"`).toLocaleDateString('pt-BR', {
                     month: 'long',
-                  }).toString().replace(/\b\w/g, x => x.toUpperCase())
+                  }).toString())
                 }
                 </Text>
                 <Text fontWeight={"bold"}>{

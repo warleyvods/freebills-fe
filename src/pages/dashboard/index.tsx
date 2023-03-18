@@ -1,5 +1,5 @@
-import { Box, Flex, Heading, SimpleGrid, useColorModeValue, theme, Text } from "@chakra-ui/react";
-import React, { useState } from "react";
+import { Box, Button, Flex, Heading, HStack, IconButton, SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
+import React, { useCallback, useState } from "react";
 import SidebarWithHeader from "../../components/SideBar";
 import CardsDashboard from "../../components/Cards/CardsDashboard";
 import { useDashboard } from "../../hooks/dashboard/useDashboard";
@@ -13,25 +13,85 @@ import dynamic from 'next/dynamic'
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
 import { getChartDataOptions } from "../../utils/chartData";
 import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false
 });
 
-
-
 export default function Dashboard() {
+  const [month, setMonth] = useState(new Date().getMonth() + 1)
+  const [year, setYear] = useState(new Date().getFullYear())
+
   const {data: user} = useMe();
-  const {data: dash} = useDashboard(user?.id);
-  const {data: expenseDash} = useDashboardExpenseGraph(user?.id);
-  const {data: revenueDash} = useDashboardRevenueGraph(user?.id);
+  const {data: dash} = useDashboard(user?.id, month, year);
+  const {data: expenseDash} = useDashboardExpenseGraph(user?.id, month, year);
+  const {data: revenueDash} = useDashboardRevenueGraph(user?.id, month, year);
+
+
   const mainColor = useColorModeValue('white', 'gray.800');
+
+  function capitalizeFirstLetter(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
+
+  const incrementMonth = useCallback(() => {
+    setMonth((month) => {
+      if (month >= 1 && month < 12) {
+        return ++month
+      }
+      return month;
+    })
+  }, [])
+
+  const decreaseMonth = useCallback(() => {
+    setMonth((month) => {
+      if (month > 1 && month <= 12) {
+        return --month
+      }
+      return month;
+    })
+  }, [])
+
+
 
   return (
     <SidebarWithHeader>
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
-        <Flex flexDirection="row" justifyContent="space-between" mb="20px" mt="10px" ml={"10px"}>
+        <Flex flexDirection="row" justifyContent={"space-between"} position={"relative"} mb="20px" mt="10px" ml={"10px"}>
           <Heading>Dashboard</Heading>
+          <HStack position={"absolute"} left={"40%"} justify={"center"}>
+            <IconButton
+              onClick={decreaseMonth}
+              isRound={true}
+              variant={"ghost"}
+              aria-label={"button account"}
+              icon={<ChevronLeftIcon w={8} h={8} />}
+              size={"lg"}
+            />
+            <HStack p={0}>
+              <Text fontWeight={"bold"}>{
+                capitalizeFirstLetter(new Date(`"${month}"`).toLocaleDateString('pt-BR', {
+                  month: 'long',
+                }).toString())
+              }
+              </Text>
+              <Text fontWeight={"bold"}>{
+                new Date().toLocaleDateString('pt-BR', {
+                  year: 'numeric',
+                })}
+              </Text>
+            </HStack>
+            <IconButton
+              onClick={incrementMonth}
+              colorScheme={"gray"}
+              variant={"ghost"}
+              isRound={true}
+              aria-label={"button account"}
+              icon={<ChevronRightIcon w={8} h={8} />}
+              size={"lg"}
+            />
+          </HStack>
         </Flex>
         <>
           <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px'>

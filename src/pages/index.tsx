@@ -69,6 +69,7 @@ export default function SignIn() {
           description: "login ou senha incorretos.",
           status: 'error',
           duration: 3000,
+          position: 'top',
           isClosable: true,
         })
       }
@@ -80,6 +81,7 @@ export default function SignIn() {
           description: "Um erro aconteceu ao tentar concluir sua solicação, tenta novamente mais tarde.",
           status: 'error',
           duration: 3000,
+          position: 'top',
           isClosable: true,
         })
       }

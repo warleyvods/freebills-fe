@@ -7,7 +7,8 @@ import {
   Heading,
   HStack,
   Icon,
-  IconButton, Image,
+  IconButton,
+  Image,
   Input,
   InputGroup,
   InputLeftElement,
@@ -22,7 +23,8 @@ import {
   Thead,
   Tooltip,
   Tr,
-  useColorModeValue, VStack
+  useColorModeValue,
+  VStack
 } from "@chakra-ui/react";
 import { RiAddLine, RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
 import TagW from "../../../components/Tag";
@@ -30,13 +32,11 @@ import { useMe } from "../../../hooks/users/useMe";
 import { ConfirmationDialog } from "../../../components/Dialog/ConfirmationDialog";
 import { Pagination } from "../../../components/Pagination";
 import { BiEdit, BiTrash } from "react-icons/bi";
-import { GrEdit } from "react-icons/gr";
 import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
 import { category, NewTransactionModal } from "../../../components/Modals/Transaction";
 import { dateFormat, numberFormat } from "../../../components/Utils/utils";
 import React, { useCallback, useState } from "react";
 import CardsDashboard from "../../../components/Cards/CardsDashboard";
-import { useDashboard } from "../../../hooks/dashboard/useDashboard";
 import { Formik } from 'formik';
 import { useIsFetching } from "react-query";
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon, SearchIcon, SmallCloseIcon } from "@chakra-ui/icons";
@@ -45,7 +45,6 @@ import { useTransactionRevenue } from "../../../hooks/transactions/useTransactio
 import { MdAccountBalance, MdOutlineAttachMoney } from "react-icons/md";
 import { useDashboardRevenue } from "../../../hooks/dashboard/useDashboardRevenue";
 import CardsSkeleton from "../../../components/Cards/CardsSkeleton";
-import { useAccountById } from "../../../hooks/accounts/useAccountById";
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
 
 interface ColumnsProps {
@@ -79,6 +78,10 @@ export default function TransactionRevenue() {
   const {data: accounts} = useAccounts(user?.id)
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const padding = "1px";
+
+  function capitalizeFirstLetter(word: string) {
+    return word.charAt(0).toUpperCase() + word.slice(1);
+  }
 
   const incrementMonth = useCallback(() => {
     setMonth((month) => {
@@ -154,9 +157,9 @@ export default function TransactionRevenue() {
               />
               <HStack p={0}>
                 <Text fontWeight={"bold"}>{
-                  new Date(`"${month}"`).toLocaleDateString('pt-BR', {
+                  capitalizeFirstLetter(new Date(`"${month}"`).toLocaleDateString('pt-BR', {
                     month: 'long',
-                  }).toString().replace(/\b\w/g, x => x.toUpperCase())
+                  }).toString())
                 }
                 </Text>
                 <Text fontWeight={"bold"}>{
