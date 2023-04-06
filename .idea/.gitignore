@@ -3,3 +3,7 @@
 /workspace.xml
 # Editor-based HTTP Client requests
 /httpRequests/
+/codeStyles/codeStyleConfig.xml
+/inspectionProfiles/Project_Default.xml
+/vcs.xml
+../.idea
