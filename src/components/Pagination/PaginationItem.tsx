@@ -10,24 +10,24 @@ export function PaginationItem({isCurrent = false, number, onPageChange}: Pagina
   if (isCurrent) {
     return (
       <LightMode>
-      <Button size={ "sm" }
-              fontSize={ "xs" }
-              width={ 4 }
-              colorScheme={ "blue" }
-              disabled
-              _disabled={ {
-                bgColor: 'facebook.500',
-                cursor: 'default'
-              } }>
-        { number }
-      </Button>
-        </LightMode>
+        <Button size={"sm"}
+                fontSize={"xs"}
+                width={4}
+                colorScheme={"blue"}
+                disabled
+                _disabled={{
+                  bgColor: 'facebook.500',
+                  cursor: 'default'
+                }}>
+          {number}
+        </Button>
+      </LightMode>
     )
   }
 
   return (
     <LightMode>
-      <Button onClick={() => onPageChange(number)}
+      <Button onClick={() => onPageChange(number - 1)}
               size="sm"
               fontSize="xs"
               width={4}
@@ -36,7 +36,7 @@ export function PaginationItem({isCurrent = false, number, onPageChange}: Pagina
               _hover={{
                 bg: 'gray.500'
               }}>
-        { number }
+        {number}
       </Button>
     </LightMode>
   )
