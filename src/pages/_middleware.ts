@@ -34,11 +34,8 @@ export function middleware(request: NextRequest) {
   }
 
   if (currLocation.pathname === '/') {
-    console.log("passei aqui")
     return NextResponse.redirect(new URL('/dashboard', currLocation))
   }
-
-  console.log("vazei: " + tokenString)
 
   return NextResponse.next()
 }

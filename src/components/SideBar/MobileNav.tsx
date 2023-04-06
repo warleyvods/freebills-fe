@@ -20,6 +20,7 @@ import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { api } from "../../services/api";
 import { useQuery } from "react-query";
+import { useMe } from "../../hooks/users/useMe";
 
 interface MobileProps extends FlexProps {
   onOpen: () => void;
@@ -36,6 +37,7 @@ function useProfilePicture(id: number){
 
 export const MobileNav = ({onOpen, ...rest}: MobileProps) => {
   const {colorMode, toggleColorMode} = useColorMode();
+  const user = useMe()
 
   const baseURL = api.defaults.baseURL;
   const [forceReloadImage, setForceReloadImage] = useState(false);
@@ -107,9 +109,9 @@ export const MobileNav = ({onOpen, ...rest}: MobileProps) => {
                   alignItems="flex-start"
                   spacing="1px"
                   ml="2">
-                  <Text fontSize="sm">Admin</Text>
+                  <Text fontSize="sm">{user.data?.name}</Text>
                   <Text fontSize="xs" color="gray.600">
-                    admin@admin.com
+                    {user.data?.email}
                   </Text>
                 </VStack>
                 <Box display={{base: 'none', md: 'flex'}}>

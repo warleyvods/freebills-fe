@@ -186,9 +186,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   };
 
   const handleCreateAddress = (values) => {
-    createTransaction.mutate({
-      ...values, userId
-    });
+    createTransaction.mutate({...values, userId});
     handleOk()
   }
 
