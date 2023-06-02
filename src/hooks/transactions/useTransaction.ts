@@ -1,5 +1,6 @@
 import { api } from "../../services/api";
 import { useQuery } from "react-query";
+import { formatDate } from "../../utils/chartData";
 
 type TransactionType = {
   id: number;
@@ -31,7 +32,10 @@ export async function getAllTransactions(page: number, keyword: string, month: s
     }
   });
 
-  return response.data;
+  return {
+    ...response.data,
+    date: formatDate(response.data.date)
+  };
 }
 
 export function useTransaction(page: number, keyword, month, year, userId?: number) {

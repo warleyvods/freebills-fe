@@ -1,5 +1,6 @@
 import { api } from "../../services/api";
 import { useQuery } from "react-query";
+import { formatDate } from "../../utils/chartData";
 
 export type Transaction = {
   id: number;
@@ -30,11 +31,6 @@ async function getTransactionById(transactionId: number): Promise<Transaction> {
     barCode: data.barCode,
     accountId: data.accountId
   }
-}
-
-export function formatDate(date: string): string {
-  const data = new Date(date);
-  return data.toLocaleDateString('pt-BR');
 }
 
 export function useTransactionById(transactionId: number) {

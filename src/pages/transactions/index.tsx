@@ -34,10 +34,9 @@ import { useMe } from "../../hooks/users/useMe";
 import { ConfirmationDialog } from "../../components/Dialog/ConfirmationDialog";
 import { Pagination } from "../../components/Pagination";
 import { BiEdit, BiTrash } from "react-icons/bi";
-import { GrEdit } from "react-icons/gr";
 import { useDeleteTransaction } from "../../hooks/transactions/useDeleteTransaction";
 import { category, NewTransactionModal } from "../../components/Modals/Transaction";
-import { dateFormat, numberFormat } from "../../components/Utils/utils";
+import { numberFormat } from "../../components/Utils/utils";
 import React, { useCallback, useState } from "react";
 import CardsDashboard from "../../components/Cards/CardsDashboard";
 import { useDashboard } from "../../hooks/dashboard/useDashboard";
@@ -49,6 +48,7 @@ import { FaRegCreditCard } from "react-icons/fa";
 import CardsSkeleton from "../../components/Cards/CardsSkeleton";
 import { PayTransactionModal } from "../../components/Modals/Transaction/PayTransaction";
 import { BankSlipModal } from "../../components/Modals/Transaction/BankSlip";
+import { formatDate } from "../../utils/chartData";
 
 interface ColumnsProps {
   name: string;
@@ -321,7 +321,7 @@ export default function Transaction() {
                             )}
                           </Td>
                           <Td textAlign={"center"} p={padding}>
-                            {dateFormat(transaction.date)}
+                            {formatDate(transaction.date)}
                           </Td>
                           <Td pl={0} pr={0} pt={padding} pb={padding}>
                             <Flex justify={"center"}>

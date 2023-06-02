@@ -58,7 +58,15 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
               total: {
                 show: true,
                 showAlways: true,
-              }
+                label: 'Total',
+                formatter: function (w) {
+                  const total = w.globals.seriesTotals.reduce((a, b) => {
+                    return a + b;
+                  }, 0);
+
+                  return total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                }
+              },
             }
           }
         }
@@ -88,4 +96,9 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
 
     return categories.map(category => translations[category] || category);
   }
+}
+
+export function formatDate(date: string): string {
+  const parts = date.split('-');
+  return `${parts[2]}/${parts[1]}/${parts[0]}`;
 }

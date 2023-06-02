@@ -23,14 +23,6 @@ export function numberFormat(value: number) {
   }).format(value);
 }
 
-export function dateFormat(value) {
-  return new Date(value).toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  })
-}
-
 export function CEPFormat(str){
   var re = /^([\d]{2})\.?([\d]{3})\-?([\d]{3})/;
 
