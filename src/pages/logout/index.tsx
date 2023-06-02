@@ -1,16 +1,22 @@
-import { useQuery } from "react-query";
+import { useEffect } from "react";
+import { useMutation } from "react-query";
 import { useRouter } from "next/router";
 import { api } from "../../services/api";
 
-export const Logout = () => {
+const Logout = () => {
   const router = useRouter();
+  const { mutateAsync: logout } = useMutation(async () => {
+    await api.post("v1/auth/logout");
+  });
 
-  useQuery(['logout'], async () => {
-    await api.post('v1/auth/logout')
-    router.push("/");
-  })
+  useEffect(() => {
+    (async () => {
+      await logout();
+      await router.push("/");
+    })();
+  }, [logout, router]);
 
-  return null
-}
+  return null;
+};
 
 export default Logout;

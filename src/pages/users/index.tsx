@@ -184,7 +184,7 @@ export default function UserList() {
                                   <NextLink
                                     href={{
                                       pathname: '/users/[id]',
-                                      query: {id: user.id},
+                                      query: { id: user.id },
                                     }}
                                     passHref
                                   >
