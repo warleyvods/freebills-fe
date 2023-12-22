@@ -1,30 +1,11 @@
-import {
-  Box,
-  Button,
-  Center,
-  Checkbox,
-  Flex,
-  Heading,
-  IconButton,
-  InputGroup,
-  InputRightElement,
-  LightMode,
-  Stack,
-  useColorModeValue,
-  useToast,
-  Text,
-  VStack, Link
-} from "@chakra-ui/react";
+import { Flex, Image, Link, Text, useColorModeValue, useToast } from "@chakra-ui/react";
 import * as yup from 'yup';
 import { useMutation } from "react-query";
 import { api } from "../services/api";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { Formik } from 'formik';
-import { InputFormik } from "../components/Form/input";
-import LogoBills from "../components/Logo/LogoBills";
-import NextLink from "next/link";
+import { LoginForm } from "../components/Form/LoginForm";
 
 export type SignInFormData = {
   login: string;
@@ -94,109 +75,72 @@ export default function SignIn() {
   }
 
   return (
-    <Flex w="100vw"
-          h="100vh"
-          align="center"
-          justify="center"
-          bg={useColorModeValue('gray.50', 'gray.800')}
+    <Flex
+      minH="100vh"
+      flexDir="column"
+      justifyContent="center"
+      alignItems="center"
+      px={6}
     >
-      <Stack spacing={8} mx={'auto'} w={'450px'} minW={'430px'} py={12} px={6}>
-        <Flex width="100%"
-              maxWidth={"auto"}
-              bg={boxColor}
-              p={"8"}
-              rounded={'lg'}
-              flexDir={"column"}
-              boxShadow={'lg'}
+      <Flex
+        mx="auto"
+        w="full"
+        maxW="sm"
+        flexDir="column"
+        alignItems="center"
+      >
+        <Image
+          width={"auto"}
+          height={"40px"}
+          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
+          alt="Your Company"
+        />
+        <Text
+          mt={10}
+          textAlign="center"
+          fontSize="2xl"
+          fontWeight="bold"
+          lineHeight="tight"
+          color="gray.900"
         >
-          <Formik initialValues={initialValues}
-                  validateOnChange={false}
-                  validationSchema={signInFormSchema}
-                  onSubmit={handleSignIn}
-          >
-            {({handleSubmit, handleChange, values, errors}) =>
-              <>
-                <form onSubmit={handleSubmit}>
-                  <Stack spacing={4}>
-                    <Center pb={10}>
-                      <Box maxH={"400px"} maxW={"230px"} >
-                        {
-                          mainColor == 'white' ? (
-                            <>
-                              <VStack>
-                                <LogoBills />
-                                <Heading fontFamily={'Poppins'} fontWeight={"bold"} fontSize={'25px'}>Free Bills</Heading>
-                              </VStack>
-                            </>
-                          ) : (
-                            <>
-                              <VStack>
-                                <LogoBills />
-                                <Heading fontFamily={'Poppins'} fontWeight={"bold"} fontSize={'25px'}>Free Bills</Heading>
-                              </VStack>
-                            </>
-                          )
-                        }
-                      </Box>
-                    </Center>
-                    <InputFormik name={"login"}
-                                 type={"text"}
-                                 onChange={handleChange}
-                                 value={values.login}
-                                 error={errors.login}
-                                 placeholder={"Login"}
-                    />
-                    <InputGroup size='md'>
-                      <InputFormik name={"password"}
-                                   type={show ? 'text' : 'password'}
-                                   onChange={handleChange}
-                                   value={values.password}
-                                   error={errors.password}
-                                   placeholder={"Senha"}
-                      />
-                      <InputRightElement width='4.5rem'>
-                        <IconButton ml={"30px"}
-                                    bg="inherit"
-                                    borderRadius="inherit"
-                                    _focus={{
-                                      boxShadow: "none",
-                                    }}
-                                    onClick={handleClick}
-                                    size="sm"
-                                    variant="unstyled"
-                                    aria-label="show pass"
-                                    icon={show ? <ViewIcon /> : <ViewOffIcon />}
-                        />
-                      </InputRightElement>
-                    </InputGroup>
-                  </Stack>
-                  <Stack spacing={5} mt={4}>
-                    <Stack
-                      direction={{base: 'column', sm: 'row'}}
-                      align={'start'}
-                      justify={'space-between'}>
-                      <Checkbox>Lembrar</Checkbox>
-                      <NextLink href={"/forgot"}>
-                        <Text align={'center'} mt={3}>
-                          <Link color={'blue.400'}>Esqueceu sua senha?</Link>
-                        </Text>
-                      </NextLink>
-                    </Stack>
-                    <LightMode>
-                      <Button type={"submit"} marginTop={6} colorScheme={"facebook"} isLoading={loading}>Entrar</Button>
-                    </LightMode>
-                  </Stack>
-                  <NextLink href={"/sign-in"}>
-                    <Text align={'center'} mt={3}>
-                      <Link color={'blue.400'}>Cadastre-se</Link>
-                    </Text>
-                  </NextLink>
-                </form>
-              </>
-            }
-          </Formik>
-        </Flex>
-      </Stack>
+          Faça login na sua conta
+        </Text>
+      </Flex>
+
+      <Flex
+        mt={10}
+        mx="auto"
+        w="full"
+        maxW="sm"
+        flexDir="column"
+      >
+        <Formik initialValues={initialValues}
+                validateOnChange={false}
+                validationSchema={signInFormSchema}
+                onSubmit={handleSignIn}
+        >
+          {
+            formik => <LoginForm formik={formik} onSubmit={formik.handleSubmit} />
+          }
+        </Formik>
+      </Flex>
+
+      <Text
+        mt={10}
+        textAlign="center"
+        fontSize="sm"
+        color="gray.500"
+      >
+        Não é membro?{' '}
+        <Link
+          href={"/sign-in"}
+          fontWeight="semibold"
+          color="indigo.600"
+          _hover={{ color: "indigo.500" }}
+        >
+          Cadastre-se
+        </Link>
+      </Text>
     </Flex>
   )
 }
