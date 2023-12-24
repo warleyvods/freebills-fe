@@ -1,3 +1,5 @@
+import { translateCategories } from "./utils";
+
 export function getChartDataOptions(labels: string[], transactionType: string) {
 
   const revenueColors = [
@@ -73,29 +75,6 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
       }
     }
   };
-
-  function translateCategories(categories: string[]): string[] {
-    const translations = {
-      'HOUSE': 'Casa',
-      'EDUCATION': 'Educação',
-      'ELECTRONIC': 'Eletrônicos',
-      'LEISURE': 'Lazer',
-      'RESTAURANT': 'Restaurante',
-      'HEALTH': 'Saúde',
-      'SERVICE': 'Serviços',
-      'SUPERMARKET': 'Supermercado',
-      'TRANSPORT': 'Transporte',
-      'CLOTHES': 'Vestuário',
-      'TRIPS': 'Viagens',
-      'OTHERS': 'Outros',
-      'AWARD': 'Prêmios',
-      'GIFT': 'Presentes',
-      'SALARY': 'Salário',
-      'REAJUST': 'Reajuste'
-    };
-
-    return categories.map(category => translations[category] || category);
-  }
 }
 
 export function formatDate(date: string): string {

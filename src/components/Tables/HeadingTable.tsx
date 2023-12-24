@@ -9,9 +9,18 @@ type HeadingProps = {
   isLoading?: boolean;
   isFetching?: boolean;
   contentLength?: number;
+  activeButton?: boolean;
 }
 
-export default function HeadingTable({title, titleButton, contentLength, path, isFetching, isLoading}: HeadingProps) {
+export default function HeadingTable({
+  title,
+  titleButton,
+  contentLength,
+  path,
+  isFetching,
+  isLoading,
+  activeButton = false
+}: HeadingProps) {
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
 
   return (
@@ -45,22 +54,28 @@ export default function HeadingTable({title, titleButton, contentLength, path, i
                   </NextLink>
                 ) : (
                   <>
-                    <Button
-                      fontSize={"sm"}
-                      fontWeight={"medium"}
-                      variant={"ghost"}
-                      isDisabled={true}
-                    >
-                      Exportar
-                    </Button>
-                    <Button
-                      fontSize={"sm"}
-                      fontWeight={"medium"}
-                      variant={"ghost"}
-                      isDisabled={true}
-                    >
-                      Importar
-                    </Button>
+                    {
+                      activeButton && (
+                        <>
+                          <Button
+                            fontSize={"sm"}
+                            fontWeight={"medium"}
+                            variant={"ghost"}
+                            isDisabled={true}
+                          >
+                            Exportar
+                          </Button>
+                          <Button
+                            fontSize={"sm"}
+                            fontWeight={"medium"}
+                            variant={"ghost"}
+                            isDisabled={true}
+                          >
+                            Importar
+                          </Button>
+                        </>
+                      )
+                    }
 
                     {/* BOTAO DESKTOP */}
                     {

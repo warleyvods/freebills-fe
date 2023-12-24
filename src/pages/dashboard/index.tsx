@@ -24,66 +24,43 @@ import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardReve
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
+import { capitalizeFirstLetter, getMonthName, updateMonth, updateYear } from "../../utils/utils";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false
 });
 
 export default function Dashboard() {
+  const mainColor = useColorModeValue('white', 'gray.800');
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
-
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
-
   const {data: user} = useMe();
   const {data: dash} = useDashboard(user?.id, month, year);
   const {data: expenseDash} = useDashboardExpenseGraph(user?.id, month, year);
   const {data: revenueDash} = useDashboardRevenueGraph(user?.id, month, year);
 
-
-  const mainColor = useColorModeValue('white', 'gray.800');
-
-  function capitalizeFirstLetter(word: string) {
-    return word.charAt(0).toUpperCase() + word.slice(1);
-  }
-
   const incrementMonthWithYear = useCallback(() => {
     let newMonth;
     setMonth((currentMonth) => {
-      if (currentMonth < 12) {
-        newMonth = currentMonth + 1;
-      } else {
-        newMonth = 1;
-      }
+      newMonth = updateMonth(currentMonth, 'increment');
       return newMonth;
     });
 
     setYear((currentYear) => {
-      if (newMonth === 1) {
-        return currentYear + 1;
-      } else {
-        return currentYear;
-      }
+      return updateYear(currentYear, newMonth, 'increment');
     });
   }, []);
 
   const decreaseMonthWithYear = useCallback(() => {
     let newMonth;
     setMonth((currentMonth) => {
-      if (currentMonth > 1) {
-        newMonth = currentMonth - 1;
-      } else {
-        newMonth = 12;
-      }
+      newMonth = updateMonth(currentMonth, 'decrement');
       return newMonth;
     });
 
     setYear((currentYear) => {
-      if (newMonth === 12) {
-        return currentYear - 1;
-      } else {
-        return currentYear;
-      }
+      return updateYear(currentYear, newMonth, 'decrement');
     });
   }, []);
 
@@ -103,9 +80,7 @@ export default function Dashboard() {
             />
             <HStack p={0}>
               <Text fontWeight={"bold"}>{
-                capitalizeFirstLetter(new Date(`"${month}"`).toLocaleDateString('pt-BR', {
-                  month: 'long',
-                }).toString())
+                capitalizeFirstLetter(getMonthName(month))
               }
               </Text>
               <Text fontWeight={"bold"}>
