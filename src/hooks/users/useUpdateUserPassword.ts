@@ -28,12 +28,12 @@ export function useUpdateUserPassword(onSuccess?: () => {}, onError?: () => {}) 
     onSuccess: async () => {
       await queryClient.invalidateQueries(['users'])
       onSuccess?.()
-    }, onError: (erro: AxiosError<ErrorType>) => {
+    }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({
-        title: erro.response.data.title,
-        description: erro.response.data.details,
+        title: error.response.data.title,
+        description: error.response.data.details,
         status: 'error',
         duration: 9000,
         isClosable: true,

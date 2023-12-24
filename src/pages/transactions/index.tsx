@@ -28,7 +28,6 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { RiAddLine, RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
-import TagW from "../../components/Tag";
 import { useTransaction } from "../../hooks/transactions/useTransaction";
 import { useMe } from "../../hooks/users/useMe";
 import { ConfirmationDialog } from "../../components/Dialog/ConfirmationDialog";
@@ -49,6 +48,7 @@ import CardsSkeleton from "../../components/Cards/CardsSkeleton";
 import { PayTransactionModal } from "../../components/Modals/Transaction/PayTransaction";
 import { BankSlipModal } from "../../components/Modals/Transaction/BankSlip";
 import { formatDate } from "../../utils/chartData";
+import Tag from "../../components/Tag/Tag";
 
 interface ColumnsProps {
   name: string;
@@ -329,9 +329,9 @@ export default function Transaction() {
                             </Flex>
                           </Td>
                           <Td textAlign={"center"} p={padding}>
-                            {transaction.transactionType === 'REVENUE' ? (
-                              <TagW colorScheme={"green"} label={"RECEITA"} />) : (
-                              <TagW colorScheme={"red"} label={"DESPESA"} />)}
+                            <Tag variant={transaction.transactionType === 'REVENUE' ? "green" : "red"}
+                                 label={transaction.transactionType === 'REVENUE' ? "RECEITA" : "DESPESA"}
+                            />
                           </Td>
                           <Td textAlign={"center"}>
                             <Text fontWeight={"bold"}>{numberFormat(transaction.amount)}</Text>
@@ -406,7 +406,7 @@ export default function Transaction() {
                                       icon={<Icon as={BiTrash} fontSize={"16"} />}
                                       onClick={onOpen} />}
                                     title={"Deletar Transação"} mainColor={mainColor} buttonText={"Deletar"}
-                                    description={"Deseja deletar essa transação?"} />
+                                    description={"Deseja deletar essa transação?"}  variant={"default"}/>
                                 </LightMode>
                               </HStack>
                             </Flex>

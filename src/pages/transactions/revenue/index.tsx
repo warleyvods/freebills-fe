@@ -27,7 +27,6 @@ import {
   VStack
 } from "@chakra-ui/react";
 import { RiAddLine, RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
-import TagW from "../../../components/Tag";
 import { useMe } from "../../../hooks/users/useMe";
 import { ConfirmationDialog } from "../../../components/Dialog/ConfirmationDialog";
 import { Pagination } from "../../../components/Pagination";
@@ -47,6 +46,8 @@ import { useDashboardRevenue } from "../../../hooks/dashboard/useDashboardRevenu
 import CardsSkeleton from "../../../components/Cards/CardsSkeleton";
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
 import { formatDate } from "../../../utils/chartData";
+import Tag from "../../../components/Tag/Tag";
+import SideBarLayout from "../../../components/SidebarLayout/SideBarLayout";
 
 interface ColumnsProps {
   name: string;
@@ -107,7 +108,7 @@ export default function TransactionRevenue() {
   }
 
   return (
-    <SidebarWithHeader>
+    <SideBarLayout>
       <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px' pb={5}>
         {!!dash ? (
           <>
@@ -338,9 +339,9 @@ export default function TransactionRevenue() {
                             </Flex>
                           </Td>
                           <Td textAlign={"center"} p={padding}>
-                            {transaction.transactionType === 'REVENUE' ? (
-                              <TagW colorScheme={"green"} label={"RECEITA"} />) : (
-                              <TagW colorScheme={"red"} label={"DESPESA"} />)}
+                            <Tag variant={transaction.transactionType === 'REVENUE' ? "green" : "red"}
+                                 label={transaction.transactionType === 'REVENUE' ? "RECEITA" : "DESPESA"}
+                            />
                           </Td>
                           <Td textAlign={"center"}>
                             <Text fontWeight={"bold"}>{numberFormat(transaction.amount)}</Text>
@@ -374,7 +375,7 @@ export default function TransactionRevenue() {
                                       icon={<Icon as={BiTrash} fontSize={"16"} />}
                                       onClick={onOpen} />}
                                     title={"Deletar Receita"} mainColor={mainColor} buttonText={"Deletar"}
-                                    description={"Deseja deletar essa receita?"} />
+                                    description={"Deseja deletar essa receita?"}  variant={"default"}/>
                                 </LightMode>
                               </HStack>
                             </Flex>
@@ -391,6 +392,6 @@ export default function TransactionRevenue() {
           </Box>
         </Flex>
       </Box>
-    </SidebarWithHeader>
+    </SideBarLayout>
   )
 };

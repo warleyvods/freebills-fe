@@ -10,7 +10,7 @@ type DashboardExpenseGraph = {
 async function getDashboard(userId: number, month?: number, year?: number): Promise<DashboardExpenseGraph> {
   const response = await api.get('v1/dashboard/expense-graph', {
     params: {
-      userId: userId,
+      userId,
       month,
       year
     }

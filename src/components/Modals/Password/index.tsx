@@ -1,8 +1,6 @@
 import {
   Box,
   Button,
-  Center,
-  Divider,
   HStack,
   LightMode,
   Modal,
@@ -13,17 +11,18 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Stack,
   useDisclosure,
   VStack
 } from '@chakra-ui/react'
 import React, { ReactNode, useCallback } from "react";
 import * as yup from "yup";
 import { useRouter } from "next/router";
-import { useUpdateUserPassword } from "../../../hooks/users/useUpdateUserPassword";
 import { InputFormik } from "../../Form/input";
 import { Formik } from 'formik';
+import { useUpdateUserPassword } from "../../../hooks/users/useUpdateUserPassword";
 
-const paasswordValidationSchema = yup.object().shape({
+const passwordValidationSchema = yup.object().shape({
   password: yup.string().required('Senha obrigatória').min(6, 'No minimo 6 caracteres'),
   password_confirmation: yup.string().oneOf([
     null, yup.ref('password')
@@ -36,14 +35,13 @@ interface ModalTypes {
   trigger: (onOpen?: () => void, onClose?: () => void) => ReactNode;
   text?: string;
   id: number;
-  mainColor: string;
 }
 
 const initialValues = {
   password: ''
 }
 
-export function ModalPassword({onOk, onCancel, trigger, id, mainColor}: ModalTypes) {
+export function ModalPassword({onOk, onCancel, trigger, id, }: ModalTypes) {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const router = useRouter();
   const updatePassword = useUpdateUserPassword(() => router.push('/users'))
@@ -74,25 +72,25 @@ export function ModalPassword({onOk, onCancel, trigger, id, mainColor}: ModalTyp
         size={"sm"}
       >
         <ModalOverlay backdropFilter='blur(1px)' />
-        <ModalContent bg={mainColor}>
+        <ModalContent bg={"white"}>
           <Formik initialValues={initialValues}
-                  validationSchema={paasswordValidationSchema}
+                  validationSchema={passwordValidationSchema}
                   onSubmit={handleCreateAddress}
           >
             {({handleSubmit, handleChange, values, errors, isSubmitting}) =>
               <>
                 <form onSubmit={handleSubmit}>
 
-                  <ModalHeader fontSize={"25px"} fontWeight={"bold"}>Alterar Senha</ModalHeader>
-                  <Center>
-                    <Divider maxW={"550"} borderColor={"gray.700"} />
-                  </Center>
-                  <ModalCloseButton />
+                  <Stack>
+                    <ModalHeader fontWeight={"medium"}>Alterar Senha</ModalHeader>
+                    <ModalCloseButton />
+                  </Stack>
+
                   <ModalBody justifyContent={"center"}>
-                    <Box flex={1} borderRadius={8} bg={mainColor} pt={5} pl={5} pr={5} pb={8}>
+                    <Box flex={1} borderRadius={8} bg={"white"} >
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth={"150px"} spacing={5} w={"100%"}>
-                          <SimpleGrid minChildWidth={"240px"} spacing={8} w={"100%"}>
+                          <SimpleGrid minChildWidth={"240px"} spacing={5} w={"100%"}>
                             <InputFormik label={"Nova Senha"}
                                          name={"password"}
                                          important={"*"}
@@ -115,10 +113,10 @@ export function ModalPassword({onOk, onCancel, trigger, id, mainColor}: ModalTyp
                     </Box>
                   </ModalBody>
                   <ModalFooter>
-                    <HStack spacing={2}>
+                    <HStack spacing={1}>
                       <LightMode>
-                        <Button colorScheme={"red"} onClick={handleCancel}>Cancelar</Button>
-                        <Button isLoading={isSubmitting} colorScheme={"blue"} type={"submit"}>Salvar</Button>
+                        <Button variant={"cancel"} onClick={handleCancel}>Cancelar</Button>
+                        <Button variant={"default"}  type={"submit"}>Salvar</Button>
                       </LightMode>
                     </HStack>
                   </ModalFooter>

@@ -21,6 +21,7 @@ import { NewAccountModal } from "../../components/Modals/NewAccount";
 import { useAccounts } from "../../hooks/accounts/useAccounts";
 import { useMe } from "../../hooks/users/useMe";
 import NextLink from "next/link";
+import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 
 export default function Accounts() {
   const {data: user} = useMe();
@@ -28,7 +29,7 @@ export default function Accounts() {
   const mainColor = useColorModeValue('white', 'gray.800');
 
   return (
-    <SidebarWithHeader>
+    <SideBarLayout>
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
         <Flex flexDirection="row" justifyContent="space-between" mb="20px" mt="10px" ml={"10px"}>
           <Heading>Contas {!isLoading && isFetching && <Spinner size={"sm"} color={"gray.500"} ml={4} />}</Heading>
@@ -98,6 +99,6 @@ export default function Accounts() {
           </>
         )}
       </Flex>
-    </SidebarWithHeader>
+    </SideBarLayout>
   )
 };

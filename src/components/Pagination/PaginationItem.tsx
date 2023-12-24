@@ -1,4 +1,4 @@
-import { Button, LightMode } from "@chakra-ui/react";
+import { Button, LightMode, Text } from "@chakra-ui/react";
 
 interface PaginationItemProps {
   number: number;
@@ -11,13 +11,17 @@ export function PaginationItem({isCurrent = false, number, onPageChange}: Pagina
     return (
       <LightMode>
         <Button size={"sm"}
+                borderRadius={0}
+                borderColor={"black"}
                 fontSize={"xs"}
                 width={4}
-                colorScheme={"blue"}
+                variant={"default"}
                 disabled
+                _hover={{
+                  bg: 'indigo.300'
+                }}
                 _disabled={{
-                  bgColor: 'facebook.500',
-                  cursor: 'default'
+                  bgColor: 'default',
                 }}>
           {number}
         </Button>
@@ -29,14 +33,17 @@ export function PaginationItem({isCurrent = false, number, onPageChange}: Pagina
     <LightMode>
       <Button onClick={() => onPageChange(number - 1)}
               size="sm"
+              borderRadius={0}
+              border={"1px"}
+              borderLeft={0}
+              borderColor={"gray.150"}
               fontSize="xs"
               width={4}
-              color={"black"}
-              bgColor="gray.200"
+              bg={"white"}
               _hover={{
-                bg: 'gray.500'
+                bg: 'littleGray.500'
               }}>
-        {number}
+        <Text fontWeight={"bold"}>{number}</Text>
       </Button>
     </LightMode>
   )

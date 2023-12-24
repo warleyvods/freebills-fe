@@ -1,13 +1,14 @@
 import React from 'react';
-import SidebarWithHeader from "../../../components/SideBar";
 import {
   Box,
-  Button, Center,
+  Button,
+  Center,
   Flex,
   Heading,
   HStack,
   Icon,
-  IconButton, Image,
+  IconButton,
+  Image,
   LightMode,
   Spinner,
   Table,
@@ -17,7 +18,8 @@ import {
   Th,
   Thead,
   Tr,
-  useColorModeValue, VStack
+  useColorModeValue,
+  VStack
 } from "@chakra-ui/react";
 import { useAccountArchived } from "../../../hooks/accounts/useAccountsArchived";
 import { ConfirmationDialog } from "../../../components/Dialog/ConfirmationDialog";
@@ -26,6 +28,7 @@ import { useUpdateArchiveAccount } from "../../../hooks/accounts/useUpdateArchiv
 import { useDeleteAccount } from "../../../hooks/accounts/useDeleteAccount";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { accountType, numberFormat } from "../../../components/Utils/utils";
+import SideBarLayout from "../../../components/SidebarLayout/SideBarLayout";
 
 interface ColumnsProps {
   name: string;
@@ -55,7 +58,7 @@ export default function ArchivedAccount() {
   }
 
   return (
-    <SidebarWithHeader>
+    <SideBarLayout>
       <Box>
         <Flex w="100%" maxWidth={"auto"} mx={"auto"}>
           <Box flex={1} borderRadius={8} p={8} bg={mainColor}>
@@ -143,7 +146,7 @@ export default function ArchivedAccount() {
                                       icon={<Icon as={BiTrash} fontSize={"16"} />}
                                       onClick={onOpen} />}
                                     title={"Deletar Conta"} mainColor={mainColor} buttonText={"Deletar"}
-                                    description={`Você tem certeza que deseja deletar a conta ${account.description}? Atenção: Ao deletar essa conta, todas as receitas, despesas e transferências associadas a ela serão deletadas.`} />
+                                    description={`Você tem certeza que deseja deletar a conta ${account.description}? Atenção: Ao deletar essa conta, todas as receitas, despesas e transferências associadas a ela serão deletadas.`}  variant={"default"}/>
                                 </LightMode>
                               </HStack>
                             </Flex>
@@ -158,7 +161,7 @@ export default function ArchivedAccount() {
           </Box>
         </Flex>
       </Box>
-    </SidebarWithHeader>
+    </SideBarLayout>
   )
 };
 

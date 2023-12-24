@@ -1,6 +1,14 @@
-import { Box, Button, Flex, Heading, HStack, IconButton, SimpleGrid, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  HStack,
+  IconButton,
+  SimpleGrid,
+  Text,
+  useBreakpointValue,
+  useColorModeValue
+} from "@chakra-ui/react";
 import React, { useCallback, useState } from "react";
-import SidebarWithHeader from "../../components/SideBar";
 import CardsDashboard from "../../components/Cards/CardsDashboard";
 import { useDashboard } from "../../hooks/dashboard/useDashboard";
 import { useMe } from "../../hooks/users/useMe";
@@ -14,12 +22,16 @@ import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpe
 import { getChartDataOptions } from "../../utils/chartData";
 import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
+import HeadingTable from "../../components/Tables/HeadingTable";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false
 });
 
 export default function Dashboard() {
+  const isMobile = useBreakpointValue({base: true, md: true, lg: false});
+
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
 
@@ -35,39 +47,59 @@ export default function Dashboard() {
     return word.charAt(0).toUpperCase() + word.slice(1);
   }
 
-  const incrementMonth = useCallback(() => {
-    setMonth((month) => {
-      if (month >= 1 && month < 12) {
-        return ++month
+  const incrementMonthWithYear = useCallback(() => {
+    let newMonth;
+    setMonth((currentMonth) => {
+      if (currentMonth < 12) {
+        newMonth = currentMonth + 1;
+      } else {
+        newMonth = 1;
       }
-      return month;
-    })
-  }, [])
+      return newMonth;
+    });
 
-  const decreaseMonth = useCallback(() => {
-    setMonth((month) => {
-      if (month > 1 && month <= 12) {
-        return --month
+    setYear((currentYear) => {
+      if (newMonth === 1) {
+        return currentYear + 1;
+      } else {
+        return currentYear;
       }
-      return month;
-    })
-  }, [])
+    });
+  }, []);
 
+  const decreaseMonthWithYear = useCallback(() => {
+    let newMonth;
+    setMonth((currentMonth) => {
+      if (currentMonth > 1) {
+        newMonth = currentMonth - 1;
+      } else {
+        newMonth = 12;
+      }
+      return newMonth;
+    });
 
+    setYear((currentYear) => {
+      if (newMonth === 12) {
+        return currentYear - 1;
+      } else {
+        return currentYear;
+      }
+    });
+  }, []);
 
   return (
-    <SidebarWithHeader>
+    <SideBarLayout>
+      <HeadingTable title={"Dashboard"} />
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
-        <Flex flexDirection="row" justifyContent={"space-between"} position={"relative"} mb="20px" mt="10px" ml={"10px"}>
-          <Heading>Dashboard</Heading>
-          <HStack position={"absolute"} left={"40%"} justify={"center"}>
+        <Flex flexDirection="row" justifyContent={"center"}>
+          <HStack justify={"center"}>
             <IconButton
-              onClick={decreaseMonth}
+              onClick={decreaseMonthWithYear}
               isRound={true}
               variant={"ghost"}
               aria-label={"button account"}
               icon={<ChevronLeftIcon w={8} h={8} />}
-              size={"lg"}
+              size={"md"}
             />
             <HStack p={0}>
               <Text fontWeight={"bold"}>{
@@ -76,20 +108,18 @@ export default function Dashboard() {
                 }).toString())
               }
               </Text>
-              <Text fontWeight={"bold"}>{
-                new Date().toLocaleDateString('pt-BR', {
-                  year: 'numeric',
-                })}
+              <Text fontWeight={"bold"}>
+                {year}
               </Text>
             </HStack>
             <IconButton
-              onClick={incrementMonth}
+              onClick={incrementMonthWithYear}
               colorScheme={"gray"}
               variant={"ghost"}
               isRound={true}
               aria-label={"button account"}
               icon={<ChevronRightIcon w={8} h={8} />}
-              size={"lg"}
+              size={"md"}
             />
           </HStack>
         </Flex>
@@ -131,30 +161,55 @@ export default function Dashboard() {
             )}
           </SimpleGrid>
 
-          <SimpleGrid columns={{sm: 1, md: 2, xl: 2}} spacing='24px' h={"100hv"} mt={5}>
-            <Flex bg={mainColor} h={"auto"} justify={"center"} p={5} borderRadius={"25px"} flexDirection={"column"} alignItems={"center"}>
-              <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Despesas por categoria</Text>
-              <Box h={"100%"} w={"70%"}>
+          {
+            isMobile ? (
+              <Flex flexDirection={"column"}
+                    alignItems={"center"}
+                    justify={"center"}
+                    h={"100%"}
+                    w={"100%"}
+                    mt={"10px"}
+              >
+                <Text mt={5}>Despesas por categoria</Text>
                 <ReactApexChart
                   options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
                   series={expenseDash?.series?.length ? expenseDash.series : [0]}
                   type="donut"
                 />
-              </Box>
-            </Flex>
-            <Flex bg={mainColor} h={"auto"} justify={"center"} p={5} borderRadius={"25px"} flexDirection={"column"} alignItems={"center"}>
-              <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Receitas por categoria</Text>
-              <Box h={"100%"} w={"70%"}>
+                <Text mt={5}>Receitas por categoria</Text>
                 <ReactApexChart
                   options={getChartDataOptions(revenueDash?.labels?.length ? revenueDash.labels : [], 'REVENUE').options}
                   series={revenueDash?.series?.length ? revenueDash.series : [0]}
                   type="donut"
                 />
-              </Box>
-            </Flex>
-          </SimpleGrid>
+              </Flex>
+            ) : (
+              <SimpleGrid columns={{sm: 1, md: 2, xl: 2}} spacing='24px' h={"100hv"} mt={5}>
+                <Flex bg={mainColor} h={"auto"} justify={"center"} p={5} borderRadius={"25px"} flexDirection={"column"} alignItems={"center"}>
+                  <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Despesas por categoria</Text>
+                  <Box h={"100%"} w={"70%"}>
+                    <ReactApexChart
+                      options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
+                      series={expenseDash?.series?.length ? expenseDash.series : [0]}
+                      type="donut"
+                    />
+                  </Box>
+                </Flex>
+                <Flex bg={mainColor} h={"auto"} justify={"center"} p={5} borderRadius={"25px"} flexDirection={"column"} alignItems={"center"}>
+                  <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Receitas por categoria</Text>
+                  <Box h={"100%"} w={"70%"}>
+                    <ReactApexChart
+                      options={getChartDataOptions(revenueDash?.labels?.length ? revenueDash.labels : [], 'REVENUE').options}
+                      series={revenueDash?.series?.length ? revenueDash.series : [0]}
+                      type="donut"
+                    />
+                  </Box>
+                </Flex>
+              </SimpleGrid>
+            )
+          }
         </>
       </Flex>
-    </SidebarWithHeader>
+    </SideBarLayout>
   )
 }

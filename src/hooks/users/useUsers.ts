@@ -17,46 +17,62 @@ type getUsersResponse = {
   content: User[];
 }
 
-export async function getUsers(page: number): Promise<getUsersResponse> {
-  const size = 7;
+async function getUsers(page, sort?, status?, keyword?, size?): Promise<getUsersResponse> {
   const response = await api.get('v1/user', {
-      params: {
-        page,
-        size
-      }
-    })
+    params: {
+      page: page,
+      size: size,
+      sort: sort,
+      status: status,
+      keyword: keyword
+    }
+  });
 
-    const totalElements = response.data.totalElements
+  const totalElements = response.data.totalElements;
 
-    const content = response.data.content.map(user => {
-      return {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        admin: user.admin,
-        active: user.active,
-        createdAt: new Date(user.createdAt).toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric'
-        }),
-        lastAccess: new Date(user.lastAccess).toLocaleDateString('pt-BR', {
-          day: '2-digit',
-          month: '2-digit',
-          year: 'numeric',
-          hour: 'numeric',
-          minute: 'numeric'
-        })
-      };
-    });
+  const content = response.data.content.map(user => {
+    const createdAt = user.createdAt && isValidDate(user.createdAt)
+      ? new Date(user.createdAt).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
+      })
+      : "-";
+
+    const lastAccess = user.lastAccess && isValidDate(user.lastAccess)
+      ? new Date(user.lastAccess).toLocaleDateString('pt-BR', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric'
+      })
+      : "-";
 
     return {
-      content, totalElements
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      admin: user.admin,
+      active: user.active,
+      createdAt,
+      lastAccess
     };
+  });
+
+  return {
+    content,
+    totalElements
+  };
 }
 
-export function useUsers(page: number) {
-  return useQuery(['users', page], () => getUsers(page), {
+function isValidDate(dateStr: string): boolean {
+  const date = new Date(dateStr);
+  return date instanceof Date && !isNaN(date.getTime());
+}
+
+export function useUsers(page, sort?, status?, keyword?, size?) {
+  return useQuery(['users', page, sort, status, keyword, size], () => getUsers(page, sort, status, keyword, size), {
     staleTime: 1000 * 5,
   })
 }
