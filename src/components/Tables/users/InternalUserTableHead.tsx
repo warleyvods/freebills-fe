@@ -105,6 +105,7 @@ export function InternalUserTableHead({
       <HStack spacing={"2px"}>
         {!isMobile && activeSearchBar && (
           <InputGroup>
+            {/* eslint-disable-next-line react/no-children-prop */}
             <InputLeftElement pointerEvents="none" children={<SearchIcon color="gray.300" />} />
             <Input
               focusBorderColor={"gray.700"}

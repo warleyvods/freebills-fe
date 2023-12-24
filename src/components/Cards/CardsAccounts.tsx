@@ -101,7 +101,7 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
                 <MenuItem icon={<ExternalLinkIcon />} onClick={onOpen}>
                   Arquivar Conta
                 </MenuItem>
-              } />
+              }  variant={"default"}/>
 
             <ReadjustmentAccountModal accountId={accId} trigger={(onOpen) =>
               <MenuItem icon={<RepeatIcon />} onClick={onOpen}>

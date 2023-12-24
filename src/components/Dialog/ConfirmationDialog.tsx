@@ -24,7 +24,7 @@ interface ModalProps {
   disabled?: boolean;
   description: string;
   buttonText: string;
-  variant: string;
+  variant?: string;
 }
 
 export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, disabled, description, buttonText, variant }: ModalProps) {
