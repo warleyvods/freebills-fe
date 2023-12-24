@@ -1,9 +1,10 @@
 import {
   FormControl,
   FormErrorMessage,
-  FormLabel,
+  FormLabel, HStack,
   Input as ChakraInput,
   InputProps as ChakraInputProps,
+  Text,
   useColorModeValue
 } from "@chakra-ui/react";
 import { forwardRef, ForwardRefRenderFunction } from "react";
@@ -19,23 +20,30 @@ interface InputProps extends ChakraInputProps {
 }
 
 const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({
-                                                                             important,
-                                                                             name,
-                                                                             mask,
-                                                                             label,
-                                                                             error = null,
-                                                                             value,
-                                                                             onChange,
-                                                                             type,
-                                                                             placeholder,
-                                                                             ...rest
-                                                                           }: InputProps, ref) => {
+  important,
+  name,
+  mask,
+  label,
+  error = null,
+  value,
+  onChange,
+  type,
+  placeholder,
+  ...rest
+}: InputProps, ref) => {
   const mainColor = useColorModeValue('gray.10', 'gray.900');
 
   return (
     <FormControl isInvalid={!!error}>
       {
-        !!label && <FormLabel htmlFor={name}>{label}<span style={{color: "red"}}>{important}</span></FormLabel>
+        !!label && (
+          <FormLabel htmlFor={name} mb={1}>
+            <HStack spacing={"2px"}>
+              <Text fontSize={"1rem"}>{label}</Text>
+              <span style={{color: "red"}}>{important}</span>
+            </HStack>
+          </FormLabel>
+        )
       }
       <InputMask
         mask={mask}
@@ -56,8 +64,8 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({
         }
       </InputMask>
 
-      <FormErrorMessage>
-        {error}
+      <FormErrorMessage mt={1}>
+        <Text fontSize={"0.8rem"} fontWeight={"medium"}>{error}</Text>
       </FormErrorMessage>
     </FormControl>
   );

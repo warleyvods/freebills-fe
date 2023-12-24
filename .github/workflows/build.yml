@@ -55,6 +55,6 @@ jobs:
       if: always()
       with:
         webhook: ${{ secrets.DISCORD_WEBHOOK }}
-        title: "Front RH Web"
+        title: "Front Freebills"
         description: "Build and Deploy to Server"
         username: GitHub Actions

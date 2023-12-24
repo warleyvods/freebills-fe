@@ -31,7 +31,8 @@ import { useMe } from "../../../hooks/users/useMe";
 import { InfoIcon } from "@chakra-ui/icons";
 import { useAccountById } from "../../../hooks/accounts/useAccountById";
 import { useUpdateAccount } from "../../../hooks/accounts/useUpdateAccount";
-import MaskMoney from "../../Form/MaskMoney";
+import InputMoney from "../../Form/MoneyInput";
+import { SelectFormik } from "../../Form/SelectInput";
 
 const createAddressValidationSchema = yup.object().shape({
   description: yup.string().required('Descrição Obrigatória.'),
@@ -42,8 +43,8 @@ const createAddressValidationSchema = yup.object().shape({
 const initialValues = {
   amount: '',
   description: '',
-  accountType: 'CHECKING_ACCOUNT',
-  bankType: 'INTER',
+  accountType: '',
+  bankType: '',
   dashboard: false
 }
 
@@ -97,9 +98,9 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
         onClose={handleCancel}
         isOpen={isOpen}
         isCentered
-        size="xl"
+        size={{ base: "md", md: "md", lg: "lg" }}
       >
-        <ModalOverlay backdropFilter='blur(1px)' />
+        <ModalOverlay backdropFilter='blur(3px)' />
         <ModalContent bg={mainColor}>
           <Formik initialValues={accountFound || initialValues}
                   onSubmit={!!accountId ? handleUpdateAccount : handleCreateAccount}
@@ -114,63 +115,65 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                     <Divider maxW="550" borderColor="gray.700" />
                   </Center>
                   <ModalCloseButton />
-                  <ModalBody justifyContent="center">
-                    <Box flex={1} color={inverseMainColor} borderRadius={8} pt={5} pl={5} pr={5} pb={8}>
+                  <ModalBody justifyContent={"end"}>
+                    <Box flex={1} color={inverseMainColor} borderRadius={8} pt={5} pl={"5px"} pr={"5px"} pb={8}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
-
-                          <MaskMoney
+                          <InputMoney
                             onChange={(value) => {
                               setFieldValue("amount", value);
                             }}
                             value={values.amount}
-                            name={"amount"} />
-
-                          <InputFormik placeholder={"Descrição"}
+                            name={"amount"}
+                            error={errors.amount}
+                            label={"Valor"}
+                            fontSize={"1rem"}
+                            fontWeight={"medium"}
+                            important={true}
+                          />
+                          <InputFormik label={"Descrição"}
+                                       name={"description"}
                                        important={"*"}
-                                       name="description"
-                                       type="text"
+                                       type={"text"}
                                        onChange={handleChange}
                                        value={values.description}
                                        error={errors.description}
                           />
-                          <FormControl>
-                            <FormLabel htmlFor='accountType'>Tipo da Conta <span
-                              style={{color: "red"}}>*</span></FormLabel>
-                            <Select id={"accountType"}
-                                    name={"accountType"}
-                                    value={values.accountType}
-                                    onChange={handleChange}
-                                    bg={selectBgColor}
-                            >
-                              <option value='CHECKING_ACCOUNT'>Conta Corrente</option>
-                              <option value='SAVINGS'>Poupança</option>
-                              <option value='MONEY'>Dinheiro</option>
-                              <option value='INVESTMENTS'>Investimento</option>
-                              <option value='OTHERS'>Outros</option>
-                            </Select>
-                          </FormControl>
+                          <SelectFormik
+                            label="Tipo da Conta"
+                            name="accountType"
+                            error={errors.accountType}
+                            value={values.accountType}
+                            onChange={handleChange}
+                            important={"*"}
+                            options={[
+                              { value: 'CHECKING_ACCOUNT', label: 'Conta Corrente' },
+                              { value: 'SAVINGS', label: 'Poupança' },
+                              { value: 'MONEY', label: 'Dinheiro' },
+                              { value: 'INVESTMENTS', label: 'Investimento' },
+                              { value: 'OTHERS', label: 'Outros' },
+                            ]}
+                          />
 
-                          <FormControl>
-                            <FormLabel htmlFor='accountType'>Instituição Financeira <span
-                              style={{color: "red"}}>*</span></FormLabel>
-                            <Select id={"bankType"}
-                                    name={"bankType"}
-                                    value={values.bankType}
-                                    onChange={handleChange}
-                                    bg={selectBgColor}
-                            >
-                              <option value='INTER'>Banco Inter</option>
-                              <option value='NUBANK'>Nubank</option>
-                              <option value='CAIXA'>Caixa</option>
-                              <option value='SANTANDER'>Santander</option>
-                              <option value='BRADESCO'>Bradesco</option>
-                              <option value='BB'>Banco do Brasil</option>
-                              <option value='ITAU'>Itaú</option>
-                              <option value='SICOOB'>Sicoob</option>
-                              <option value='OTHERS'>Outros</option>
-                            </Select>
-                          </FormControl>
+                          <SelectFormik
+                            label="Instituição Financeira"
+                            name="bankType"
+                            error={errors.bankType}
+                            value={values.bankType}
+                            onChange={handleChange}
+                            important={"*"}
+                            options={[
+                              { value: 'INTER', label: 'Banco Inter' },
+                              { value: 'NUBANK', label: 'Nubank' },
+                              { value: 'CAIXA', label: 'Caixa' },
+                              { value: 'SANTANDER', label: 'Santander' },
+                              { value: 'BRADESCO', label: 'Bradesco' },
+                              { value: 'BB', label: 'Banco do Brasil' },
+                              { value: 'ITAU', label: 'Itau' },
+                              { value: 'SICOOB', label: 'Sicoob' },
+                              { value: 'OTHERS', label: 'Outros' },
+                            ]}
+                          />
 
                           <LightMode>
                             <HStack justify={"space-between"} mt={3} alignItems={"baseline"}>

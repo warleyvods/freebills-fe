@@ -22,6 +22,7 @@ import { useAccounts } from "../../hooks/accounts/useAccounts";
 import { useMe } from "../../hooks/users/useMe";
 import NextLink from "next/link";
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
+import HeadingTable from "../../components/Tables/HeadingTable";
 
 export default function Accounts() {
   const {data: user} = useMe();
@@ -30,39 +31,39 @@ export default function Accounts() {
 
   return (
     <SideBarLayout>
-      <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
-        <Flex flexDirection="row" justifyContent="space-between" mb="20px" mt="10px" ml={"10px"}>
-          <Heading>Contas {!isLoading && isFetching && <Spinner size={"sm"} color={"gray.500"} ml={4} />}</Heading>
-          <HStack spacing={3}>
-            <NewAccountModal
-              text={"Adicionar"}
-              trigger={onOpen =>
-                <LightMode>
-                  <Button as={"a"}
-                          size={"sm"}
-                          onClick={onOpen}
-                          fontSize={"sm"}
-                          colorScheme={"facebook"}
-                          leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
-                  >Adicionar novo
-                  </Button>
-                </LightMode>
-              }
-            />
-            <LightMode>
-              <NextLink href={"/accounts/archiveds"}>
-                <Button as={"a"}
-                        size={"sm"}
+      <HStack justify={"space-between"}>
+        <HeadingTable title={"Contas"} isLoading={isLoading} />
+        <HStack spacing={"8px"}>
+          <NewAccountModal
+            text={"Adicionar"}
+            trigger={onOpen =>
+              <LightMode>
+                <Button size={"sm"}
+                        onClick={onOpen}
                         fontSize={"sm"}
-                        colorScheme={"purple"}
-                        leftIcon={<Icon as={RiArchiveLine} fontSize={"20"} />
-                        }
-                >Arquivados
+                        variant={"default"}
+                        leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
+                >Adicionar conta
                 </Button>
-              </NextLink>
-            </LightMode>
-          </HStack>
-        </Flex>
+              </LightMode>
+            }
+          />
+          <LightMode>
+            <NextLink href={"/accounts/archiveds"}>
+              <Button as={"a"}
+                      size={"sm"}
+                      fontSize={"sm"}
+                      colorScheme={"purple"}
+                      leftIcon={<Icon as={RiArchiveLine} fontSize={"20"} />
+                      }
+              >Arquivados
+              </Button>
+            </NextLink>
+          </LightMode>
+        </HStack>
+      </HStack>
+
+      <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
         {isLoading ? (
           <Flex justify={"center"}>
             <Spinner />
@@ -92,7 +93,8 @@ export default function Accounts() {
                 </Box>
               ) : (
                 accounts?.map(acc => (
-                  <CardsAccount key={acc.id} amount={acc.amount} description={acc.description} accId={acc.id} bankType={acc.bankType}/>
+                  <CardsAccount key={acc.id} amount={acc.amount} description={acc.description} accId={acc.id}
+                                bankType={acc.bankType} />
                 ))
               )}
             </SimpleGrid>

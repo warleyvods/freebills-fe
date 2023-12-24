@@ -20,7 +20,6 @@ export const createUserValidationSchema = yup.object().shape({
   ], 'As senhas precisam ser iguais.')
 });
 
-
 const initialValues = {
   name: '',
   login: '',
