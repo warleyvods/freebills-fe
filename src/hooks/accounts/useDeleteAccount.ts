@@ -15,6 +15,7 @@ export function useDeleteAccount() {
         status: 'success',
         duration: 2000,
         isClosable: true,
+        position: "top"
       })
       await queryClient.invalidateQueries(['accounts'])
       await queryClient.invalidateQueries(['accounts-archived'])
@@ -25,6 +26,7 @@ export function useDeleteAccount() {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        position: "top"
       })
     }
   });

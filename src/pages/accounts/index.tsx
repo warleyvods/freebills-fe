@@ -1,5 +1,16 @@
 import React from 'react';
-import { Button, Flex, HStack, Icon, LightMode, SimpleGrid, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  HStack,
+  Icon, IconButton,
+  LightMode,
+  SimpleGrid,
+  Spinner,
+  Text,
+  useBreakpointValue,
+  useColorModeValue
+} from "@chakra-ui/react";
 import { RiAddLine, RiArchiveLine } from "react-icons/ri";
 import CardsAccount from "../../components/Cards/CardsAccounts";
 import { NewAccountModal } from "../../components/Modals/NewAccount";
@@ -9,8 +20,10 @@ import NextLink from "next/link";
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
 import IconComponent from "../../components/Icons/IconComponent";
+import { ChevronLeftIcon } from "@chakra-ui/icons";
 
 export default function Accounts() {
+  const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const {data: user} = useMe();
   const {data: accounts, isLoading, isFetching, error} = useAccounts(user?.id);
   const mainColor = useColorModeValue('white', 'gray.800');
@@ -35,18 +48,30 @@ export default function Accounts() {
               </LightMode>
             }
           />
+
           <LightMode>
             <NextLink href={"/accounts/archiveds"}>
-              <Button as={"a"}
-                      size={"sm"}
-                      fontSize={"sm"}
-                      colorScheme={"purple"}
-                      leftIcon={<Icon as={RiArchiveLine} fontSize={"20"} />
-                      }
-              >Arquivados
-              </Button>
+              { isMobile ? (
+                <IconButton
+                variant={"solid"}
+                colorScheme={"purple"}
+                aria-label={"archived"}
+                icon={<Icon as={RiArchiveLine} fontSize={"20"} />}
+                size={"sm"}
+                />
+              ) : (
+                <Button as={"a"}
+                        size={"sm"}
+                        fontSize={"sm"}
+                        colorScheme={"purple"}
+                        leftIcon={<Icon as={RiArchiveLine} fontSize={"20"} />
+                        }
+                >Arquivados
+                </Button>
+              )}
             </NextLink>
           </LightMode>
+
         </HStack>
       </HStack>
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
