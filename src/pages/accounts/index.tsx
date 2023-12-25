@@ -1,20 +1,5 @@
 import React from 'react';
-import SidebarWithHeader from "../../components/SideBar";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  HStack,
-  Icon,
-  IconButton,
-  LightMode,
-  SimpleGrid,
-  Spinner,
-  Text,
-  useColorModeValue,
-  VStack
-} from "@chakra-ui/react";
+import { Button, Flex, HStack, Icon, LightMode, SimpleGrid, Spinner, Text, useColorModeValue } from "@chakra-ui/react";
 import { RiAddLine, RiArchiveLine } from "react-icons/ri";
 import CardsAccount from "../../components/Cards/CardsAccounts";
 import { NewAccountModal } from "../../components/Modals/NewAccount";
@@ -23,6 +8,7 @@ import { useMe } from "../../hooks/users/useMe";
 import NextLink from "next/link";
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
+import IconComponent from "../../components/Icons/IconComponent";
 
 export default function Accounts() {
   const {data: user} = useMe();
@@ -31,6 +17,7 @@ export default function Accounts() {
 
   return (
     <SideBarLayout>
+      {/*HEADER + BOTOES ADD CONTA + ARQUIVADOS*/}
       <HStack justify={"space-between"}>
         <HeadingTable title={"Contas"} isLoading={isLoading} />
         <HStack spacing={"8px"}>
@@ -62,7 +49,6 @@ export default function Accounts() {
           </LightMode>
         </HStack>
       </HStack>
-
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
         {isLoading ? (
           <Flex justify={"center"}>
@@ -74,29 +60,26 @@ export default function Accounts() {
           </Flex>
         ) : (
           <>
+            {
+              accounts.length === 0 && (
+                <Flex justify={"center"} align={"center"} flexDir={"column"} w={"full%"} h={"60vh"}>
+                  <Text fontSize={"lg"} fontWeight={"medium"} mb={"30px"}>Nenhuma conta cadastrada</Text>
+                  <IconComponent name={"void"} width={"200"} height={"200"}/>
+                </Flex>
+              )
+            }
             <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px'>
-              {accounts.length === 0 ? (
-                <Box bg={mainColor} minW={"350px"} minH={"200px"} borderRadius={25} p={"20px"} boxShadow={"lg"}>
-                  <VStack justify={"center"} w={"100%"} h={"100%"}>
-                    <Text fontWeight="bold" fontSize={"25px"}>Adicionar Conta</Text>
-                    <NewAccountModal
-                      trigger={open =>
-                        <IconButton
-                          onClick={open}
-                          borderRadius={25}
-                          aria-label={"add acc"}
-                          icon={<RiAddLine />}
-                          size={"lg"}
-                        />}
-                    />
-                  </VStack>
-                </Box>
-              ) : (
+              {
                 accounts?.map(acc => (
-                  <CardsAccount key={acc.id} amount={acc.amount} description={acc.description} accId={acc.id}
-                                bankType={acc.bankType} />
+                  <CardsAccount
+                    key={acc.id}
+                    amount={acc.amount}
+                    description={acc.description}
+                    accId={acc.id}
+                    bankType={acc.bankType}
+                  />
                 ))
-              )}
+              }
             </SimpleGrid>
           </>
         )}

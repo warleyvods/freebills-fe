@@ -143,7 +143,6 @@ export default function CreateUser() {
                       <Button variant={"default"} type={"submit"}>Salvar</Button>
                     </HStack>
                   </Flex>
-
                 </form>
               </>
             }

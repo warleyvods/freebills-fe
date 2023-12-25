@@ -29,6 +29,7 @@ import { useDeleteAccount } from "../../../hooks/accounts/useDeleteAccount";
 import { RepeatIcon } from "@chakra-ui/icons";
 import { accountType, numberFormat } from "../../../components/Utils/utils";
 import SideBarLayout from "../../../components/SidebarLayout/SideBarLayout";
+import HeadingTable from "../../../components/Tables/HeadingTable";
 
 interface ColumnsProps {
   name: string;
@@ -60,15 +61,8 @@ export default function ArchivedAccount() {
   return (
     <SideBarLayout>
       <Box>
-        <Flex w="100%" maxWidth={"auto"} mx={"auto"}>
-          <Box flex={1} borderRadius={8} p={8} bg={mainColor}>
-            <Flex mb={8} justify={"space-between"} align={"center"}>
-              <Heading size={"lg"} fontWeight={"bold"}>
-                Contas Arquivadas
-                {!isLoading && isFetching && <Spinner size={"sm"} color={"gray.500"} ml={4} />}
-              </Heading>
-            </Flex>
-
+        <Flex w="100%" maxWidth={"auto"} mx={"auto"} flexDirection={"column"}>
+            <HeadingTable title={"Contas arquivadas"} isLoading={isLoading} />
             {isLoading ? (
               <Flex justify={"center"}>
                 <Spinner />
@@ -146,7 +140,11 @@ export default function ArchivedAccount() {
                                       icon={<Icon as={BiTrash} fontSize={"16"} />}
                                       onClick={onOpen} />}
                                     title={"Deletar Conta"} mainColor={mainColor} buttonText={"Deletar"}
-                                    description={`Você tem certeza que deseja deletar a conta ${account.description}? Atenção: Ao deletar essa conta, todas as receitas, despesas e transferências associadas a ela serão deletadas.`}  variant={"default"}/>
+                                    description={`
+                                    Você tem certeza que deseja deletar a conta ${account.description}? 
+                                    Atenção: Ao deletar essa conta, todas as receitas, despesas e transferências associadas a ela serão deletadas.`}
+                                    variant={"danger"}
+                                  />
                                 </LightMode>
                               </HStack>
                             </Flex>
@@ -158,7 +156,6 @@ export default function ArchivedAccount() {
                 </Table>
               </>
             )}
-          </Box>
         </Flex>
       </Box>
     </SideBarLayout>

@@ -3,7 +3,6 @@ import {
   Button,
   Center,
   Divider,
-  FormControl,
   FormLabel,
   HStack,
   LightMode,
@@ -14,7 +13,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   SimpleGrid,
   Switch,
   Tooltip,
@@ -199,7 +197,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                   <ModalFooter>
                     <HStack spacing={2}>
                       <LightMode>
-                        <Button isLoading={isSubmitting} colorScheme="blue" type="submit">Salvar</Button>
+                        <Button size={"sm"} isLoading={isSubmitting} variant={"default"} type="submit">Salvar</Button>
                       </LightMode>
                     </HStack>
                   </ModalFooter>
