@@ -60,7 +60,7 @@ export function NewCreditCard({onCancel, trigger, text, ccId}: ModalTypes) {
   const inverseMainColor = useColorModeValue('gray.800', 'white');
   const selectBgColor = useColorModeValue('gray.10', 'gray.900');
   const {isOpen, onOpen, onClose} = useDisclosure();
-  const {data: accounts} = useAccounts(1);
+  const {data: accounts} = useAccounts();
   const createCC = useCreateCreditCard();
   const {data: ccFound} = useCreditCardById(ccId);
   const updateCreditCard = useUpdateCreditCard();

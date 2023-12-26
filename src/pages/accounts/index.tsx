@@ -25,7 +25,7 @@ import { ChevronLeftIcon } from "@chakra-ui/icons";
 export default function Accounts() {
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const {data: user} = useMe();
-  const {data: accounts, isLoading, isFetching, error} = useAccounts(user?.id);
+  const {data: accounts, isLoading, isFetching, error} = useAccounts();
   const mainColor = useColorModeValue('white', 'gray.800');
 
   return (

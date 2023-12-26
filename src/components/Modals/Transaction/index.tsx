@@ -168,7 +168,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   const userId = user?.id;
   const createTransaction = useCreateTransaction();
   const updateTransaction = useUpdateTransaction();
-  const {data: accounts} = useAccounts(userId);
+  const {data: accounts} = useAccounts();
   const color = colorType(transactionType);
   const category = categoryMap(transactionType);
   const {data: transactionFound} = useTransactionById(transactionId);
