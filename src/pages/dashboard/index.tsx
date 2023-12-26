@@ -36,7 +36,7 @@ export default function Dashboard() {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
   const {data: user} = useMe();
-  const {data: dash} = useDashboard(user?.id, month, year);
+  const {data: dash} = useDashboard(month, year);
   const {data: expenseDash} = useDashboardExpenseGraph(user?.id, month, year);
   const {data: revenueDash} = useDashboardRevenueGraph(user?.id, month, year);
 

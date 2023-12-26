@@ -75,7 +75,7 @@ export default function Transaction() {
   const [year, setYear] = useState(new Date().getFullYear())
   const [page, setPage] = useState(0)
   const {data: user} = useMe();
-  const {data: dash} = useDashboard(user?.id, month, year);
+  const {data: dash} = useDashboard(month, year);
   const {data: transactions, isLoading, error} = useTransaction(page, keyword, month, year);
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const padding = "1px";
