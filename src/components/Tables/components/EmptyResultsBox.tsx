@@ -4,8 +4,8 @@ import { RiAddLine } from "react-icons/ri";
 
 type EmptyResultsBoxProps = {
   title: string;
-  path: string;
-  buttonText: string;
+  path?: string;
+  buttonText?: string;
 }
 
 export function EmptyResultsBox({title, path, buttonText}: EmptyResultsBoxProps) {
@@ -14,12 +14,16 @@ export function EmptyResultsBox({title, path, buttonText}: EmptyResultsBoxProps)
           alignItems={"center"}>
       <VStack spacing={"15px"}>
         <Text fontWeight={"medium"} textAlign={"center"} fontSize={"18px"}>{title}</Text>
-        <NextLink href={path} passHref>
-          <Button
-            leftIcon={<RiAddLine fontSize={"20"} />}>
-            {buttonText}
-          </Button>
-        </NextLink>
+
+        {/*TODO resolver problema (nao mostrar o botao quando nao houver texto ou path)*/}
+        { path!! || buttonText!! && (
+          <NextLink href={path} passHref>
+            <Button
+              leftIcon={<RiAddLine fontSize={"20"} />}>
+              {buttonText}
+            </Button>
+          </NextLink>
+        ) }
       </VStack>
     </Flex>
   )

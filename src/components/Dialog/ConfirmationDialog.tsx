@@ -5,7 +5,7 @@ import {
   Modal,
   ModalBody,
   ModalContent,
-  ModalFooter,
+  ModalFooter, ModalHeader,
   ModalOverlay,
   Stack,
   Text,
@@ -20,14 +20,14 @@ interface ModalProps {
   onCancel?: () => void;
   trigger: (onOpen?: () => void, onClose?: () => void) => ReactNode;
   mainColor: string;
-  title: string;
+  title?: string;
   disabled?: boolean;
   description: string;
   buttonText: string;
   variant?: string;
 }
 
-export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, disabled, description, buttonText, variant }: ModalProps) {
+export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, disabled, description, buttonText, variant, title }: ModalProps) {
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   const handleCancel = useCallback(() => {
@@ -57,7 +57,7 @@ export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, disabled
                 <CustomIcon value={AlertIcon} color={"customRed.500"} />
               </Circle>
               <Flex direction={"column"} gap={2} ml={{ base: 0, md: 3 }}>
-                <Text fontSize={"md"} fontWeight={"medium"} textAlign={{ base: 'center', md: 'start'}}>Deletar conta</Text>
+                <Text fontSize={"md"} fontWeight={"medium"} textAlign={{ base: 'center', md: 'start'}}>{title}</Text>
                 <Text fontSize={"sm"} fontWeight={"normal"} textAlign={{ base: 'center', md: 'start'}}>{description}</Text>
               </Flex>
             </Flex>

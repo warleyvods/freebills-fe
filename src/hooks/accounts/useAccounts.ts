@@ -10,18 +10,13 @@ type Account = {
   bankType: string;
 }
 
-export async function getAccounts(userId: number): Promise<Account[]> {
-  const response = await api.get('v1/accounts', {
-    params: {
-      userId: userId
-    }
-  });
-
+export async function getAccounts(): Promise<Account[]> {
+  const response = await api.get('v1/accounts', {});
   return response.data;
 }
 
-export function useAccounts(userId: number) {
-  return useQuery(['accounts', userId], () => getAccounts(userId), {
+export function useAccounts() {
+  return useQuery(['accounts'], () => getAccounts(), {
     staleTime: 0,
     cacheTime: 0
   })

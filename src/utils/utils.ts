@@ -71,3 +71,9 @@ export const updateYear = (currentYear, newMonth, operation) => {
     return newMonth === 12 ? currentYear - 1 : currentYear;
   }
 };
+
+export interface Options {
+  value: string;
+  label: string;
+  active?: boolean
+}

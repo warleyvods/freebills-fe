@@ -15,6 +15,7 @@ export function useDeleteTransaction() {
         status: 'success',
         duration: 2000,
         isClosable: true,
+        position: "top"
       })
       await queryClient.invalidateQueries(['balance-revenue'])
       await queryClient.invalidateQueries(['transaction-expense'])
@@ -28,6 +29,7 @@ export function useDeleteTransaction() {
         status: 'error',
         duration: 3000,
         isClosable: true,
+        position: "top"
       })
     }
   });

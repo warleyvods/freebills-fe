@@ -1,47 +1,54 @@
 import { api } from "../../services/api";
 import { useQuery } from "react-query";
+import { Transaction } from "./useTransactionById";
 
-type TransactionType = {
-  id: number;
-  amount: number;
-  paid: boolean;
-  date: string,
-  description: string;
-  transactionType: string;
-  transactionCategory: string;
-  accountId: number;
-}
-
-type getTransactionResponse = {
+type TransactionResponse = {
   totalElements: number;
-  content: TransactionType[];
+  content: Transaction[];
 }
 
-export async function getAllTransactionsRevenue(page: number,
+export async function getAllTransactionsRevenue(
+  page: number,
   keyword: string,
-  month: string,
-  year: string,
+  month: number,
+  year: number,
   userId?: number,
-  transactionType = 'REVENUE'): Promise<getTransactionResponse> {
-  const size = 8;
+  size?: number,
+  sort?: string,
+  transactionType?: string): Promise<TransactionResponse> {
+
   const response = await api.get('v1/transactions/filter', {
     params: {
+      userId,
       page,
-      userId: userId,
       size,
-      keyword,
+      sort,
       month,
       year,
-      transactionType
+      keyword,
+      transactionType,
     }
   });
 
   return response.data;
 }
 
-export function useTransactionRevenue(page: number, keyword, month, year, userId?: number) {
-  return useQuery(['transaction-revenue', userId, page, keyword, month, year], () => getAllTransactionsRevenue(page, keyword, month, year, userId), {
-    staleTime: 0,
-    cacheTime: 0
-  })
+export function useTransactionRevenue(
+  page: number,
+  keyword: string,
+  month: number,
+  year: number,
+  sort?: string,
+  transactionType?: string,
+  size?: number,
+  userId?: number
+) {
+  return useQuery(
+    ['transaction-revenue', userId, page, keyword, month, year, sort, transactionType, size],
+    () => getAllTransactionsRevenue(page, keyword, month, year, userId, size, sort, transactionType),
+    {
+      staleTime: 0,
+      cacheTime: 0
+    }
+  )
 }

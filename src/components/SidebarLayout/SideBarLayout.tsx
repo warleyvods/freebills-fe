@@ -15,8 +15,9 @@ import Header from "./Header";
 import { CustomIcon } from "../Icons/House";
 import { HouseIcon, PeopleIcon } from "../../utils/chartData";
 import { BiBox } from "react-icons/bi";
+import { useMe } from "../../hooks/users/useMe";
 
-function SidebarContent() {
+function SidebarContent({ isAdmin }) {
   return (
     <Flex
       flex="1"
@@ -43,9 +44,8 @@ function SidebarContent() {
       <Stack direction={"column"} spacing={1} alignItems={"center"}>
         <NavItem icon={<CustomIcon value={HouseIcon}/>} href={"/dashboard"}>Dashboard</NavItem>
         <NavItem icon={<CustomIcon value={HouseIcon}/>} href={"/accounts"}>Contas</NavItem>
-        <NavItem icon={<CustomIcon icon={BiBox}/>} href={"/transactions/revenue"}>Transações - E</NavItem>
-        <NavItem icon={<CustomIcon icon={BiBox}/>} href={"/transactions/expense"}>Transações - S</NavItem>
-        <NavItem icon={<CustomIcon value={PeopleIcon}/>} href={"/users"}>Usuários</NavItem>
+        <NavItem icon={<CustomIcon icon={BiBox}/>} href={"/transactions/revenue"}>Transações</NavItem>
+        { isAdmin && (<NavItem icon={<CustomIcon value={PeopleIcon}/>} href={"/users"}>Usuários</NavItem>)}
       </Stack>
     </Flex>
   )
@@ -58,6 +58,7 @@ type SidebarProps = {
 function SideBarLayout({children}: SidebarProps) {
   const {isOpen, onOpen, onClose} = useDisclosure();
   const toggleSidebar = isOpen ? onClose : onOpen;
+  const {data: me} = useMe();
 
   return (
     <>
@@ -69,12 +70,12 @@ function SideBarLayout({children}: SidebarProps) {
            w={72}
            flexDir="column"
       >
-        <SidebarContent />
+        <SidebarContent isAdmin={me?.admin} />
         <Drawer isOpen={isOpen} onClose={onClose} placement="left">
           <DrawerOverlay />
           <DrawerContent>
             <DrawerCloseButton />
-            <SidebarContent />
+            <SidebarContent isAdmin={me?.admin} />
           </DrawerContent>
         </Drawer>
       </Box>
