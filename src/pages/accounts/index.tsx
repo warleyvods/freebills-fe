@@ -3,30 +3,26 @@ import {
   Button,
   Flex,
   HStack,
-  Icon, IconButton,
+  Icon,
+  IconButton,
   LightMode,
   SimpleGrid,
   Spinner,
   Text,
-  useBreakpointValue,
-  useColorModeValue
+  useBreakpointValue
 } from "@chakra-ui/react";
 import { RiAddLine, RiArchiveLine } from "react-icons/ri";
 import CardsAccount from "../../components/Cards/CardsAccounts";
 import { NewAccountModal } from "../../components/Modals/NewAccount";
 import { useAccounts } from "../../hooks/accounts/useAccounts";
-import { useMe } from "../../hooks/users/useMe";
 import NextLink from "next/link";
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
 import IconComponent from "../../components/Icons/IconComponent";
-import { ChevronLeftIcon } from "@chakra-ui/icons";
 
 export default function Accounts() {
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
-  const {data: user} = useMe();
   const {data: accounts, isLoading, isFetching, error} = useAccounts();
-  const mainColor = useColorModeValue('white', 'gray.800');
 
   return (
     <SideBarLayout>
@@ -75,7 +71,7 @@ export default function Accounts() {
         </HStack>
       </HStack>
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
-        {isLoading ? (
+        { isLoading ? (
           <Flex justify={"center"}>
             <Spinner />
           </Flex>
@@ -86,14 +82,15 @@ export default function Accounts() {
         ) : (
           <>
             {
-              accounts.length === 0 && (
+              /* BOX DE CONTA VAZIA */
+              accounts?.length === 0 && (
                 <Flex justify={"center"} align={"center"} flexDir={"column"} w={"full%"} h={"60vh"}>
                   <Text fontSize={"lg"} fontWeight={"medium"} mb={"30px"}>Nenhuma conta cadastrada</Text>
                   <IconComponent name={"void"} width={"200"} height={"200"}/>
                 </Flex>
               )
             }
-            <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='24px'>
+            <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='18px'>
               {
                 accounts?.map(acc => (
                   <CardsAccount

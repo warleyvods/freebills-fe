@@ -31,7 +31,6 @@ type AccountProps = {
 }
 
 export default function CardsAccount({amount, description, accId, bankType}: AccountProps) {
-  const mainColor = useColorModeValue('white', 'gray.800');
   const updateArchiveAcc = useUpdateArchiveAccount();
   const descriptionArchive = "Arquivar conta é uma opção muito útil quando temos aquela conta que não movimentamos mais e desejamos apenas tirá-la da relação de contas," +
     " mantendo os lançamentos vinculados a ela. Você tem certeza que deseja arquivar a conta?";
@@ -62,8 +61,8 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
   }
 
   return (
-    <Box bg={mainColor} w={"auto"} minH={"auto"} borderRadius={25} p={"20px"} boxShadow={"lg"}>
-      <HStack justifyContent={"space-between"} align={"center"}>
+    <Box w={"auto"} borderRadius={"10px"} border={"1px"} borderColor={"gray.100"} p={"15px"} boxShadow={"lg"}>
+      <HStack justifyContent={"space-between"} spacing={0} align={"center"}>
         <HStack spacing={3}>
           <Image
             borderRadius='full'
@@ -71,7 +70,7 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
             src={bank(bankType)}
             alt='inter'
           />
-          <Text fontWeight="bold" fontSize={"1.3rem"}>{description}</Text>
+          <Text fontWeight="medium" fontSize={"1.1rem"}>{description}</Text>
         </HStack>
         <Menu>
           <MenuButton
@@ -84,7 +83,7 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
           <MenuList>
             <NewAccountModal
               accountId={accId}
-              text={"Editar"}
+              text={"edit"}
               trigger={(open) =>
                 <MenuItem icon={<EditIcon />} onClick={open}>
                   Editar
@@ -92,16 +91,18 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
               }
             />
             <ConfirmationDialog
-              mainColor={mainColor}
+              mainColor={"white"}
               title={"Arquivar Conta"}
               description={descriptionArchive}
               buttonText={"Arquivar"}
+              variant={"danger"}
               onOk={() => handleArchiveChange(accId)}
               trigger={(onOpen) =>
                 <MenuItem icon={<ExternalLinkIcon />} onClick={onOpen}>
                   Arquivar Conta
                 </MenuItem>
-              }  variant={"default"}/>
+              }
+            />
 
             <ReadjustmentAccountModal accountId={accId} trigger={(onOpen) =>
               <MenuItem icon={<RepeatIcon />} onClick={onOpen}>
@@ -113,19 +114,19 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
         </Menu>
       </HStack>
 
-      <HStack justify={"space-between"} spacing={20} mt={"35px"}>
-        <Text fontWeight={"semibold"} fontSize={"1.2rem"}>Saldo atual</Text>
-        <Text fontFamily={"Poppins"} fontWeight={"medium"} fontSize={"1.2rem"}
+      <HStack justify={"space-between"} spacing={0} mt={"35px"}>
+        <Text fontWeight={"medium"} fontSize={"0.97rem"}>Saldo atual</Text>
+        <Text fontWeight={"medium"} fontSize={"0.97rem"}
               color={amount >= 0 ? 'green' : 'red'}>{!!amount ? numberFormat(amount) : 'R$ 0,00'}</Text>
       </HStack>
 
-      <HStack justify={"space-between"} spacing={20} mt={"05px"}>
-        <Text fontWeight="normal" fontSize={"1.2rem"}>Saldo previsto</Text>
-        <Text fontWeight="normal" fontSize={"1.2rem"} color="green">R$ 0,00</Text>
+      <HStack justify={"space-between"} spacing={0} mt={"5px"}>
+        <Text fontWeight="medium" fontSize={"0.97rem"}>Saldo previsto</Text>
+        <Text fontWeight="medium" fontSize={"0.97rem"} color="green">R$ 0,00</Text>
       </HStack>
       <Flex justifyContent={"flex-end"} mt={"20px"}>
         <LightMode>
-          <Button variant='ghost' colorScheme={"facebook"}>ADICIONAR DESPESA</Button>
+          <Button variant='solid' size={"xs"} isDisabled={true} colorScheme={"facebook"}>Adicionar despesa</Button>
         </LightMode>
       </Flex>
     </Box>

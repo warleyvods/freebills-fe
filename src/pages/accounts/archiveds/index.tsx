@@ -26,11 +26,12 @@ import { ConfirmationDialog } from "../../../components/Dialog/ConfirmationDialo
 import { BiTrash } from "react-icons/bi";
 import { useUpdateArchiveAccount } from "../../../hooks/accounts/useUpdateArchiveAcc";
 import { useDeleteAccount } from "../../../hooks/accounts/useDeleteAccount";
-import { RepeatIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, RepeatIcon } from "@chakra-ui/icons";
 import { accountType, numberFormat } from "../../../components/Utils/utils";
 import SideBarLayout from "../../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../../components/Tables/HeadingTable";
 import IconComponent from "../../../components/Icons/IconComponent";
+import NextLink from "next/link";
 
 interface ColumnsProps {
   name: string;
@@ -62,7 +63,23 @@ export default function ArchivedAccount() {
     <SideBarLayout>
       <Box>
         <Flex w="100%" maxWidth={"auto"} mx={"auto"} flexDirection={"column"}>
-          <HeadingTable title={"Contas arquivadas"} isLoading={isLoading} isFetching={isFetching} />
+          <HStack>
+            <NextLink
+              href={{
+                pathname: `/accounts`,
+              }}
+              passHref
+            >
+              <IconButton
+                isRound={true}
+                variant={"solid"}
+                aria-label={"button account"}
+                icon={<ChevronLeftIcon fontSize={"26px"} />}
+                size={"sm"}
+              />
+            </NextLink>
+            <HeadingTable title={"Contas arquivadas"} isLoading={isLoading} isFetching={isFetching} />
+          </HStack>
           {isLoading ? (
             <Flex justify={"center"}>
               <Spinner />

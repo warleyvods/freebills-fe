@@ -9,7 +9,7 @@ import { EmptyResultsBox } from "../../../components/Tables/components/EmptyResu
 import TransactionTable from "../../../components/Tables/transaction/TransactionTable";
 import { Pagination } from "../../../components/Pagination";
 import { Options } from "../../../utils/utils";
-import { InfoCards } from "../../../components/InfoCards";
+import { InfoDashboardCard } from "../../../components/InfoCards";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 const menuOptions: Options[] = [
@@ -33,8 +33,8 @@ export default function TransactionRevenue() {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
   const [showCardInfo, setShowCardInfo] = useState(true);
-  const [page, setPage] = useState(0);
   const [active, setActive] = useState(null);
+  const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState(null);
   const [sortComplete, setSortComplete] = useState('');
   const [selectedValuePage, setSelectedValuePage] = useState(10);
@@ -88,10 +88,7 @@ export default function TransactionRevenue() {
           <HStack justifyContent={"space-between"}>
             <HeadingTable
               title={"Transações"}
-              // titleButton={"Adicionar produto"}
-              // path={"/dashboard/transactions/create"}
               isLoading={isLoading}
-              // contentLength={transactions?.content.length}
             />
             <IconButton
               variant={"ghost"}
@@ -102,7 +99,7 @@ export default function TransactionRevenue() {
           </HStack>
         )}
 
-        <InfoCards
+        <InfoDashboardCard
           onUpdateYear={handleChangeYear}
           onUpdateMonth={handleChangeMonth}
           dashboardType={active}

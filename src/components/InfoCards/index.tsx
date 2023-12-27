@@ -19,7 +19,7 @@ type InfoCardsProps = {
   showCardInfo?: boolean;
 };
 
-export function InfoCards({dashboardType, onUpdateMonth, onUpdateYear, showCardInfo = true}: InfoCardsProps) {
+export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, showCardInfo = true}: InfoCardsProps) {
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
 
@@ -230,21 +230,25 @@ export function InfoCards({dashboardType, onUpdateMonth, onUpdateYear, showCardI
                 />
               </HStack>
             </Flex>
-            <NewTransactionModal
-              transactionType={dashboardType}
-              trigger={(open) =>
-                <LightMode>
-                  <Button as={"a"}
-                          onClick={open}
-                          size={"sm"}
-                          fontSize={"sm"}
-                          color={"white"}
-                          bg={ dashboardType === 'REVENUE' ? "green.500" : "red.500"}
-                          leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
-                  >Adicionar {dashboardType === 'REVENUE' ? "receita" : "despesa"}
-                  </Button>
-                </LightMode>
-              } />
+            { dashboardType !== null ? (
+              <NewTransactionModal
+                transactionType={dashboardType}
+                trigger={(open) =>
+                  <LightMode>
+                    <Button as={"a"}
+                            onClick={open}
+                            size={"sm"}
+                            fontSize={"sm"}
+                            color={"white"}
+                            bg={ dashboardType === 'REVENUE' ? "green.500" : "red.500"}
+                            leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
+                    >Adicionar {dashboardType === 'REVENUE' ? "receita" : "despesa"}
+                    </Button>
+                  </LightMode>
+                } />
+            ) : (
+              <div/>
+            ) }
           </HStack>
 
         </>

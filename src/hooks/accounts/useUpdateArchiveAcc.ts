@@ -27,6 +27,13 @@ export function useUpdateArchiveAccount(onSuccess?: () => {}, onError?: () => {}
     onSuccess: async () => {
       await queryClient.invalidateQueries(['accounts'])
       await queryClient.invalidateQueries(['accounts-archived'])
+      toast({
+        description: "Ação executada com sucesso!",
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: "top"
+      })
       onSuccess?.()
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()

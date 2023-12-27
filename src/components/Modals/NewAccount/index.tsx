@@ -51,7 +51,7 @@ interface ModalTypes {
   onOk?: () => void;
   onCancel?: () => void;
   trigger: (onOpen?: () => void, onClose?: () => void) => ReactNode;
-  text?: string;
+  text?: "edit" | "Adicionar" | null;
   userId?: number;
 }
 
@@ -108,27 +108,30 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
             {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
               <>
                 <form onSubmit={handleSubmit}>
-                  <ModalHeader fontSize="25px" fontWeight="bold">{text} Conta</ModalHeader>
-                  <Center>
-                    <Divider maxW="550" borderColor="gray.700" />
-                  </Center>
+                  <ModalHeader fontSize="20px" fontWeight="medium">{text === 'edit' ? "Editar" : "Adicionar"} Conta</ModalHeader>
                   <ModalCloseButton />
+                  <Center>
+                    <Divider maxW="550" borderColor="gray.150" />
+                  </Center>
+
                   <ModalBody justifyContent={"end"}>
                     <Box flex={1} color={inverseMainColor} borderRadius={8} pt={5} pl={"5px"} pr={"5px"} pb={8}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
-                          <InputMoney
-                            onChange={(value) => {
-                              setFieldValue("amount", value);
-                            }}
-                            value={values.amount}
-                            name={"amount"}
-                            error={errors.amount}
-                            label={"Valor"}
-                            fontSize={"1rem"}
-                            fontWeight={"medium"}
-                            important={true}
-                          />
+                          {text !== 'edit' && (
+                            <InputMoney
+                              onChange={(value) => {
+                                setFieldValue("amount", value);
+                              }}
+                              value={values.amount}
+                              name={"amount"}
+                              error={errors.amount}
+                              label={"Valor"}
+                              fontSize={"1rem"}
+                              fontWeight={"medium"}
+                              important={true}
+                            />
+                          )}
                           <InputFormik label={"Descrição"}
                                        name={"description"}
                                        important={"*"}
