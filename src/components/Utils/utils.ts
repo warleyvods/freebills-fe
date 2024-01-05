@@ -16,11 +16,13 @@ export function phoneMask(v) {
   return r;
 }
 
-export function numberFormat(value: number) {
+export function moneyFormat(value: number) {
+  const roundedValue = (Math.round(value * 100) / 100).toFixed(2);
+
   return new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
-  }).format(value);
+  }).format(parseFloat(roundedValue));
 }
 
 export function CEPFormat(str){

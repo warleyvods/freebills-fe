@@ -18,7 +18,7 @@ import {
   VStack
 } from '@chakra-ui/react'
 import React, { useState } from "react";
-import { CheckIcon, InfoIcon, SmallCloseIcon } from "@chakra-ui/icons";
+import { CheckIcon, DeleteIcon, InfoIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import { SkeletonTable } from "../../Skeletons/SkeletonTable";
 import { Transaction } from "../../../hooks/transactions/useTransactionById";
 import { PayTransactionModal } from "../../Modals/Transaction/PayTransaction";
@@ -30,7 +30,8 @@ import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTrans
 import Tag from "../../Tag/Tag";
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
 import { formatDate } from "../../../utils/chartData";
-import { numberFormat } from "../../Utils/utils";
+import { moneyFormat } from "../../Utils/utils";
+import NextLink from "next/link";
 
 type ProductTableProps = {
   content: Transaction[];
@@ -114,9 +115,53 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                         </Flex>
                       </Td>
                     ) : (
-                      /* ISMOBILE AQUI */
                       <Td p={"5px"}>
-
+                        <NextLink href={`#`} passHref>
+                          <Flex p={4}
+                                borderWidth={1}
+                                borderRadius="md"
+                                boxShadow="sm"
+                                borderColor={"gray.100"}
+                                justify={"space-between"}
+                          >
+                            <Flex direction={"column"}>
+                              <VStack spacing={"0"} justify={"flex-start"} alignItems={"flex-start"} mb={"10px"}>
+                                <Text fontSize="md" fontWeight="medium" color="black.400">{transaction.description}</Text>
+                                {/*<Text fontSize="sm" color="gray.300">{transaction.email}</Text>*/}
+                              </VStack>
+                              <VStack spacing={"0"} justify={"flex-start"} alignItems={"flex-start"}>
+                                <Tag variant={transaction.transactionType === 'REVENUE' ? "green" : "red"}
+                                     label={transaction.transactionType === 'REVENUE' ? "RECEITA" : "DESPESA"}
+                                />
+                              </VStack>
+                            </Flex>
+                            <VStack>
+                              <ConfirmationDialog
+                                title="Deletar Transação"
+                                buttonText="Deletar"
+                                description="Você tem certeza de que deseja desativar sua conta? Todos os seus dados serão permanentemente removidos. Essa ação não pode ser desfeita."
+                                onOk={() => null}
+                                mainColor={'white'}
+                                variant={'danger'}
+                                trigger={(onOpen) => {
+                                  return (
+                                    <IconButton
+                                      margin={"20px -5px 0px 0px"}
+                                      color={"customRed.500"}
+                                      variant={"ghost"}
+                                      aria-label={'delete'}
+                                      icon={<DeleteIcon />}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        onOpen();
+                                      }}
+                                    />
+                                  )
+                                }}
+                              />
+                            </VStack>
+                          </Flex>
+                        </NextLink>
                       </Td>
                     )
                   ) : (
@@ -185,7 +230,7 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                       {/*VALOR*/}
                       <Td  pb={0} pt={0}>
                         <Flex justify="center">
-                          <Text fontWeight={"bold"}>{numberFormat(transaction.amount)}</Text>
+                          <Text fontWeight={"bold"}>{moneyFormat(transaction.amount)}</Text>
                         </Flex>
                       </Td>
 

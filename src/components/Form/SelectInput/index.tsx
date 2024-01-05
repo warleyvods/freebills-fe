@@ -8,7 +8,7 @@ import {
   HStack,
   useColorModeValue
 } from "@chakra-ui/react";
-import { forwardRef, ForwardRefRenderFunction } from "react";
+import React, { forwardRef, ForwardRefRenderFunction } from "react";
 
 interface SelectProps extends ChakraSelectProps {
   name?: string;
@@ -28,7 +28,7 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
   onChange,
   placeholder,
   ...rest
-}: SelectProps, ref) => {
+}: SelectProps) => {
   const mainColor = useColorModeValue('gray.10', 'gray.900');
 
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -42,7 +42,7 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
       {label && (
         <FormLabel htmlFor={name} mb={1}>
           <HStack spacing={"2px"}>
-            <Text fontSize={"1rem"}>{label}</Text>
+            <Text fontSize={{ base: "0.9rem", md: "1rem" }}>{label}</Text>
             <span style={{ color: "red" }}>{important}</span>
           </HStack>
         </FormLabel>

@@ -39,7 +39,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({
         !!label && (
           <FormLabel htmlFor={name} mb={1}>
             <HStack spacing={"2px"}>
-              <Text fontSize={"1rem"}>{label}</Text>
+              <Text fontSize={{ base: "0.9rem", md: "1rem" }}>{label}</Text>
               <span style={{color: "red"}}>{important}</span>
             </HStack>
           </FormLabel>

@@ -17,7 +17,7 @@ import {
 import React from "react";
 import { RiMastercardFill, RiMore2Fill } from "react-icons/ri";
 import { EditIcon, ExternalLinkIcon, RepeatIcon } from "@chakra-ui/icons";
-import { numberFormat } from "../Utils/utils";
+import { moneyFormat } from "../Utils/utils";
 
 type CardProps = {
   description: string;
@@ -86,7 +86,7 @@ export default function CreditCard({description, closingDay, cardLimit } : CardP
         }</Text>
       </HStack>
 
-      <Text fontWeight="bold" fontSize={"0.9rem"}>R$ 100,00 de {numberFormat(cardLimit)}</Text>
+      <Text fontWeight="bold" fontSize={"0.9rem"}>R$ 100,00 de {moneyFormat(cardLimit)}</Text>
       <Progress value={20} borderRadius={"10px"} />
       <Text fontWeight="normal" fontSize={"0.8rem"} mb={"15px"}>Limite Disponível R$ 7.900,00</Text>
 

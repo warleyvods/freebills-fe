@@ -1,9 +1,19 @@
 import React, { ReactNode, useCallback, useState } from "react";
-import { Button, Flex, HStack, Icon, IconButton, LightMode, SimpleGrid, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Flex,
+  HStack,
+  Icon,
+  IconButton,
+  LightMode,
+  SimpleGrid, Stack,
+  Text,
+  useBreakpointValue
+} from "@chakra-ui/react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import { capitalizeFirstLetter, getMonthName, updateMonth, updateYear } from "../../utils/utils";
 import CardsDashboard from "../Cards/CardsDashboard";
-import { numberFormat } from "../Utils/utils";
+import { moneyFormat } from "../Utils/utils";
 import { MdAccountBalance, MdOutlineAttachMoney } from "react-icons/md";
 import { RiAddLine, RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
 import CardsSkeleton from "../Cards/CardsSkeleton";
@@ -20,6 +30,7 @@ type InfoCardsProps = {
 };
 
 export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, showCardInfo = true}: InfoCardsProps) {
+  const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
 
@@ -89,32 +100,30 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
     switch (dashboardType) {
       case "REVENUE":
         const revenueDashboard = dashboardData as unknown as DashboardRevenueBalance;
-        console.log("to em revenue", month, year)
-        console.log("revebue", revenueDashboard)
         cards = (
           <>
             <CardsDashboard
               description={"Saldo Atual"}
-              value={numberFormat(revenueDashboard?.totalBalance)}
+              value={moneyFormat(revenueDashboard?.totalBalance)}
               color={"blue.600"}
               icon={MdOutlineAttachMoney}
               path={"/transactions"}
             />
             <CardsDashboard
               description={"Receitas Pendentes"}
-              value={numberFormat(revenueDashboard?.totalRevenuePending)}
+              value={moneyFormat(revenueDashboard?.totalRevenuePending)}
               color={"green.600"}
               icon={RiArrowUpLine}
             />
             <CardsDashboard
               description={"Receitas Pagas"}
-              value={numberFormat(revenueDashboard?.totalRevenueReceived)}
+              value={moneyFormat(revenueDashboard?.totalRevenueReceived)}
               color={"green.600"}
               icon={RiArrowDownLine}
             />
             <CardsDashboard
               description={"Total"}
-              value={numberFormat(revenueDashboard?.totalRevenue)}
+              value={moneyFormat(revenueDashboard?.totalRevenue)}
               color={"green.600"}
               icon={MdAccountBalance}
             />
@@ -124,31 +133,30 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
 
       case "EXPENSE":
         const expenseDashboard = dashboardData as unknown as DashboardBalanceExpense;
-        console.log("to em expense", month, year)
         cards = (
           <>
             <CardsDashboard
               description={"Saldo Atual"}
-              value={numberFormat(expenseDashboard?.totalBalance)}
+              value={moneyFormat(expenseDashboard?.totalBalance)}
               color={"blue.600"}
               icon={MdOutlineAttachMoney}
               path={"/transactions"}
             />
             <CardsDashboard
               description={"Despesas Pendentes"}
-              value={numberFormat(expenseDashboard?.totalExpensePending)}
+              value={moneyFormat(expenseDashboard?.totalExpensePending)}
               color={"red.600"}
               icon={RiArrowUpLine}
             />
             <CardsDashboard
               description={"Despesas Pagas"}
-              value={numberFormat(expenseDashboard?.totalExpenseReceived)}
+              value={moneyFormat(expenseDashboard?.totalExpenseReceived)}
               color={"red.600"}
               icon={RiArrowDownLine}
             />
             <CardsDashboard
               description={"Total"}
-              value={numberFormat(expenseDashboard?.totalExpense)}
+              value={moneyFormat(expenseDashboard?.totalExpense)}
               color={"red.600"}
               icon={MdAccountBalance}
             />
@@ -158,31 +166,30 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
 
       case null:
         const totalDashboard = dashboardData as DashboardBalance;
-        console.log("to em total")
         cards = (
           <>
             <CardsDashboard
               description={"Saldo Atual"}
-              value={numberFormat(totalDashboard?.totalBalance)}
+              value={moneyFormat(totalDashboard?.totalBalance)}
               color={"blue.600"}
               icon={MdOutlineAttachMoney}
               path={"/transactions"}
             />
             <CardsDashboard
               description={"Total de Receitas"}
-              value={numberFormat(totalDashboard?.totalRevenue)}
+              value={moneyFormat(totalDashboard?.totalRevenue)}
               color={"green.600"}
               icon={RiArrowDownLine}
             />
             <CardsDashboard
               description={"Total de Despesas"}
-              value={numberFormat(totalDashboard?.totalExpensive)}
+              value={moneyFormat(totalDashboard?.totalExpensive)}
               color={"red.600"}
               icon={RiArrowUpLine}
             />
             <CardsDashboard
               description={"Total de Despesas em Cartões"}
-              value={numberFormat(totalDashboard?.totalExpensiveCards)}
+              value={moneyFormat(totalDashboard?.totalExpensiveCards)}
               color={"red.600"}
               icon={RiArrowUpLine}
             />
@@ -203,8 +210,8 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
           <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing="18px" pb={0} pt={3}>
             {cards}
           </SimpleGrid>
-          <HStack justify={"space-between"} p={2}>
-            <Text fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
+          <Stack direction={[ isMobile ? "column" : "row" ]} justify={"space-between"} p={2}>
+            <Text textAlign={ isMobile ? "center" : "center" } fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
             <Flex flexDirection="row" justifyContent={"center"} pb={0} pt={0}>
               <HStack justify={"center"}>
                 <IconButton
@@ -249,7 +256,7 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
             ) : (
               <div/>
             ) }
-          </HStack>
+          </Stack>
 
         </>
       )}

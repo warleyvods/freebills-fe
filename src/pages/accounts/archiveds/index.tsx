@@ -27,7 +27,7 @@ import { BiTrash } from "react-icons/bi";
 import { useUpdateArchiveAccount } from "../../../hooks/accounts/useUpdateArchiveAcc";
 import { useDeleteAccount } from "../../../hooks/accounts/useDeleteAccount";
 import { ChevronLeftIcon, RepeatIcon } from "@chakra-ui/icons";
-import { accountType, numberFormat } from "../../../components/Utils/utils";
+import { accountType, moneyFormat } from "../../../components/Utils/utils";
 import SideBarLayout from "../../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../../components/Tables/HeadingTable";
 import IconComponent from "../../../components/Icons/IconComponent";
@@ -124,7 +124,7 @@ export default function ArchivedAccount() {
                         </Td>
                         <Td pl={0} pr={0}>
                           <Flex justify={"center"}>
-                            <Text fontWeight={"normal"}>{numberFormat(account.amount)}</Text>
+                            <Text fontWeight={"normal"}>{moneyFormat(account.amount)}</Text>
                           </Flex>
                         </Td>
                         <Td pl={0} pr={0}>

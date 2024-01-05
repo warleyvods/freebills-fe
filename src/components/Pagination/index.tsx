@@ -2,6 +2,7 @@ import { Box, Button, Flex, HStack, Icon, Select, Stack, Text } from "@chakra-ui
 import { PaginationItem } from "./PaginationItem";
 import React, { useState } from "react";
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { moneyFormat } from "../Utils/utils";
 
 interface PaginationProps {
   totalCountOfRegisters: number;
@@ -10,6 +11,7 @@ interface PaginationProps {
   onPageChange: (page: number) => void;
   changePageSize?: boolean;
   handleSizeChange?: (value: number) => void;
+  totalSurveyValues?: number;
 }
 
 const siblingsCount = 1;
@@ -28,7 +30,8 @@ export function Pagination({
   currentPage = 1,
   onPageChange,
   changePageSize = false,
-  handleSizeChange
+  handleSizeChange,
+  totalSurveyValues
 }: PaginationProps) {
 
   const [selectedValue, setSelectedValue] = useState<number>(registerPerPage);
@@ -82,6 +85,8 @@ export function Pagination({
               <option value={10}>10 por página</option>
               <option value={15}>15 por página</option>
               <option value={20}>20 por página</option>
+              <option value={50}>50 por página</option>
+              <option value={100}>100 por página</option>
             </Select>
           </HStack>
           <Box display={{base: 'none', md: 'inline'}}>
@@ -90,7 +95,10 @@ export function Pagination({
         </HStack>
       )}
 
+
+
       <HStack spacing={0}>
+        <Text fontWeight={"medium"} mr={"15px"}>{!!totalSurveyValues ? `Soma: ${moneyFormat(totalSurveyValues)}` : ""}</Text>
         <Button
           onClick={previousPage}
           paddingLeft={0}

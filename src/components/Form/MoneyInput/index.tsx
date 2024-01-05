@@ -10,7 +10,7 @@ interface InputProps {
   value: number;
   name: string;
   fontWeight?: string;
-  fontSize?: string;
+  fontSize?: string | { base: string; md: string; }
   placeholder?: string;
 }
 
@@ -92,6 +92,8 @@ const InputMoney: React.FC<InputProps> = ({
               allowNegative={true}
               prefix="-"
               style={{
+                fontWeight: 'normal',
+                fontSize: '17px',
                 outline: 'none',
                 padding: "8px",
                 width: "100%",

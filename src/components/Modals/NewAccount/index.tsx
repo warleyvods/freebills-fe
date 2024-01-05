@@ -58,7 +58,6 @@ interface ModalTypes {
 export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes) {
   const mainColor = useColorModeValue('white', 'gray.800');
   const inverseMainColor = useColorModeValue('gray.800', 'white');
-  const selectBgColor = useColorModeValue('gray.10', 'gray.900');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const createAccount = useCreateAccount();
   const {data: accountFound} = useAccountById(accountId);

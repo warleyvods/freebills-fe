@@ -13,13 +13,14 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Text,
   SimpleGrid,
-  Switch,
+  Switch, useBreakpointValue,
   useColorModeValue,
   useDisclosure,
   VStack
 } from '@chakra-ui/react'
-import React, { ReactNode, useCallback, useMemo, useState } from "react";
+import React, { ReactNode, useCallback } from "react";
 import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
 import { useMe } from "../../../hooks/users/useMe";
@@ -27,14 +28,16 @@ import { useCreateTransaction } from "../../../hooks/transactions/useCreateTrans
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
 import { useTransactionById } from "../../../hooks/transactions/useTransactionById";
 import { useUpdateTransaction } from "../../../hooks/transactions/useUpdateTransaction";
-import NumberFormat from "react-number-format";
 import * as yup from "yup";
-import MaskMoney from "../../Form/MaskMoney";
+import InputMoney from "../../Form/MoneyInput";
+import { SelectFormik } from "../../Form/SelectInput";
 
 const createTransactionSchema = yup.object().shape({
-  amount: yup.number().required('Valor Obrigatório.'),
-  date: yup.string().required('Data Obrigatória.'),
-  description: yup.string().required('Descrição Obrigatória.')
+  amount: yup.number().required('Valor obrigatório.'),
+  date: yup.string().required('Data obrigatória.'),
+  description: yup.string().required('Descrição obrigatória.'),
+  transactionCategory: yup.string().required('Categoria obrigatória.'),
+
 });
 
 interface LinkItemProps {
@@ -132,7 +135,7 @@ const expenseInitialValues = {
 
 const colorType = (transactionType: string): string => {
   if (transactionType === 'TRANSACTION') {
-    return 'blue.500';
+    return 'blue.400';
   } else if (transactionType === 'REVENUE') {
     return 'green.500';
   } else {
@@ -162,6 +165,7 @@ interface ModalTypes {
 }
 
 export function NewTransactionModal({onCancel, trigger, transactionType, transactionId, edit}: ModalTypes) {
+  // const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const mainColor = useColorModeValue('white', 'gray.800');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const {data: user} = useMe();
@@ -195,6 +199,18 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
     onClose();
   }, [onClose, onCancel])
 
+  const accountOptions = accounts?.map((acc) => ({
+    value: acc.id.toString(),
+    label: acc.description,
+  }));
+
+  const categoryOptions = category.map((acc) => ({
+    value: acc.category,
+    label: acc.categoryName,
+  }));
+
+  // @ts-ignore
+  // @ts-ignore
   return (
     <>
       {trigger(onOpen, onClose)}
@@ -202,34 +218,43 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
         onClose={handleCancel}
         isOpen={isOpen}
         isCentered
-        size="xl"
+        size="lg"
       >
-        <ModalOverlay backdropFilter='blur(1px)' />
-        <ModalContent bg={mainColor}>
-          <Formik initialValues={transactionFound ? transactionFound : (transactionType === 'REVENUE' ? revenueInitialValues : expenseInitialValues)}
-                  onSubmit={!!transactionId ? handleUpdateTransaction : handleCreateAddress}
-                  validationSchema={createTransactionSchema}
-                  validateOnChange={false}
+        <ModalOverlay backdropFilter='blur(3px)' />
+        <ModalContent bg={mainColor} borderRadius={"10px"}>
+          <Formik
+            initialValues={transactionFound ? transactionFound : (transactionType === 'REVENUE' ? revenueInitialValues : expenseInitialValues)}
+            onSubmit={!!transactionId ? handleUpdateTransaction : handleCreateAddress}
+            validationSchema={createTransactionSchema}
+            validateOnChange={false}
           >
             {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
               <>
                 <form onSubmit={handleSubmit}>
                   <ModalHeader bg={color}
                                fontSize="25px"
-                               fontWeight="bold">{!!transactionType && `${edit ? "Editar" : "Adicionar"} ${transactionType === 'REVENUE' ? 'receita' : 'despesa'}`}
+                               fontWeight="medium">{!!transactionType && `${edit ? "Editar" : "Adicionar"} ${transactionType === 'REVENUE' ? 'receita' : 'despesa'}`}
                   </ModalHeader>
                   <ModalCloseButton />
-                  <ModalBody justifyContent="center">
-                    <Box flex={1} borderRadius={8} bg={mainColor} pt={5} pl={5} pr={5} pb={8}>
+                  <ModalBody justifyContent="center" p={{base: "15px", md: "24px"}}>
+                    <Box flex={1} borderRadius={"5px"} bg={mainColor}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
-                          <MaskMoney
+                          <InputMoney
                             onChange={(value) => {
                               setFieldValue("amount", value);
                             }}
                             value={values.amount}
-                           name={"amount"}/>
-                          <InputFormik placeholder="Data"
+                            name={"amount"}
+                            error={errors.amount}
+                            label={"Valor"}
+                            fontSize={{base: "0.9rem", md: "1rem"}}
+                            fontWeight={"medium"}
+                            important={true}
+                          />
+                          <InputFormik label={"Data"}
+                                       important={"*"}
+                                       placeholder="Data"
                                        mask={"99/99/9999"}
                                        name="date"
                                        type="text"
@@ -237,35 +262,35 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                                        value={values.date}
                                        error={errors.date}
                           />
-                          <InputFormik placeholder={"Descrição"}
+                          <InputFormik label={"Descrição"}
+                                       important={"*"}
+                                       placeholder={"Descrição"}
                                        name="description"
                                        type="text"
                                        onChange={handleChange}
                                        value={values.description}
                                        error={errors.description}
                           />
-                          <Select placeholder={"Selecione uma Conta" }
-                                  id={"accountId"}
-                                  name={"accountId"}
-                                  value={values.accountId}
-                                  onChange={handleChange}
-                          >
-                            {accounts?.map((acc) => (
-                              <option key={acc.id} value={acc.id}>{acc.description}</option>
-                            ))}
 
-                          </Select>
+                          <SelectFormik
+                            label="Tipo da Conta"
+                            name="accountId"
+                            error={errors.accountId}
+                            value={values.accountId}
+                            onChange={handleChange}
+                            important={"*"}
+                            options={accountOptions}
+                          />
 
-                          <Select placeholder={"Selecione uma Categoria"}
-                                  id={"transactionCategory"}
-                                  name={"transactionCategory"}
-                                  value={values.transactionCategory}
-                                  onChange={handleChange}>
-
-                            {category.map((cat) => (
-                              <option key={cat.category} value={cat.category}>{cat.categoryName}</option>
-                            ))}
-                          </Select>
+                          <SelectFormik
+                            label="Selecione uma Categoria"
+                            name="transactionCategory"
+                            error={errors.transactionCategory}
+                            value={values.transactionCategory}
+                            onChange={handleChange}
+                            important={"*"}
+                            options={categoryOptions}
+                          />
 
                           {
                             edit ? (
@@ -294,31 +319,26 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                             : null
                           }
 
-                          <HStack justify={"space-between"}>
-                            <FormControl as={SimpleGrid} columns={{base: 1, lg: 8}}>
-                              <FormLabel htmlFor='barCode'>Boleto</FormLabel>
-                              <LightMode>
-                                <Switch
-                                  id="bankSlip"
-                                  name="bankSlip"
-                                  isChecked={values.bankSlip}
-                                  onChange={handleChange}
-                                />
-                              </LightMode>
-                            </FormControl>
+                          <HStack>
+                            <Text fontSize={{base: "0.9rem", md: "1rem"}} fontWeight={"medium"}>Boleto</Text>
+                            <Switch
+                              id="bankSlip"
+                              name="bankSlip"
+                              isChecked={values.bankSlip}
+                              onChange={handleChange}
+                            />
                           </HStack>
 
-                          <FormControl as={SimpleGrid} columns={{base: 1, lg: 9}}>
-                            <FormLabel htmlFor='paid'>Pago</FormLabel>
-                            <LightMode>
-                              <Switch
-                                id="paid"
-                                name="paid"
-                                isChecked={values.paid}
-                                onChange={handleChange}
-                              />
-                            </LightMode>
-                          </FormControl>
+                          <HStack>
+                            <Text fontSize={{base: "0.9rem", md: "1rem"}} fontWeight={"medium"}>Pago</Text>
+                            <Switch
+                              id="paid"
+                              name="paid"
+                              isChecked={values.paid}
+                              onChange={handleChange}
+                            />
+                          </HStack>
+
 
                         </SimpleGrid>
                       </VStack>
@@ -327,7 +347,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                   <ModalFooter>
                     <HStack spacing={2}>
                       <LightMode>
-                        <Button isLoading={isSubmitting} colorScheme="blue" type="submit">Salvar</Button>
+                        <Button isLoading={isSubmitting} variant={"default"} type="submit">Salvar</Button>
                       </LightMode>
                     </HStack>
                   </ModalFooter>

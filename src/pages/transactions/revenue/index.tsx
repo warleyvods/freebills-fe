@@ -1,7 +1,7 @@
 import { Box, HStack, IconButton } from "@chakra-ui/react";
 import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
 import React, { useState } from "react";
-import { useTransactionRevenue } from "../../../hooks/transactions/useTransactionRevenue";
+import { useTransaction } from "../../../hooks/transactions/useTransaction";
 import HeadingTable from "../../../components/Tables/HeadingTable";
 import SideBarLayout from "../../../components/SidebarLayout/SideBarLayout";
 import { InternalTableHead } from "../../../components/Tables/components/InternalTableHead";
@@ -43,7 +43,7 @@ export default function TransactionRevenue() {
     data: transactions,
     isLoading,
     error
-  } = useTransactionRevenue(page, keyword, month, year, sortComplete, active, selectedValuePage);
+  } = useTransaction(page, keyword, month, year, sortComplete, active, selectedValuePage);
 
   const {mutate: deleteTransaction} = useDeleteTransaction();
 
@@ -125,7 +125,7 @@ export default function TransactionRevenue() {
               title={
                 active === null
                   ? "Nenhum transação encontrada"
-                  : active
+                  : active === 'REVENUE'
                     ? "Nenhuma receita encontrada"
                     : "Nenhuma despesa encontrada"
               }
@@ -147,6 +147,7 @@ export default function TransactionRevenue() {
                 registerPerPage={selectedValuePage}
                 handleSizeChange={handleSizeChange}
                 changePageSize={true}
+                totalSurveyValues={transactions?.totalSurveyValues}
               />
             </>
           )}
