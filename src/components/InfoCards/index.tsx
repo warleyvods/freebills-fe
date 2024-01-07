@@ -6,11 +6,13 @@ import {
   Icon,
   IconButton,
   LightMode,
+  ScaleFade,
   SimpleGrid, Stack,
   Text,
-  useBreakpointValue
+  useBreakpointValue, useDisclosure,
+  VStack
 } from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, ChevronRightIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { capitalizeFirstLetter, getMonthName, updateMonth, updateYear } from "../../utils/utils";
 import CardsDashboard from "../Cards/CardsDashboard";
 import { moneyFormat } from "../Utils/utils";
@@ -33,10 +35,15 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
+  const [show, setShow] = useState(true);
 
   const revenueData = useDashboardRevenue(month, year);
   const expenseData = useDashboardExpense(month, year);
   const totalData = useDashboard(month, year);
+
+  const toggleShow = () => {
+    setShow((prevShow) => !prevShow);
+  };
 
   const useDashboardData = (dashboardType: string, revenueData, expenseData, totalData) => {
     switch (dashboardType) {
@@ -207,11 +214,36 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
     <>
       {showCardInfo && (
         <>
-          <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing="18px" pb={0} pt={3}>
-            {cards}
-          </SimpleGrid>
-          <Stack direction={[ isMobile ? "column" : "row" ]} justify={"space-between"} p={2}>
-            <Text textAlign={ isMobile ? "center" : "center" } fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
+          { show && (
+            <ScaleFade initialScale={0.9} in={show}>
+              <SimpleGrid
+                columns={{sm: 1, md: 2, xl: 4}} spacing="18px" pb={0} pt={3}>
+                {cards}
+              </SimpleGrid>
+            </ScaleFade>
+
+          ) }
+
+          <Stack direction={[isMobile ? "column" : "row"]} justify={"space-between"} p={2}>
+            { isMobile ? (
+              <HStack justify={"center"}>
+                <Text textAlign={"center"} fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
+                <IconButton
+                  ml="30px"
+                  bg="inherit"
+                  borderRadius="inherit"
+                  _focus={{boxShadow: "none"}}
+                  onClick={toggleShow}
+                  size="sm"
+                  variant="unstyled"
+                  aria-label={"show info"}
+                  icon={show ? <ViewOffIcon /> : <ViewIcon />}
+                />
+              </HStack>
+            ) : (
+              <Text fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
+            ) }
+
             <Flex flexDirection="row" justifyContent={"center"} pb={0} pt={0}>
               <HStack justify={"center"}>
                 <IconButton
@@ -237,7 +269,7 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
                 />
               </HStack>
             </Flex>
-            { dashboardType !== null ? (
+            {dashboardType !== null ? (
               <NewTransactionModal
                 transactionType={dashboardType}
                 trigger={(open) =>
@@ -247,15 +279,15 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
                             size={"sm"}
                             fontSize={"sm"}
                             color={"white"}
-                            bg={ dashboardType === 'REVENUE' ? "green.500" : "red.500"}
+                            bg={dashboardType === 'REVENUE' ? "green.500" : "red.500"}
                             leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
                     >Adicionar {dashboardType === 'REVENUE' ? "receita" : "despesa"}
                     </Button>
                   </LightMode>
                 } />
             ) : (
-              <div/>
-            ) }
+              <div />
+            )}
           </Stack>
 
         </>

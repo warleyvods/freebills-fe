@@ -22,6 +22,7 @@ import { FloatingComponent } from "../components/FloatingComponent";
 import Tag from "../../Tag/Tag";
 import { DeleteIcon } from "@chakra-ui/icons";
 import { ConfirmationDialog } from "../../Dialog/ConfirmationDialog";
+import { useDeleteBatchUsers } from "../../../hooks/users/useDeleteBatchUsers";
 
 
 interface Users {
@@ -50,9 +51,11 @@ export default function UserTable({content, isLoading, error, onDeleteUser}: Use
   const allChecked = allUsers?.every((userId) => selectedUsers.includes(userId));
   const isIndeterminate = selectedUsers.some(Boolean) && !allChecked;
   const showFloatMenu = allChecked || isIndeterminate;
+  const deleteSelectUsers = useDeleteBatchUsers();
 
   const handleDeleteBatchUsers = () => {
     setSelectedUsers([]);
+    deleteSelectUsers.mutate(selectedUsers);
   }
 
   const handleCheckAllChange = (e) => {
@@ -212,8 +215,8 @@ export default function UserTable({content, isLoading, error, onDeleteUser}: Use
         <Flex position={"sticky"} justify={"center"} alignItems={"center"} bottom={"0px"}
               p={showFloatMenu ? "1rem" : "none"} flexDirection={"column"}>
           <FloatingComponent showFloatMenu={showFloatMenu}
-                             selectedProducts={selectedUsers}
-                             handleDeleteBatchProducts={handleDeleteBatchUsers} />
+                             selects={selectedUsers}
+                             handleDeleteBatchSelected={handleDeleteBatchUsers} />
         </Flex>
         {showFloatMenu && <Divider />}
       </>

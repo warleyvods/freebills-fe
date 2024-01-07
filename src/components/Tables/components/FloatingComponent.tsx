@@ -1,9 +1,8 @@
-import { Button, Flex, IconButton, ScaleFade } from "@chakra-ui/react";
+import { Button, Flex, ScaleFade } from "@chakra-ui/react";
 import React from "react";
-import { DeleteIcon } from "@chakra-ui/icons";
 import { ConfirmationDialog } from "../../Dialog/ConfirmationDialog";
 
-export function FloatingComponent({showFloatMenu, selectedProducts, handleDeleteBatchProducts}) {
+export function FloatingComponent({showFloatMenu, selects: selectIds, handleDeleteBatchSelected: handleDeleteBatchUsers}) {
   if (!showFloatMenu) {
     return null;
   }
@@ -32,7 +31,7 @@ export function FloatingComponent({showFloatMenu, selectedProducts, handleDelete
           title="Deletar Usuário"
           buttonText="Deletar"
           description="Você tem certeza de que deseja desativar sua conta? Todos os seus dados serão permanentemente removidos. Essa ação não pode ser desfeita."
-          onOk={() => handleDeleteBatchProducts(selectedProducts)}
+          onOk={() => handleDeleteBatchUsers(selectIds)}
           mainColor={'white'}
           variant={'danger'}
           trigger={(onOpen) => {
@@ -41,7 +40,7 @@ export function FloatingComponent({showFloatMenu, selectedProducts, handleDelete
                 variant={"danger"}
                 onClick={onOpen}
               >
-                {selectedProducts.length > 1 ? `Excluir usuários` : `Excluir usuário`}
+                {selectIds.length > 1 ? `Excluir usuários` : `Excluir usuário`}
               </Button>
             )
           }}

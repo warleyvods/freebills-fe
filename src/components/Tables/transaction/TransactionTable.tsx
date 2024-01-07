@@ -42,7 +42,6 @@ type ProductTableProps = {
 }
 
 export default function ProductsTable({content, isLoading, error,}: ProductTableProps) {
-
   //STATES
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const [showIconButton, setShowIconButton] = useState({});
@@ -61,7 +60,7 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
 
   return (
     isLoading ? (
-        <SkeletonTable mobile={isMobile} />
+        <SkeletonTable isMobile={isMobile} />
       ) :
       error ? (
         <Flex justify="center">

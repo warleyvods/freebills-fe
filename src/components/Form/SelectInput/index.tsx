@@ -16,6 +16,7 @@ interface SelectProps extends ChakraSelectProps {
   error?: any;
   options: { value: string; label: string }[];
   important?: string;
+  showDefaultOption?: boolean;
 }
 
 const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
@@ -27,6 +28,7 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
   value,
   onChange,
   placeholder,
+  showDefaultOption,
   ...rest
 }: SelectProps) => {
   const mainColor = useColorModeValue('gray.10', 'gray.900');
@@ -58,10 +60,12 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
         bgColor={mainColor}
         {...rest}
       >
-        <option value='' disabled hidden>
-          -
-        </option>
-        {options.map((opt) => (
+        { showDefaultOption && (
+          <option value='' disabled hidden>
+            -
+          </option>
+        )}
+        { options.map((opt) => (
           <option key={opt.value} value={opt.value}>
             {opt.label}
           </option>

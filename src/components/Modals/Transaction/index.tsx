@@ -36,8 +36,8 @@ const createTransactionSchema = yup.object().shape({
   amount: yup.number().required('Valor obrigatório.'),
   date: yup.string().required('Data obrigatória.'),
   description: yup.string().required('Descrição obrigatória.'),
-  transactionCategory: yup.string().required('Categoria obrigatória.'),
-
+  accountId: yup.string().required('Conta obrigatória.'),
+  transactionCategory: yup.string().required('Categoria obrigatória.')
 });
 
 interface LinkItemProps {
@@ -115,7 +115,8 @@ const revenueInitialValues = {
   transactionCategory: '',
   paid: false,
   barCode: '',
-  bankSlip: false
+  bankSlip: false,
+  accountId: ''
 }
 
 const expenseInitialValues = {
@@ -130,7 +131,8 @@ const expenseInitialValues = {
   transactionCategory: '',
   paid: false,
   barCode: '',
-  bankSlip: false
+  bankSlip: false,
+  accountId: ''
 }
 
 const colorType = (transactionType: string): string => {
@@ -209,8 +211,6 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
     label: acc.categoryName,
   }));
 
-  // @ts-ignore
-  // @ts-ignore
   return (
     <>
       {trigger(onOpen, onClose)}
@@ -280,6 +280,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                             onChange={handleChange}
                             important={"*"}
                             options={accountOptions}
+                            showDefaultOption={true}
                           />
 
                           <SelectFormik
@@ -290,7 +291,10 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                             onChange={handleChange}
                             important={"*"}
                             options={categoryOptions}
+                            showDefaultOption={true}
                           />
+
+
 
                           {
                             edit ? (

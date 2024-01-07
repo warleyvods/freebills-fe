@@ -6,13 +6,14 @@ export default function CardsSkeleton() {
   const mainColor = useColorModeValue('white', 'gray.800');
 
   return (
-    <Box bg={mainColor} w={"auto"} minH={"auto"} borderRadius={25} p={"20px"} boxShadow={"lg"} as={"a"}>
+    <Box bg={mainColor} w={"auto"} minH={"auto"} borderRadius={"10px"} p={"15px"} boxShadow={"sm"}
+         border={"1px"} borderColor={"gray.100"}>
       <HStack justifyContent={"space-between"} align={"center"}>
-        <VStack justify={"flex-start"} p={2} alignItems={"start"} spacing={5}>
-          <Skeleton height='20px' minW={"150px"} />
-          <Skeleton height='20px' minW={"150px"} />
+        <VStack justify={"flex-start"} p={2} alignItems={"start"}>
+          <Skeleton w={"130px"} h={"23px"} />
+          <Skeleton w={"130px"} h={"23px"} />
         </VStack>
-        <SkeletonCircle size='60px' />
+        <SkeletonCircle size={"45px"} />
       </HStack>
     </Box>
   )

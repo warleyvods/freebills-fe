@@ -91,10 +91,17 @@ export function InternalTableHead({
             size="sm"
             fontWeight="medium"
             border={activeButton === option.value ? "1px" : "0px"}
-            borderColor={activeButton === option.value ? option.borderColor : "initial"}
+            borderColor={activeButton === option.value ? option.borderColor : "transparent"}
             color={activeButton === option.value ? option.textColor : "initial"}
             bg={activeButton === option.value ? option.bgColor : "initial"}
-            _hover={{bg: "gray.100"}}
+            _hover={{
+              color: option.value === 'REVENUE' ? 'lime.600' : option.value === 'EXPENSE' ? 'littlePink.600' : 'white',
+              bg: option.value === 'REVENUE' ? 'lime.400' : option.value === 'EXPENSE' ? 'littlePink.400' : 'indigo.300',
+            }}
+            _active={{
+              color: option.value === 'REVENUE' ? 'lime.600' : option.value === 'EXPENSE' ? 'littlePink.600' : 'white',
+              bg: option.value === 'REVENUE' ? 'lime.500' : option.value === 'EXPENSE' ? 'littlePink.500' : 'indigo.400',
+            }}
             onClick={() => handleButtonClick(option.value)}
             isDisabled={option.active}
           >
