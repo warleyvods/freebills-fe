@@ -9,6 +9,14 @@ type JwtPayload = {
 // This function can be marked `async` if using `await` inside
 export function middleware(request: NextRequest) {
   const currLocation = new URL(request.url);
+
+  if (currLocation.pathname === '/' && request.cookies.token) {
+    const jwt = decode<JwtPayload>(request.cookies.token);
+    if (jwt.exp >= new Date().valueOf() / 1000) {
+      return NextResponse.redirect(new URL('/dashboard', currLocation));
+    }
+  }
+
   if (currLocation.pathname === '/') {
     return NextResponse.next();
   }
