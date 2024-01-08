@@ -1,4 +1,5 @@
 import {
+  Box,
   Button, Circle,
   Flex,
   HStack,
@@ -114,53 +115,60 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                         </Flex>
                       </Td>
                     ) : (
-                      <Td p={"5px"}>
-                        <NextLink href={`#`} passHref>
-                          <Flex p={4}
-                                borderWidth={1}
-                                borderRadius="md"
-                                boxShadow="sm"
-                                borderColor={"gray.100"}
-                                justify={"space-between"}
-                          >
-                            <Flex direction={"column"}>
-                              <VStack spacing={"0"} justify={"flex-start"} alignItems={"flex-start"} mb={"10px"}>
-                                <Text fontSize="md" fontWeight="medium" color="black.400">{transaction.description}</Text>
-                                {/*<Text fontSize="sm" color="gray.300">{transaction.email}</Text>*/}
-                              </VStack>
-                              <VStack spacing={"0"} justify={"flex-start"} alignItems={"flex-start"}>
-                                <Tag variant={transaction.transactionType === 'REVENUE' ? "green" : "red"}
-                                     label={transaction.transactionType === 'REVENUE' ? "RECEITA" : "DESPESA"}
-                                />
-                              </VStack>
+                      <Td p={"2px"}>
+                        <NewTransactionModal
+                          transactionType={transaction.transactionType}
+                          transactionId={transaction.id}
+                          edit={true}
+                          trigger={(open) => (
+                            <Flex pl={"5px"} pr={"8px"} pb={"2px"} pt={"2px"}
+                                  borderWidth={1}
+                                  borderRadius="md"
+                                  boxShadow="sm"
+                                  borderColor={"gray.100"}
+                                  justify={"space-between"}
+                                  onClick={open}
+
+                            >
+                              <Flex direction={"row"} w={"full"} p={0} h={"50px"} alignItems={"center"}
+                                    justify={"space-between"}>
+                                <HStack>
+                                  <Circle size={"42px"} bg={"gray.200"} />
+                                  <VStack spacing={0} alignItems={"start"}>
+                                    <Text fontWeight={"bold"} size={"0.95rem"}>{transaction.description}</Text>
+                                    <Text fontWeight={"medium"} size={"0.95rem"}>
+                                      { category[transaction.transactionCategory]} | {
+                                      accounts?.filter(acc => acc.id === transaction.accountId)
+                                        .map((acc) => (
+                                          acc.description
+                                        ))} </Text>
+                                  </VStack>
+                                </HStack>
+
+                                <VStack spacing={1} alignItems={"end"}>
+                                  <Text fontWeight={"bold"}>{moneyFormat(transaction.amount)}</Text>
+                                  {transaction.paid ? (
+                                    <Tooltip label='Pago' placement='auto-start'>
+                                      <Circle size='20px' bg='lime.400' color='lime.600' border={"1px"}
+                                              borderColor={"lime.500"}>
+                                        <CheckIcon h={"10px"} />
+                                      </Circle>
+                                    </Tooltip>
+
+                                  ) : (
+                                    <Tooltip label='Pendente' placement='auto-start'>
+                                      <Circle size='20px' bg='littlePink.400' color='littlePink.600' border={"1px"}
+                                              borderColor={"littlePink.500"}>
+                                        <SmallCloseIcon h={"14px"} />
+                                      </Circle>
+                                    </Tooltip>
+                                  )}
+                                </VStack>
+                              </Flex>
                             </Flex>
-                            <VStack>
-                              <ConfirmationDialog
-                                title="Deletar Transação"
-                                buttonText="Deletar"
-                                description="Você tem certeza de que deseja desativar sua conta? Todos os seus dados serão permanentemente removidos. Essa ação não pode ser desfeita."
-                                onOk={() => null}
-                                mainColor={'white'}
-                                variant={'danger'}
-                                trigger={(onOpen) => {
-                                  return (
-                                    <IconButton
-                                      margin={"20px -5px 0px 0px"}
-                                      color={"customRed.500"}
-                                      variant={"ghost"}
-                                      aria-label={'delete'}
-                                      icon={<DeleteIcon />}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                        onOpen();
-                                      }}
-                                    />
-                                  )
-                                }}
-                              />
-                            </VStack>
-                          </Flex>
-                        </NextLink>
+                          )}
+                        />
+
                       </Td>
                     )
                   ) : (
@@ -173,18 +181,20 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                       </Td>
 
                       {/*SITUAÇÃO*/}
-                      <Td  pb={0} pt={0}>
+                      <Td pb={0} pt={0}>
                         <Flex justify="center">
                           {transaction.paid ? (
                             <Tooltip label='Pago' placement='auto-start'>
-                              <Circle size='20px' bg='lime.400' color='lime.600' border={"1px"} borderColor={"lime.500"}>
+                              <Circle size='20px' bg='lime.400' color='lime.600' border={"1px"}
+                                      borderColor={"lime.500"}>
                                 <CheckIcon h={"10px"} />
                               </Circle>
                             </Tooltip>
 
                           ) : (
                             <Tooltip label='Pendente' placement='auto-start'>
-                              <Circle size='20px' bg='littlePink.400' color='littlePink.600' border={"1px"} borderColor={"littlePink.500"}>
+                              <Circle size='20px' bg='littlePink.400' color='littlePink.600' border={"1px"}
+                                      borderColor={"littlePink.500"}>
                                 <SmallCloseIcon h={"14px"} />
                               </Circle>
                             </Tooltip>
@@ -193,7 +203,7 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                       </Td>
 
                       {/*CONTA*/}
-                      <Td  pb={0} pt={0}>
+                      <Td pb={0} pt={0}>
                         <Flex justify={"center"}>
                           <Text fontWeight={"medium"}>
                             {accounts?.filter(acc => acc.id === transaction.accountId).map((acc) => (
@@ -204,21 +214,21 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                       </Td>
 
                       {/*DATA*/}
-                      <Td  pb={0} pt={0}>
+                      <Td pb={0} pt={0}>
                         <Flex justify="center">
                           {formatDate(transaction.date)}
                         </Flex>
                       </Td>
 
                       {/*CATEGORIA*/}
-                      <Td  pb={0} pt={0}>
+                      <Td pb={0} pt={0}>
                         <Flex justify="center">
                           <Text fontWeight={"medium"}>{category[transaction.transactionCategory]}</Text>
                         </Flex>
                       </Td>
 
                       {/*TIPO*/}
-                      <Td  pb={0} pt={0}>
+                      <Td pb={0} pt={0}>
                         <Flex justify="center">
                           <Tag variant={transaction.transactionType === 'REVENUE' ? "green" : "red"}
                                label={transaction.transactionType === 'REVENUE' ? "RECEITA" : "DESPESA"}
@@ -227,14 +237,14 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                       </Td>
 
                       {/*VALOR*/}
-                      <Td  pb={0} pt={0}>
+                      <Td pb={0} pt={0}>
                         <Flex justify="center">
                           <Text fontWeight={"bold"}>{moneyFormat(transaction.amount)}</Text>
                         </Flex>
                       </Td>
 
                       {/*OPÇÕES*/}
-                      <Td  pb={0} pt={0}>
+                      <Td pb={0} pt={0}>
                         <HStack justify={"flex-end"}>
                           {
                             transaction.paid ? null : (
@@ -312,7 +322,7 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                                 size="sm"
                                 icon={<Icon as={BiTrash} fontSize={"16"} />}
                                 onClick={onOpen} />}
-                               />
+                            />
                           </LightMode>
                         </HStack>
                       </Td>
