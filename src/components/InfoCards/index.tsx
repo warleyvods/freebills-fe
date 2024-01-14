@@ -1,18 +1,20 @@
 import React, { ReactNode, useCallback, useState } from "react";
 import {
+  Avatar, Box,
   Button,
   Flex,
   HStack,
+  Image,
   Icon,
   IconButton,
-  LightMode,
+  LightMode, Menu, MenuButton, MenuItem, MenuList,
   ScaleFade,
-  SimpleGrid, Stack,
+  SimpleGrid,
+  Stack,
   Text,
-  useBreakpointValue, useDisclosure,
-  VStack
+  useBreakpointValue, useColorModeValue, VStack
 } from "@chakra-ui/react";
-import { ChevronLeftIcon, ChevronRightIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, ChevronLeftIcon, ChevronRightIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 import { capitalizeFirstLetter, getMonthName, updateMonth, updateYear } from "../../utils/utils";
 import CardsDashboard from "../Cards/CardsDashboard";
 import { moneyFormat } from "../Utils/utils";
@@ -23,6 +25,8 @@ import { DashboardRevenueBalance, useDashboardRevenue } from "../../hooks/dashbo
 import { DashboardBalanceExpense, useDashboardExpense } from "../../hooks/dashboard/useDashboardExpense";
 import { DashboardBalance, useDashboard } from "../../hooks/dashboard/useDashboard";
 import { NewTransactionModal } from "../Modals/Transaction";
+import { FiChevronDown } from "react-icons/fi";
+import NextLink from "next/link";
 
 type InfoCardsProps = {
   dashboardType: "REVENUE" | "EXPENSE" | null;
@@ -214,7 +218,7 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
     <>
       {showCardInfo && (
         <>
-          { show && (
+          {show && (
             <ScaleFade initialScale={0.9} in={show}>
               <SimpleGrid
                 columns={{sm: 1, md: 2, xl: 4}} spacing="18px" pb={0} pt={3}>
@@ -222,10 +226,10 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
               </SimpleGrid>
             </ScaleFade>
 
-          ) }
+          )}
 
           <Stack direction={[isMobile ? "column" : "row"]} justify={"space-between"} p={2}>
-            { isMobile ? (
+            {isMobile ? (
               <HStack justify={"center"}>
                 <Text textAlign={"center"} fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
                 <IconButton
@@ -242,9 +246,9 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
               </HStack>
             ) : (
               <Text fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
-            ) }
+            )}
 
-            <Flex flexDirection="row" justifyContent={"center"} pb={0} pt={0}>
+            <Flex flexDirection="row" justifyContent={"center"} pb={0} pt={0} alignItems={"center"}>
               <HStack justify={"center"}>
                 <IconButton
                   onClick={decreaseMonthWithYear}
@@ -269,7 +273,40 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
                 />
               </HStack>
             </Flex>
-            {dashboardType !== null ? (
+
+            {dashboardType == null && (
+              <Flex justify={"center"} alignItems={"center"}>
+                <Menu>
+                  <MenuButton as={Button} rightIcon={<ChevronDownIcon />} bg={"indigo.400"} color={"white"}>
+                    Adicionar transação
+                  </MenuButton>
+                  <MenuList p={0} borderRadius={0}>
+                    <NewTransactionModal
+                      transactionType={"EXPENSE"}
+                      trigger={(open) =>
+                        <LightMode>
+                          <MenuItem onClick={open} _hover={{bg: "red.500", color: "white"}}>
+                            Adicionar despesa
+                          </MenuItem>
+                        </LightMode>
+                      } />
+
+                    <NewTransactionModal
+                      transactionType={"REVENUE"}
+                      trigger={(open) =>
+                        <LightMode>
+                          <MenuItem onClick={open} _hover={{bg: "green.500", color: "white"}}>
+                            Adicionar receita
+                          </MenuItem>
+                        </LightMode>
+                      } />
+                  </MenuList>
+                </Menu>
+              </Flex>
+
+            )}
+
+            {dashboardType !== null && (
               <NewTransactionModal
                 transactionType={dashboardType}
                 trigger={(open) =>
@@ -285,8 +322,6 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
                     </Button>
                   </LightMode>
                 } />
-            ) : (
-              <div />
             )}
           </Stack>
 

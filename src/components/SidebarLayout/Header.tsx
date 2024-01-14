@@ -111,7 +111,7 @@ export function Header({toggleSidebar}) {
             bg={useColorModeValue('white', 'gray.900')}
             borderColor={useColorModeValue('gray.200', 'gray.700')}
           >
-            <NextLink href={"/user/my-account"}>
+            <NextLink href={"/users/my-account"}>
               <MenuItem isDisabled={true}>Minha conta</MenuItem>
             </NextLink>
             <NextLink href={"/logout"}>

@@ -146,6 +146,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                             value={values.accountType}
                             onChange={handleChange}
                             important={"*"}
+                            showDefaultOption={true}
                             options={[
                               { value: 'CHECKING_ACCOUNT', label: 'Conta Corrente' },
                               { value: 'SAVINGS', label: 'Poupança' },
@@ -162,6 +163,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                             value={values.bankType}
                             onChange={handleChange}
                             important={"*"}
+                            showDefaultOption={true}
                             options={[
                               { value: 'INTER', label: 'Banco Inter' },
                               { value: 'NUBANK', label: 'Nubank' },

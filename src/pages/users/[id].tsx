@@ -10,7 +10,6 @@ import {
   Spinner,
   Text,
   Tooltip,
-  useColorModeValue,
   VStack
 } from "@chakra-ui/react";
 import NextLink from "next/link";
@@ -39,12 +38,11 @@ type RouteParams = {
 }
 
 export default function EditUser() {
-  const mainColor = useColorModeValue('white', 'gray.800');
   const router = useRouter()
   const {id} = router.query as RouteParams;
   const {data: me} = useMe();
 
-  const {data: user, isLoading} = useQuery(['user', id], async () => {
+  const { data: user, isLoading } = useQuery(['user', id], async () => {
     const res = await api.get('v1/user/' + id);
     return res.data;
   });
@@ -88,7 +86,6 @@ export default function EditUser() {
           </>
         </HStack>
       </Flex>
-
 
       <Box>
         <Flex w="100%" maxWidth={"auto"} mx={"auto"}>
