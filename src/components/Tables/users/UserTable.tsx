@@ -70,7 +70,7 @@ export default function UserTable({content, isLoading, error, onDeleteUser}: Use
   const handleSelectedUsers = (userId: number) => {
     if (selectedUsers.includes(userId)) {
       setSelectedUsers(selectedUsers.filter((id) => id !== userId));
-    } else {
+    } else {''
       setSelectedUsers([...selectedUsers, userId]);
     }
   };

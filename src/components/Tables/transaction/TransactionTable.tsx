@@ -293,7 +293,8 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                             )
                           }
                           <NewTransactionModal
-                            transactionType={'EXPENSE'}
+                            transactionType={transaction.transactionType}
+                            edit={true}
                             transactionId={transaction.id}
                             trigger={(open) => (
                               <LightMode>
