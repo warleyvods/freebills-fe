@@ -12,10 +12,9 @@ type DashBoardProps = {
 }
 
 export default function CardsDashboard({icon, description, value, color, path}: DashBoardProps) {
-  const mainColor = useColorModeValue('white', 'gray.800');
 
   return (
-    <Box bg={mainColor} w={"auto"} minH={"auto"} borderRadius={"10px"} p={"15px"} boxShadow={"sm"} as={"a"} border={"1px"} borderColor={"gray.100"}>
+    <Box w={"auto"} minH={"auto"} borderRadius={"10px"} p={"15px"} boxShadow={"sm"} as={"a"} border={"1px"} borderColor={"gray.100"}>
       <HStack justifyContent={"space-between"} align={"center"}>
         <VStack justify={"flex-start"} p={2} alignItems={"start"}>
           <Text
@@ -33,18 +32,11 @@ export default function CardsDashboard({icon, description, value, color, path}: 
           <Circle size={"45px"}
                   bg={color}
                   textAlign={"center"}
-                  as={Button}
                   _hover={{
                     color: "white"
                   }}
                   _focus={{boxShadow: 'none'}}
           >
-            <NextLink
-              href={{
-                pathname: `${!!path ? path : ''}`,
-              }}
-              passHref
-            >
             <Icon
               w={"25px"}
               h={"25px"}
@@ -55,7 +47,6 @@ export default function CardsDashboard({icon, description, value, color, path}: 
               }}
               as={icon}
             />
-            </NextLink>
           </Circle>
         )}
       </HStack>
