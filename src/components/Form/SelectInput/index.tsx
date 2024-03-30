@@ -33,9 +33,10 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
 }: SelectProps) => {
   const mainColor = useColorModeValue('gray.10', 'gray.900');
 
+  // Limpar o erro ao selecionar uma opção válida
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event);
-    // Limpar o erro ao selecionar uma opção válida
+    // @ts-ignore
     event.target.setCustomValidity('');
   };
 

@@ -12,7 +12,7 @@ import {
   MenuItem,
   MenuList,
   Text,
-  useColorModeValue
+  useColorModeValue, useColorMode
 } from "@chakra-ui/react";
 import React from "react";
 import { RiMore2Fill } from "react-icons/ri";
@@ -31,7 +31,11 @@ type AccountProps = {
 }
 
 export default function CardsAccount({ amount, description, accId, bankType }: AccountProps) {
+  const { colorMode } = useColorMode();
+
   const mainColor = useColorModeValue("black", "gray.600");
+  const bg = useColorModeValue("white", "#1E1F20");
+  const hover = useColorModeValue("gray.50", "#333537");
   const borderColor = useColorModeValue("gray.100", "gray.700");
   const positiveAmountColor = useColorModeValue('green', 'green.400');
   const negativeAmountColor = useColorModeValue('red', 'red.400');
@@ -66,7 +70,7 @@ export default function CardsAccount({ amount, description, accId, bankType }: A
   }
 
   return (
-    <Box w={"auto"} borderRadius={"10px"} border={"1px"} borderColor={borderColor} p={"15px"} boxShadow={"lg"}>
+    <Box w={"auto"} borderRadius={"10px"} border={"1px"} borderColor={borderColor} p={"15px"} boxShadow={"lg"} bg={bg} _hover={{ bg: hover }}>
       <HStack justifyContent={"space-between"} spacing={0} align={"center"}>
         <HStack spacing={3}>
           <Image

@@ -15,7 +15,7 @@ import {
   Thead,
   Tooltip,
   Tr,
-  useBreakpointValue, useColorModeValue,
+  useBreakpointValue, useColorMode, useColorModeValue,
   VStack
 } from '@chakra-ui/react'
 import React, { useState } from "react";
@@ -44,6 +44,7 @@ type ProductTableProps = {
 }
 
 export default function ProductsTable({content, isLoading, error,}: ProductTableProps) {
+  const { colorMode } = useColorMode();
   const bg = useColorModeValue("white", "gray.700");
   const tableBg = useColorModeValue("gray.100", "gray.800");
   const borderColor = useColorModeValue("gray.100", "gray.100");
@@ -92,7 +93,7 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
             {content?.map((transaction, index) => (
               <Tr
                 key={transaction.id}
-                _hover={{bg: "gray.10"}}
+                _hover={{ bg: colorMode === 'light' ? 'gray.50' : '#333537' }}
                 h={"0px"}
               >
                 {isMobile ? (
