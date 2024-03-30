@@ -29,9 +29,6 @@ type CardProps = {
 export default function CreditCard({description, closingDay, cardLimit } : CardProps) {
   const mainColor = useColorModeValue('white', 'gray.800');
 
-  const handleArchiveChange = async () => {
-  }
-
   function getNextMonth() {
     const currentMonth = new Date().getMonth() + 2;
     const month = new Date(`"${currentMonth}"`).toLocaleDateString('pt-BR', {

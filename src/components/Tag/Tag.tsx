@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text } from '@chakra-ui/react';
+import { Box, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 
 type TagProps = {
   variant: string;
@@ -7,23 +7,24 @@ type TagProps = {
 }
 
 export const Tag = ({ variant, label }: TagProps) => {
+  const { colorMode } = useColorMode();
+
+  const getColor = (lightColor: string, darkColor: string) => {
+    return colorMode === 'light' ? lightColor : darkColor;
+  };
+
   let bgColor, borderColor, textColor;
 
   switch (variant) {
     case 'green':
-      bgColor = 'lime.400';
-      borderColor = 'lime.500';
-      textColor = 'lime.600';
+      bgColor = getColor('lime.400', '#426241');
+      borderColor = getColor('lime.500', '#426241');
+      textColor = getColor('lime.600', '#8FFF8E');
       break;
     case 'red':
-      bgColor = 'littlePink.400';
-      borderColor = 'littlePink.500';
-      textColor = 'littlePink.600';
-      break;
-    case 'gray':
-      bgColor = 'littleGray.400';
-      borderColor = 'littleGray.500';
-      textColor = 'littleGray.600';
+      bgColor = getColor('littlePink.400', '#624141');
+      borderColor = getColor('littlePink.500', '#624141');
+      textColor = getColor('littlePink.600', '#FF8E8E');
       break;
     default:
       bgColor = 'lime.400';

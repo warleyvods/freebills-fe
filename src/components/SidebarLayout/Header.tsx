@@ -1,6 +1,6 @@
 import {
   Avatar,
-  Box,
+  Box, Button,
   Flex,
   HStack,
   Icon,
@@ -10,7 +10,7 @@ import {
   MenuItem,
   MenuList,
   Text,
-  useBreakpointValue,
+  useBreakpointValue, useColorMode,
   useColorModeValue,
   useDisclosure,
   VStack
@@ -18,12 +18,16 @@ import {
 import { FiChevronDown } from "react-icons/fi";
 import NextLink from "next/link";
 import { useMe } from "../../hooks/users/useMe";
+import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 
 export function Header({toggleSidebar}) {
+  const mainColor = useColorModeValue("white", "gray.800");
+  const borderColor = useColorModeValue("white", "gray.700");
   const me  = useMe()
   const { isOpen, onOpen, onClose } = useDisclosure();
   const isBase = useBreakpointValue({ base: true, md: false });
   const handleClick = isBase ? (isOpen ? onClose : onOpen) : null;
+  const { colorMode, toggleColorMode } = useColorMode()
 
   return (
     <Flex
@@ -35,8 +39,8 @@ export function Header({toggleSidebar}) {
       as="header"
       alignItems="center"
       borderBottom="1px"
-      borderColor="gray.100"
-      bg="white"
+      borderColor={borderColor}
+      bg={mainColor}
       py={2}
       boxShadow="sm"
       px={{base: 4, sm: 6, lg: 8}}
@@ -69,13 +73,19 @@ export function Header({toggleSidebar}) {
           aria-hidden="true"
         />
       </HStack>
-
       {/* ADICIONAR SEARCH BAR AQUI */}
+
       {/* ICONE ALERTA AQUI */}
-
       <Flex alignItems="center">
+        <IconButton
+          onClick={toggleColorMode}
+          size="lg"
+          variant="ghost"
+          aria-label="open menu"
+          icon={colorMode === 'light' ? <MoonIcon /> : <SunIcon />}
+          mr={"10px"}
+        />
         {/* Botão do Avatar */}
-
         <IconButton
           aria-label="Abrir menu"
           icon={<Avatar src="" h="8" w="8" rounded="full" bg="gray.200" />}
@@ -84,7 +94,6 @@ export function Header({toggleSidebar}) {
           w="8"
           variant="unstyled"
         />
-
         {/* Menu */}
         <Menu isOpen={isOpen} onClose={onClose}>
           <MenuButton

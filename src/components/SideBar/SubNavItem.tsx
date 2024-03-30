@@ -14,32 +14,32 @@ interface NavItemProps extends FlexProps {
 export const SubNavItem = ({ icon, children, href, onToggle, color, ...rest}: NavItemProps) => {
   return (
     <Link as={NextLink} href={href} style={{ textDecoration: 'none' }} _focus={{ boxShadow: 'none' }}>
-      <Flex
-        align="center"
-        p="4"
-        mx="4"
-        borderRadius="lg"
-        role="group"
-        cursor="pointer"
-        _hover={{
-          bg: color,
-          color: 'white',
-        }}
-        {...rest}>
-        {icon && (
-          <Icon
-            w={"20px"}
-            h={"20px"}
-            mr="4"
-            fontSize="16"
-            _groupHover={{
-              color: 'white',
-            }}
-            as={icon}
-          />
-        )}
-        {children}
-      </Flex>
+      {/*<Flex*/}
+      {/*  align="center"*/}
+      {/*  p="4"*/}
+      {/*  mx="4"*/}
+      {/*  borderRadius="lg"*/}
+      {/*  role="group"*/}
+      {/*  cursor="pointer"*/}
+      {/*  _hover={{*/}
+      {/*    bg: color,*/}
+      {/*    color: 'white',*/}
+      {/*  }}*/}
+      {/*  {...rest}>*/}
+      {/*  {icon && (*/}
+      {/*    <Icon*/}
+      {/*      w={"20px"}*/}
+      {/*      h={"20px"}*/}
+      {/*      mr="4"*/}
+      {/*      fontSize="16"*/}
+      {/*      _groupHover={{*/}
+      {/*        color: 'white',*/}
+      {/*      }}*/}
+      {/*      as={icon}*/}
+      {/*    />*/}
+      {/*  )}*/}
+      {/*  {children}*/}
+      {/*</Flex>*/}
     </Link>
   );
 };

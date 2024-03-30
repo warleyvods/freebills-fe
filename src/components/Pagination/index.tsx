@@ -1,4 +1,4 @@
-import { Box, Button, Flex, HStack, Icon, Select, Stack, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, HStack, Icon, Select, Stack, Text, useColorModeValue } from "@chakra-ui/react";
 import { PaginationItem } from "./PaginationItem";
 import React, { useState } from "react";
 import { CheckIcon, ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
@@ -34,6 +34,8 @@ export function Pagination({
   totalSurveyValues
 }: PaginationProps) {
 
+  const bg = useColorModeValue("white", "gray.700");
+  const borderColor = useColorModeValue("gray.100", "red");
   const [selectedValue, setSelectedValue] = useState<number>(registerPerPage);
 
   const lastPage: number = totalCountOfRegisters % registerPerPage == 0 ? (totalCountOfRegisters / registerPerPage) - 1 : Math.floor(totalCountOfRegisters / registerPerPage)
@@ -63,7 +65,7 @@ export function Pagination({
       pb={3}
       pl={4}
       pr={2}
-      bg={"white"}
+      bg={bg}
       borderBottomRadius={"5px"}
     >
       {changePageSize && (
@@ -75,6 +77,7 @@ export function Pagination({
               variant="outline"
               value={selectedValue}
               onChange={(event) => {
+                // @ts-ignore
                 const value = parseInt(event.target.value);
                 setSelectedValue(value);
                 onPageChange(1);
@@ -95,24 +98,23 @@ export function Pagination({
         </HStack>
       )}
 
-
-
       <HStack spacing={0}>
-        <Text fontWeight={"medium"} mr={"15px"}>{!!totalSurveyValues ? `Soma: ${moneyFormat(totalSurveyValues)}` : ""}</Text>
+        <Text fontWeight={"medium"}
+              mr={"15px"}>{!!totalSurveyValues ? `Soma: ${moneyFormat(totalSurveyValues)}` : ""}</Text>
         <Button
           onClick={previousPage}
           paddingLeft={0}
           paddingRight={0}
-          borderLeftColor={"gray.150"}
-          borderRightColor={"gray.150"}
+          borderLeftColor={borderColor}
+          borderRightColor={borderColor}
           borderLeftRadius={"5px"}
           borderRightRadius={"0px"}
           borderRight={"1px"}
           borderTop={"1px"}
           borderBottom={"1px"}
           borderLeft={"1px"}
-          color={"gray.150"}
-          bg={"white"}
+          color={"gray.600"}
+          bg={bg}
           _hover={{
             bg: 'littleGray.500'
           }}
@@ -129,7 +131,7 @@ export function Pagination({
                         h={"auto"}
                         border={"1px"}
                         borderLeft={0}
-                        borderColor={"gray.150"}
+                        borderColor={borderColor}
                         textAlign={"center"}
                   >
                       <Text color={"black"} width={8}>...</Text>
@@ -178,7 +180,7 @@ export function Pagination({
           borderBottom={"1px"}
           borderRight={"1px"}
           color={"gray.150"}
-          bg={"white"}
+          bg={bg}
           _hover={{
             bg: 'littleGray.500'
           }}

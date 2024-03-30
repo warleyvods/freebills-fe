@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Flex, HStack, Input, PinInputField, PinInput } from "@chakra-ui/react";
+import { Avatar, Box, Button, Flex, HStack, PinInput, PinInputField } from "@chakra-ui/react";
 
 export const New = () => {
   return (
