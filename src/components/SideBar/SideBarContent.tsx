@@ -48,9 +48,9 @@ export const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
   return (
     <Box
       transition="3s ease"
-      bg={bg}
+      bg={"black"}
       borderRight="1px"
-      borderRightColor={br}
+      borderRightColor={"black"}
       w={{base: 'full', md: 60}}
       pos="fixed"
       h="full"
@@ -103,7 +103,6 @@ export const SidebarContent = ({onClose, ...rest}: SidebarProps) => {
         <>
         </>
       )}
-
     </Box>
   );
 };

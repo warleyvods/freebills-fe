@@ -7,7 +7,7 @@ import {
   Flex,
   Image,
   Stack,
-  Text,
+  Text, useColorModeValue,
   useDisclosure
 } from '@chakra-ui/react';
 import { NavItem } from "./NavItem";
@@ -18,14 +18,17 @@ import { BiBox } from "react-icons/bi";
 import { useMe } from "../../hooks/users/useMe";
 
 function SidebarContent({ isAdmin }) {
+  const bg = useColorModeValue('white', 'gray.800');
+  const borderColor = useColorModeValue('gray.100', 'gray.700');
+
   return (
     <Flex
       flex="1"
       flexDir="column"
       overflowY="auto"
       borderRight="1px solid"
-      borderColor="gray.100"
-      bg="white"
+      borderColor={borderColor}
+      bg={bg}
       px={6}
       pb={4}
       gap={5}

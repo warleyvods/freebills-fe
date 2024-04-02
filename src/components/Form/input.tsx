@@ -31,7 +31,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({
   placeholder,
   ...rest
 }: InputProps, ref) => {
-  const mainColor = useColorModeValue('gray.10', 'gray.900');
+  const mainColor = useColorModeValue('gray.10', '#1E1F20');
 
   return (
     <FormControl isInvalid={!!error}>
