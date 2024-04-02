@@ -14,7 +14,7 @@ import {
   MenuDivider,
   MenuItemOption,
   MenuList,
-  MenuOptionGroup, useBreakpointValue
+  MenuOptionGroup, useBreakpointValue, useColorModeValue
 } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { TbArrowsSort } from "react-icons/tb";
@@ -28,6 +28,9 @@ export function InternalTableHead({
   activeSearchBar = false,
 }) {
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
+  const color = useColorModeValue("white", "gray.700");
+  const borderColor = useColorModeValue("gray.100", "gray.700");
+
   const [activeButton, setActiveButton] = useState(null);
   const [attribute, setAttribute] = useState('');
   const [sortValue, setSortValue] = useState('asc');
@@ -47,9 +50,10 @@ export function InternalTableHead({
   useEffect(() => {
     setSortComplete(`${attribute},${sortValue}`);
     onSortCompleteChange(`${attribute},${sortValue}`);
-  }, [attribute, sortValue]);
+  }, [attribute, sortValue, onSortCompleteChange]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
     setSearchTerm(e.target.value);
   };
 
@@ -76,11 +80,11 @@ export function InternalTableHead({
     <Flex p={"8px"}
           h={"50px"}
           w={"full"}
-          bg={"white"}
+          bg={color}
           borderTopRadius={"5px"}
           borderTop={"1px"}
           borderBottom={"1px"}
-          borderColor={"gray.100"}
+          borderColor={borderColor}
           justifyContent={"space-between"}
     >
       <HStack>
@@ -180,7 +184,6 @@ export function InternalTableHead({
           </Menu>
         </Box>
       </HStack>
-
     </Flex>
   );
 }

@@ -76,7 +76,6 @@ export default function HeadingTable({
                         </>
                       )
                     }
-
                     {/* BOTAO DESKTOP */}
                     {
                       !!titleButton && (

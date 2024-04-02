@@ -23,11 +23,31 @@ const menuOptions: Options[] = [
 ];
 
 const buttonOptions = [
-  { value: null, label: 'Tudo', active: false, bgColor: 'indigo.300', borderColor: 'indigo.300', textColor: 'white' },
-  { value: 'REVENUE', label: 'Entradas', active: false, bgColor: 'lime.400', borderColor: 'lime.500', textColor: 'lime.600' },
-  { value: 'EXPENSE', label: 'Saídas', active: false, bgColor: 'littlePink.400', borderColor: 'littlePink.500', textColor: 'littlePink.600' },
+  {
+    value: null,
+    label: 'Tudo',
+    active: false,
+    bgColor: 'indigo.300',
+    borderColor: 'indigo.300',
+    textColor: 'white'
+  },
+  {
+    value: 'REVENUE',
+    label: 'Entradas',
+    active: false,
+    bgColor: 'lime.400',
+    borderColor: 'lime.500',
+    textColor: 'lime.600'
+  },
+  {
+    value: 'EXPENSE',
+    label: 'Saídas',
+    active: false,
+    bgColor: 'littlePink.400',
+    borderColor: 'littlePink.500',
+    textColor: 'littlePink.600'
+  },
 ];
-
 
 export default function TransactionRevenue() {
   const [month, setMonth] = useState(new Date().getMonth() + 1)
@@ -83,8 +103,7 @@ export default function TransactionRevenue() {
   return (
     <SideBarLayout>
       <Box w={"full"} flexDirection={"row"}>
-
-        { !showCardInfo && (
+        {!showCardInfo && (
           <HStack justifyContent={"space-between"}>
             <HeadingTable
               title={"Transações"}
@@ -98,14 +117,12 @@ export default function TransactionRevenue() {
             />
           </HStack>
         )}
-
         <InfoDashboardCard
           onUpdateYear={handleChangeYear}
           onUpdateMonth={handleChangeMonth}
           dashboardType={active}
           showCardInfo={showCardInfo}
         />
-
         <Box
           borderRadius={5}
           border={"1px solid gray.100"}
@@ -122,6 +139,7 @@ export default function TransactionRevenue() {
           {transactions?.content.length === 0 ? (
             <EmptyResultsBox
               path={"/dashboard/transactions/create"}
+              buttonText={"Adicionar produto"}
               title={
                 active === null
                   ? "Nenhum transação encontrada"
@@ -129,7 +147,6 @@ export default function TransactionRevenue() {
                     ? "Nenhuma receita encontrada"
                     : "Nenhuma despesa encontrada"
               }
-              buttonText={"Adicionar produto"}
             />
           ) : (
             <>

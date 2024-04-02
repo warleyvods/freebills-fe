@@ -12,7 +12,7 @@ import {
   MenuItem,
   MenuList,
   Text,
-  useColorModeValue
+  useColorModeValue, useColorMode
 } from "@chakra-ui/react";
 import React from "react";
 import { RiMore2Fill } from "react-icons/ri";
@@ -30,14 +30,23 @@ type AccountProps = {
   accId?: number;
 }
 
-export default function CardsAccount({amount, description, accId, bankType}: AccountProps) {
+export default function CardsAccount({ amount, description, accId, bankType }: AccountProps) {
+  const { colorMode } = useColorMode();
+
+  const mainColor = useColorModeValue("black", "gray.600");
+  const bg = useColorModeValue("white", "#1E1F20");
+  const hover = useColorModeValue("gray.50", "#333537");
+  const borderColor = useColorModeValue("gray.100", "gray.700");
+  const positiveAmountColor = useColorModeValue('green', 'green.400');
+  const negativeAmountColor = useColorModeValue('red', 'red.400');
   const updateArchiveAcc = useUpdateArchiveAccount();
+
   const descriptionArchive = "Arquivar conta é uma opção muito útil quando temos aquela conta que não movimentamos mais e desejamos apenas tirá-la da relação de contas," +
     " mantendo os lançamentos vinculados a ela. Você tem certeza que deseja arquivar a conta?";
 
   const handleArchiveChange = async (id: number) => {
     const archived = true;
-    await updateArchiveAcc.mutate({id, archived})
+    updateArchiveAcc.mutate({id, archived})
   }
 
   function bank(type: string) {
@@ -61,7 +70,7 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
   }
 
   return (
-    <Box w={"auto"} borderRadius={"10px"} border={"1px"} borderColor={"gray.100"} p={"15px"} boxShadow={"lg"}>
+    <Box w={"auto"} borderRadius={"10px"} border={"1px"} borderColor={borderColor} p={"15px"} boxShadow={"lg"} bg={bg} _hover={{ bg: hover }}>
       <HStack justifyContent={"space-between"} spacing={0} align={"center"}>
         <HStack spacing={3}>
           <Image
@@ -78,6 +87,7 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
             borderRadius={25}
             aria-label={"button account"}
             icon={<RiMore2Fill />}
+            color={mainColor}
             variant='outline'
           />
           <MenuList>
@@ -103,13 +113,11 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
                 </MenuItem>
               }
             />
-
             <ReadjustmentAccountModal accountId={accId} trigger={(onOpen) =>
               <MenuItem icon={<RepeatIcon />} onClick={onOpen}>
                 Reajuste de Saldo
               </MenuItem>
             } />
-
           </MenuList>
         </Menu>
       </HStack>
@@ -117,12 +125,16 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
       <HStack justify={"space-between"} spacing={0} mt={"35px"}>
         <Text fontWeight={"medium"} fontSize={"0.97rem"}>Saldo atual</Text>
         <Text fontWeight={"medium"} fontSize={"0.97rem"}
-              color={amount >= 0 ? 'green' : 'red'}>{!!amount ? moneyFormat(amount) : 'R$ 0,00'}</Text>
+              color={amount >= 0 ? positiveAmountColor : negativeAmountColor}>{!!amount ? moneyFormat(amount) : 'R$ 0,00'}
+        </Text>
       </HStack>
 
       <HStack justify={"space-between"} spacing={0} mt={"5px"}>
         <Text fontWeight="medium" fontSize={"0.97rem"}>Saldo previsto</Text>
-        <Text fontWeight="medium" fontSize={"0.97rem"} color="green">R$ 0,00</Text>
+        <Text fontWeight="medium"
+              fontSize={"0.97rem"}
+              color={amount >= 0 ? positiveAmountColor : negativeAmountColor}>R$ 0,00
+        </Text>
       </HStack>
       <Flex justifyContent={"flex-end"} mt={"20px"}>
         <LightMode>

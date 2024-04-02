@@ -27,6 +27,9 @@ const InputMoney: React.FC<InputProps> = ({
   ...rest
 }: InputProps) => {
   const inputRef = useRef<any>();
+  const mainColor = useColorModeValue('gray.10', '#1E1F20');
+  const borderColor = useColorModeValue('gray.200', '#424344');
+  const hover = useColorModeValue('#9699B0', '#545555');
 
   const formatCurrencyByEnd = (value: string): string => {
     const amount = new Intl.NumberFormat("pt-BR", {
@@ -79,12 +82,16 @@ const InputMoney: React.FC<InputProps> = ({
       <>
         <Text fontWeight={fontWeight} fontSize={fontSize}>
           {label}
-          { important && <span style={{color: "red", marginLeft: "2px" }}>*</span> }
+          {important && <span style={{color: "red", marginLeft: "2px"}}>*</span>}
         </Text>
-        <Box display="flex" borderRadius="lg" border={!!error ? "2px" : "1px"} borderColor={!!error ? "red" : "#B3B5C6"}
-             backgroundColor={"inherit"} w={"full"}>
-          <Box display="flex" alignItems="center" px={"5px"} borderLeftRadius={"7px"} paddingLeft="16px" bg={"gray.50"}
-               borderRight="1px" borderColor="#9699B0">
+        <Box display="flex"
+             borderRadius="lg"
+             border={!!error ? "1px" : "1px"}
+             borderColor={!!error ? "red" : borderColor}
+             backgroundColor={"inherit"} w={"full"}
+             _hover={{ borderColor: hover }}
+        >
+          <Box display="flex" alignItems="center" px={"5px"} borderLeftRadius={"7px"} paddingLeft="16px" bg={mainColor} borderRight="1px" borderColor={borderColor}>
             <Box userSelect="none" paddingRight="8px">R$</Box>
           </Box>
           <FormControl isInvalid={!!error}>
@@ -97,7 +104,7 @@ const InputMoney: React.FC<InputProps> = ({
                 outline: 'none',
                 padding: "8px",
                 width: "100%",
-                background: 'inherit',
+                background: mainColor,
                 borderBottomRightRadius: '0.5rem',
                 borderTopRightRadius: '0.5rem',
               }}

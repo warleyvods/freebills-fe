@@ -106,7 +106,10 @@ export function ReadjustmentAccountModal({onCancel, trigger, text, accountId}: M
                               <Radio value='ADJUST'
                                      id={"type"}
                                      name={"type"}
-                                     onChange={(e) => setFieldValue('type', e.target.checked)}
+                                     onChange={(e) => setFieldValue(
+                                       'type',
+                                       // @ts-ignore
+                                       e.target.checked)}
                                      isChecked={values.type}>
                               </Radio>
                             </VStack>

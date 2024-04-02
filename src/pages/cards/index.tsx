@@ -8,12 +8,12 @@ import {
   Icon,
   IconButton,
   LightMode,
-  SimpleGrid, Spinner,
+  SimpleGrid,
+  Spinner,
   Text,
   useColorModeValue,
   VStack
 } from "@chakra-ui/react";
-import { NewAccountModal } from "../../components/Modals/NewAccount";
 import { RiAddLine, RiArchiveLine } from "react-icons/ri";
 import NextLink from "next/link";
 import React from "react";
@@ -24,7 +24,6 @@ import { NewCreditCard } from "../../components/Modals/NewCreditCard";
 export const Card = () => {
   const {data: cards, isLoading, isFetching, error} = useCreditCards();
   const mainColor = useColorModeValue('white', 'gray.800');
-
 
   return (
     <SidebarWithHeader>
