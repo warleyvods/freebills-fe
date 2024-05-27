@@ -24,7 +24,7 @@ const initialValues = {
 
 export default function SignIn() {
   const [show, setShow] = useState(false)
-  const mainColor = useColorModeValue('white', 'gray.700');
+  const mainColor = useColorModeValue('gray.700', 'gray.50');
   const boxColor = useColorModeValue('white', 'gray.800');
   const [loading, setLoading] = useState(false);
   const toast = useToast()
@@ -101,7 +101,7 @@ export default function SignIn() {
           fontSize="2xl"
           fontWeight="bold"
           lineHeight="tight"
-          color="gray.900"
+          color={mainColor}
         >
           Faça login na sua conta
         </Text>

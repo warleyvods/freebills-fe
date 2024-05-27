@@ -21,7 +21,7 @@ export const Button: ComponentStyleConfig = {
   // // Two variants: outline and solid
   variants: {
     outline: {
-      color: 'indigo.400',
+      color: 'black',
     },
     default: {
       bg: 'indigo.400',

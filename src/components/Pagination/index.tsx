@@ -109,11 +109,11 @@ export function Pagination({
           borderRightColor={borderColor}
           borderLeftRadius={"5px"}
           borderRightRadius={"0px"}
-          borderRight={"1px"}
+          // borderRight={"1px"}
           borderTop={"1px"}
           borderBottom={"1px"}
           borderLeft={"1px"}
-          color={"gray.600"}
+          color={"gray.150"}
           bg={bg}
           _hover={{
             bg: 'littleGray.500'

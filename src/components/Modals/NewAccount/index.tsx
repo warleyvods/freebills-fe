@@ -39,7 +39,7 @@ const createAddressValidationSchema = yup.object().shape({
 });
 
 const initialValues = {
-  amount: '',
+  amount: 0,
   description: '',
   accountType: '',
   bankType: '',
@@ -70,7 +70,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
   }, [onClose]);
 
   const handleUpdateAccount = async (values) => {
-    await updateAccount.mutate({
+    updateAccount.mutate({
       accountId, ...values
     })
     handleOk()

@@ -27,7 +27,7 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({
   error = null,
   ...rest
 }: InputProps, ref) => {
-  const mainColor = useColorModeValue('white', 'gray.900');
+  const mainColor = useColorModeValue('gray.10', '#1E1F20');
   const [showPassword, setShowPassword] = useState(false);
   const handleClick = () => setShowPassword(!showPassword);
 

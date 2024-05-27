@@ -30,7 +30,6 @@ const initialValues = {
   active: false
 }
 
-
 export default function CreateUser() {
   const router = useRouter()
   const createUser = useCreateUser(() => router.push('/users'))

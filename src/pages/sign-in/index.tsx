@@ -40,7 +40,6 @@ export default function SignupCard() {
             para usar o freebills ✌️
           </Text>
         </Stack>
-
         <Formik initialValues={initialValues}
                 validateOnChange={false}
                 validationSchema={createUserValidationSchema}
