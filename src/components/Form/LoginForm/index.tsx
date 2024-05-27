@@ -16,21 +16,22 @@ interface LoginFormProps {
 export const LoginForm = ({formik}: LoginFormProps) => {
   const baseURL = api.defaults.baseURL;
   const {handleChange, values, errors} = formik;
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGitHubLoading, setIsGitHubLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  const handleSignIn = async (provider: string) => {
+  const handleSignIn = async (provider: string, setLoading: React.Dispatch<React.SetStateAction<boolean>>) => {
     try {
-      setIsLoading(true);
+      setLoading(true);
       // @ts-ignore
       window.location.href = `${baseURL}/oauth2/authorization/${provider}`;
     } catch (error) {
-      setIsLoading(false);
+      setLoading(false);
     }
   };
 
-  const handleGitHubClick = () => handleSignIn('github')
+  const handleGitHubClick = () => handleSignIn('github', setIsGitHubLoading)
 
-  const handleGoogleClick = () => handleSignIn('google')
+  const handleGoogleClick = () => handleSignIn('google', setIsGoogleLoading)
 
   return (
     <form onSubmit={formik.handleSubmit}>
@@ -76,7 +77,7 @@ export const LoginForm = ({formik}: LoginFormProps) => {
           leftIcon={<GithubIcon />}
           onClick={handleGitHubClick}
           data-testid="github"
-          isLoading={isLoading}
+          isLoading={isGitHubLoading}
           variant="outline"
         >
           Continuar com Github
@@ -85,7 +86,7 @@ export const LoginForm = ({formik}: LoginFormProps) => {
           leftIcon={<GoogleLogo />}
           onClick={handleGoogleClick}
           data-testid="github"
-          isLoading={isLoading}
+          isLoading={isGoogleLoading}
           variant="outline"
         >
           Continuar com Google
