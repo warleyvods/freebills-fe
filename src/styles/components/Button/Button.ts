@@ -1,4 +1,4 @@
-import { ComponentStyleConfig } from "@chakra-ui/react";
+import { ComponentStyleConfig, useColorModeValue } from "@chakra-ui/react";
 
 export const Button: ComponentStyleConfig = {
   baseStyle: {
@@ -20,9 +20,9 @@ export const Button: ComponentStyleConfig = {
   },
   // // Two variants: outline and solid
   variants: {
-    outline: {
-      color: 'black',
-    },
+    outline: (props) => ({
+      color: props.colorMode === 'light' ? 'black' : 'gray.50',
+    }),
     default: {
       bg: 'indigo.400',
       color: 'white',

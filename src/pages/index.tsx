@@ -129,13 +129,13 @@ export default function SignIn() {
         mt={10}
         textAlign="center"
         fontSize="sm"
-        color="gray.500"
+        color="gray.200"
       >
         Não é membro?{' '}
         <Link
           href={"/sign-in"}
           fontWeight="semibold"
-          color="indigo.600"
+          color="indigo.400"
           _hover={{ color: "indigo.500" }}
         >
           Cadastre-se
