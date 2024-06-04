@@ -5,7 +5,7 @@ import {
   HStack,
   Icon,
   IconButton,
-  LightMode,
+  LightMode, Menu, MenuButton, MenuItem, MenuList,
   Skeleton,
   Table,
   Tbody,
@@ -19,7 +19,15 @@ import {
   VStack
 } from '@chakra-ui/react'
 import React, { useState } from "react";
-import { CheckIcon, DeleteIcon, InfoIcon, SmallCloseIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  CheckIcon,
+  DeleteIcon, EditIcon,
+  ExternalLinkIcon,
+  HamburgerIcon,
+  InfoIcon, RepeatIcon,
+  SmallCloseIcon
+} from "@chakra-ui/icons";
 import { SkeletonTable } from "../../Skeletons/SkeletonTable";
 import { Transaction } from "../../../hooks/transactions/useTransactionById";
 import { PayTransactionModal } from "../../Modals/Transaction/PayTransaction";
@@ -34,6 +42,7 @@ import { formatDate } from "../../../utils/chartData";
 import { moneyFormat } from "../../Utils/utils";
 import NextLink from "next/link";
 import { CircleTag } from "../../Tag/CircleTag";
+import { useDuplicateTransaction } from "../../../hooks/transactions/useDuplicateTransaction";
 
 type ProductTableProps = {
   content: Transaction[];
@@ -59,10 +68,15 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
   const showFloatMenu = allChecked || isIndeterminate;
   const {data: accounts} = useAccounts();
   const {mutate: deleteTransaction} = useDeleteTransaction();
+  const {mutate: duplicateTransaction} = useDuplicateTransaction();
 
   //FUNCTIONS
   function handleDeleteTransaction(transactionId: number) {
     deleteTransaction(transactionId)
+  }
+
+  function handleDuplicateTransaction(transactionId: number) {
+    duplicateTransaction(transactionId)
   }
 
   return (
@@ -232,71 +246,38 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                     </Td>
 
                     {/*OPÇÕES*/}
-                    <Td pb={0} pt={0}>
-                      <HStack justify={"flex-end"}>
-                        {
-                          transaction.paid ? null : (
-                            <PayTransactionModal
-                              title={"Pagar Transação"} mainColor={"white"} buttonText={"Pagar"}
-                              description={"Deseja pagar esta transação?"}
-                              onOk={() => null}
-                              trigger={(onOpen) =>
-                                <LightMode>
-                                  <Tooltip label='Pagar' placement='auto-start'>
-                                    <IconButton
-                                      as={Button}
-                                      isRound={true}
-                                      variant={"solid"}
-                                      colorScheme={"green"}
-                                      aria-label={"pay"}
-                                      size={"sm"}
-                                      icon={<Icon as={CheckIcon} fontSize={"12"} />}
-                                      onClick={onOpen} />
-                                  </Tooltip>
-                                </LightMode>
-                              } />
-                          )
-                        }
-
-                        {!transaction.bankSlip ? null :
-                          (
-                            <BankSlipModal
-                              mainColor={"white"}
-                              barCode={transaction.barCode}
-                              onOk={() => null}
-                              trigger={(onOpen) =>
-                                <LightMode>
-                                  <Tooltip label='Pagar' placement='auto-start'>
-                                    <IconButton
-                                      as={Button}
-                                      colorScheme={"purple"}
-                                      aria-label={"pay"}
-                                      size={"sm"}
-                                      icon={<Icon as={InfoIcon} fontSize={"12"} />}
-                                      onClick={onOpen} />
-                                  </Tooltip>
-                                </LightMode>
-                              }
-                            />
-                          )
-                        }
-                        <NewTransactionModal
-                          transactionType={transaction.transactionType}
-                          edit={true}
-                          transactionId={transaction.id}
-                          trigger={(open) => (
-                            <LightMode>
-                              <IconButton
-                                onClick={open}
-                                colorScheme={"facebook"}
-                                aria-label={"edit transaction"}
-                                size="sm"
-                                icon={<Icon as={BiEdit} fontSize={"16"} />}
-                              />
-                            </LightMode>
-                          )}
+                    <Td pb={0} pt={0} textAlign={"center"}>
+                      <Menu>
+                        <MenuButton
+                          as={IconButton}
+                          aria-label='Options'
+                          icon={<HamburgerIcon />}
+                          variant='solid'
                         />
-                        <LightMode>
+                        <MenuList>
+                          <NewTransactionModal
+                            transactionType={transaction.transactionType}
+                            edit={true}
+                            transactionId={transaction.id}
+                            trigger={(open) => (
+                                <MenuItem icon={<EditIcon />} onClick={open}>
+                                  Editar
+                                </MenuItem>
+                            )}
+                          />
+                          <ConfirmationDialog
+                            title={"Duplicar Transação"}
+                            mainColor={"white"}
+                            buttonText={"Duplicar"}
+                            description={"A duplicação cria uma nova transação com base nesta atual com a data somando mais um mês. Deseja continuar com a duplicação? "}
+                            variant={"alert"}
+                            onOk={() => handleDuplicateTransaction(transaction.id)}
+                            trigger={(onOpen) => (
+                              <MenuItem onClick={onOpen} icon={<RepeatIcon />}>
+                                Duplicar
+                              </MenuItem>
+                            )}
+                          />
                           <ConfirmationDialog
                             title={"Deletar Transação"}
                             mainColor={"white"}
@@ -304,16 +285,14 @@ export default function ProductsTable({content, isLoading, error,}: ProductTable
                             description={"Deseja deletar essa transação?"}
                             variant={"danger"}
                             onOk={() => handleDeleteTransaction(transaction.id)}
-                            trigger={(onOpen) => <IconButton
-                              as={"a"}
-                              colorScheme={"red"}
-                              aria-label={"Call Segun"}
-                              size="sm"
-                              icon={<Icon as={BiTrash} fontSize={"16"} />}
-                              onClick={onOpen} />}
+                            trigger={(onOpen) => (
+                              <MenuItem onClick={onOpen} icon={<Icon as={BiTrash} fontSize={"13px"} />}>
+                                Deletar
+                              </MenuItem>
+                            )}
                           />
-                        </LightMode>
-                      </HStack>
+                        </MenuList>
+                      </Menu>
                     </Td>
                   </>
                 )}

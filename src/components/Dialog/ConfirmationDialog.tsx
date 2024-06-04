@@ -53,8 +53,8 @@ export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, disabled
           {/*<ModalCloseButton />*/}
           <ModalBody justifyContent={"center"} p={"24px"}>
             <Flex direction={{ base: 'column', md: 'row' }} alignItems={{ base: 'center', md: 'flex-start' }} gap={3}>
-              <Circle size={"2.5rem"} bg={"littlePink.450"}>
-                <CustomIcon value={AlertIcon} color={"customRed.500"} />
+              <Circle size={"2.5rem"} bg={variant == 'danger' ? 'littlePink.450' : '#FEFCE8'}>
+                <CustomIcon value={AlertIcon} color={variant == 'danger' ? 'customRed.500' : '#EAB308'} />
               </Circle>
               <Flex direction={"column"} gap={2} ml={{ base: 0, md: 3 }}>
                 <Text fontSize={"md"} fontWeight={"medium"} textAlign={{ base: 'center', md: 'start'}}>{title}</Text>

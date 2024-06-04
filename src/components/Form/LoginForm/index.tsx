@@ -30,7 +30,6 @@ export const LoginForm = ({formik}: LoginFormProps) => {
   };
 
   const handleGitHubClick = () => handleSignIn('github', setIsGitHubLoading)
-
   const handleGoogleClick = () => handleSignIn('google', setIsGoogleLoading)
 
   return (

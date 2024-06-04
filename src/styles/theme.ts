@@ -57,7 +57,31 @@ export const theme = extendTheme(config, {
     customRed: {
       "400": "#EF4444",
       "500": "#DC2626",
-    }
+    },
+    orange: {
+      50: '#fff1da',
+      100: '#ffd7ae',
+      200: '#ffbf7d',
+      300: '#ffa54c',
+      400: '#ff8b1a',
+      500: '#e67200',
+      600: '#b45800',
+      700: '#813e00',
+      800: '#4f2500',
+      900: '#200b00',
+    },
+    yellow: {
+      50: '#fff9da',
+      100: '#ffedad',
+      200: '#ffe17d',
+      300: '#ffd54b',
+      400: '#ffc91a',
+      500: '#e6b000',
+      600: '#b38800',
+      700: '#806200',
+      800: '#4e3a00',
+      900: '#1d1400',
+    },
   },
   fonts: {
     heading: 'Inter, sans-serif',

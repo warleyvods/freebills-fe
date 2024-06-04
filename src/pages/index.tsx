@@ -66,7 +66,6 @@ export default function SignIn() {
           isClosable: true,
         })
       }
-
     }
   });
 

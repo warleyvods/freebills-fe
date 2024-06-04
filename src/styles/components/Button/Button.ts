@@ -55,6 +55,16 @@ export const Button: ComponentStyleConfig = {
         bg: 'red.700',
       }
     },
+    alert: {
+      bg: '#EAB308',
+      color: 'white',
+      _hover: {
+        bg: '#C79807',
+      },
+      _active: {
+        bg: '#997505',
+      }
+    },
   },
   // The default size and variant values
   defaultProps: {
