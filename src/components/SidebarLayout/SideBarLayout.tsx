@@ -48,6 +48,7 @@ function SidebarContent({ isAdmin }) {
         <NavItem icon={<CustomIcon value={HouseIcon}/>} href={"/dashboard"}>Dashboard</NavItem>
         <NavItem icon={<CustomIcon value={HouseIcon}/>} href={"/accounts"}>Contas</NavItem>
         <NavItem icon={<CustomIcon icon={BiBox}/>} href={"/transactions/revenue"}>Transações</NavItem>
+        <NavItem icon={<CustomIcon icon={BiBox}/>} href={"/categories"}>Categorias</NavItem>
         { isAdmin && (<NavItem icon={<CustomIcon value={PeopleIcon}/>} href={"/users"}>Usuários</NavItem>)}
       </Stack>
     </Flex>

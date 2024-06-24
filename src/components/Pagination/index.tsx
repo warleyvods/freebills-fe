@@ -80,7 +80,7 @@ export function Pagination({
                 // @ts-ignore
                 const value = parseInt(event.target.value);
                 setSelectedValue(value);
-                onPageChange(1);
+                onPageChange(0);
                 handleSizeChange(value);
               }}
             >

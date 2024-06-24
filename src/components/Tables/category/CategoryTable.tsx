@@ -43,7 +43,6 @@ import { moneyFormat } from "../../Utils/utils";
 import NextLink from "next/link";
 import { CircleTag } from "../../Tag/CircleTag";
 import { useDuplicateTransaction } from "../../../hooks/transactions/useDuplicateTransaction";
-import { useCategories } from "../../../hooks/category/useCategories";
 
 type ProductTableProps = {
   content: Transaction[];
@@ -53,8 +52,8 @@ type ProductTableProps = {
   error: any;
 }
 
-export default function ProductsTable({content, isLoading, error}: ProductTableProps) {
-  const {colorMode} = useColorMode();
+export default function CategoryTable({content, isLoading, error,}: ProductTableProps) {
+  const { colorMode } = useColorMode();
   const bg = useColorModeValue("white", "gray.700");
   const tableBg = useColorModeValue("gray.100", "gray.800");
   const borderColor = useColorModeValue("gray.100", "gray.100");
@@ -67,7 +66,6 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
   const allChecked = allProducts?.every((productId) => selectedProducts.includes(productId));
   const isIndeterminate = selectedProducts.some(Boolean) && !allChecked;
   const showFloatMenu = allChecked || isIndeterminate;
-  const {data: categories} = useCategories();
   const {data: accounts} = useAccounts();
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const {mutate: duplicateTransaction} = useDuplicateTransaction();
@@ -109,7 +107,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
             {content?.map((transaction, index) => (
               <Tr
                 key={transaction.id}
-                _hover={{bg: colorMode === 'light' ? 'gray.50' : '#333537'}}
+                _hover={{ bg: colorMode === 'light' ? 'gray.50' : '#333537' }}
                 h={"0px"}
               >
                 {isMobile ? (
@@ -146,6 +144,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                                 borderWidth={1}
                                 borderRadius="md"
                                 boxShadow="sm"
+                            // borderColor={"red"}
                                 justify={"space-between"}
                                 onClick={open}
                           >
@@ -160,8 +159,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                                     accounts?.filter(acc => acc.id === transaction.accountId)
                                       .map((acc) => (
                                         acc.description
-                                      ))}
-                                  </Text>
+                                      ))} </Text>
                                 </VStack>
                               </HStack>
 
@@ -202,7 +200,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                     {/*SITUAÇÃO*/}
                     <Td pb={0} pt={0}>
                       <Flex justify="center">
-                        <CircleTag isPaid={transaction.paid} />
+                          <CircleTag isPaid={transaction.paid} />
                       </Flex>
                     </Td>
 
@@ -227,12 +225,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                     {/*CATEGORIA*/}
                     <Td pb={0} pt={0}>
                       <Flex justify="center">
-                        <Text fontWeight={"medium"}>
-                          {categories.content?.filter(cat => cat.id === transaction.categoryId)
-                            .map((category) => (
-                              category.name
-                            ))}
-                        </Text>
+                        <Text fontWeight={"medium"}>{category[transaction.transactionCategory]}</Text>
                       </Flex>
                     </Td>
 
@@ -267,9 +260,9 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                             edit={true}
                             transactionId={transaction.id}
                             trigger={(open) => (
-                              <MenuItem icon={<EditIcon />} onClick={open}>
-                                Editar
-                              </MenuItem>
+                                <MenuItem icon={<EditIcon />} onClick={open}>
+                                  Editar
+                                </MenuItem>
                             )}
                           />
                           <ConfirmationDialog

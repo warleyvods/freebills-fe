@@ -31,13 +31,14 @@ import { useUpdateTransaction } from "../../../hooks/transactions/useUpdateTrans
 import * as yup from "yup";
 import InputMoney from "../../Form/MoneyInput";
 import { SelectFormik } from "../../Form/SelectInput";
+import { useCategories } from "../../../hooks/category/useCategories";
 
 const createTransactionSchema = yup.object().shape({
   amount: yup.number().required('Valor obrigatório.'),
   date: yup.string().required('Data obrigatória.'),
   description: yup.string().required('Descrição obrigatória.'),
   accountId: yup.string().required('Conta obrigatória.'),
-  transactionCategory: yup.string().required('Categoria obrigatória.')
+  categoryId: yup.string().required('Categoria obrigatória.')
 });
 
 interface LinkItemProps {
@@ -112,7 +113,7 @@ const revenueInitialValues = {
   }),
   description: '',
   transactionType: 'REVENUE',
-  transactionCategory: '',
+  categoryId: '',
   paid: false,
   barCode: '',
   bankSlip: false,
@@ -128,7 +129,7 @@ const expenseInitialValues = {
   }),
   description: '',
   transactionType: 'EXPENSE',
-  transactionCategory: '',
+  categoryId: '',
   paid: false,
   barCode: '',
   bankSlip: false,
@@ -175,6 +176,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   const createTransaction = useCreateTransaction();
   const updateTransaction = useUpdateTransaction();
   const {data: accounts} = useAccounts();
+  const {data: categories} = useCategories();
   const color = colorType(transactionType);
   const category = categoryMap(transactionType);
   const {data: transactionFound} = useTransactionById(transactionId);
@@ -200,6 +202,13 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
     onCancel?.();
     onClose();
   }, [onClose, onCancel])
+
+  const categoriesOptions = categories?.content
+    ?.filter(category => category.categoryType === transactionType)
+    ?.map(category => ({
+      value: category.id.toString(),
+      label: category.name,
+    }));
 
   const accountOptions = accounts?.map((acc) => ({
     value: acc.id.toString(),
@@ -285,17 +294,14 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
 
                           <SelectFormik
                             label="Selecione uma Categoria"
-                            name="transactionCategory"
-                            error={errors.transactionCategory}
-                            value={values.transactionCategory}
+                            name="categoryId"
+                            error={errors.categoryId}
+                            value={values.categoryId}
                             onChange={handleChange}
                             important={"*"}
-                            options={categoryOptions}
+                            options={categoriesOptions}
                             showDefaultOption={true}
                           />
-
-
-
                           {
                             edit ? (
                               <Select placeholder={"Selecione um Tipo"}
@@ -309,7 +315,6 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                               </Select>
                             ) : null
                           }
-
                           {values.bankSlip ?
                             <HStack justify={"space-between"}>
                               <InputFormik id="barCode"
