@@ -7,7 +7,13 @@ interface RadioColorButtonProps extends UseRadioProps {
   value: string;
 }
 
-const RadioColorButton: React.FC<RadioColorButtonProps> = ({ color, value, ...props }) => {
+interface RadioColorButtonProps extends UseRadioProps {
+  color: string;
+  value: string;
+  hasError?: any;
+}
+
+const RadioColorButton: React.FC<RadioColorButtonProps> = ({ color, value, hasError, ...props }) => {
   const { getInputProps, getCheckboxProps } = useRadio(props);
 
   const input = getInputProps();
@@ -31,6 +37,7 @@ const RadioColorButton: React.FC<RadioColorButtonProps> = ({ color, value, ...pr
         _focus={{
           boxShadow: 'outline',
         }}
+        border={hasError ? '2px solid red' : 'none'}
       >
         {props.isChecked && (
           <Icon as={FaCheck} color="white" boxSize={"18px"} />

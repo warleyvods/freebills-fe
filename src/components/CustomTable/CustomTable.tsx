@@ -39,7 +39,8 @@ type CustomTableProps = {
   onDelete?: (id: number) => void;
   tableHeight: number;
   isLoading?: boolean;
-  data: CategoryResponse
+  data: CategoryResponse,
+  customInfo?: any;
 };
 
 export default function CustomTable({
@@ -58,7 +59,8 @@ export default function CustomTable({
   activeSearch,
   onDelete,
   tableHeight,
-  isLoading
+  isLoading,
+  customInfo
 }: CustomTableProps) {
 
   if (data?.content.length === 0) {
@@ -192,7 +194,8 @@ export default function CustomTable({
                         ) : buttonOptionalColumns.isMenu?.active ? (
                           buttonOptionalColumns.isMenu?.component({
                             data: rowData,
-                            del: onDelete
+                            del: onDelete,
+                            info: customInfo
                           })
                         ) : (
                           <LightMode>

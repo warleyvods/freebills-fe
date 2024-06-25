@@ -22,7 +22,7 @@ interface ModalProps {
   mainColor: string;
   title?: string;
   disabled?: boolean;
-  description: string;
+  description: any;
   buttonText: string;
   variant?: string;
 }

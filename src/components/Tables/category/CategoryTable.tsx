@@ -1,305 +1,279 @@
 import {
-  Box,
-  Button, Circle,
+  Button,
+  Circle,
   Flex,
   HStack,
   Icon,
   IconButton,
-  LightMode, Menu, MenuButton, MenuItem, MenuList,
-  Skeleton,
-  Table,
-  Tbody,
-  Td,
+  LightMode,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Text,
-  Th,
-  Thead,
-  Tooltip,
-  Tr,
-  useBreakpointValue, useColorMode, useColorModeValue,
-  VStack
 } from '@chakra-ui/react'
-import React, { useState } from "react";
-import {
-  AddIcon,
-  CheckIcon,
-  DeleteIcon, EditIcon,
-  ExternalLinkIcon,
-  HamburgerIcon,
-  InfoIcon, RepeatIcon,
-  SmallCloseIcon
-} from "@chakra-ui/icons";
-import { SkeletonTable } from "../../Skeletons/SkeletonTable";
-import { Transaction } from "../../../hooks/transactions/useTransactionById";
-import { PayTransactionModal } from "../../Modals/Transaction/PayTransaction";
-import { BankSlipModal } from "../../Modals/Transaction/BankSlip";
-import { category, NewTransactionModal } from "../../Modals/Transaction";
-import { BiEdit, BiTrash } from "react-icons/bi";
-import { ConfirmationDialog } from "../../Dialog/ConfirmationDialog";
-import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
-import Tag from "../../Tag/Tag";
-import { useAccounts } from "../../../hooks/accounts/useAccounts";
-import { formatDate } from "../../../utils/chartData";
-import { moneyFormat } from "../../Utils/utils";
+import HeadingTable from "../../Tables/HeadingTable";
+import { RiAddLine, RiArchiveLine } from "react-icons/ri";
 import NextLink from "next/link";
-import { CircleTag } from "../../Tag/CircleTag";
-import { useDuplicateTransaction } from "../../../hooks/transactions/useDuplicateTransaction";
+import React, { useState } from "react";
+import { NewCategoryModal } from "../../Modals/NewCategory";
+import { ButtonOptions, CustomButton, TableColumn, TableHeadProps } from "../../CustomTable/types/ColumnTypes";
+import CustomTable from "../../CustomTable/CustomTable";
+import { ChevronLeftIcon, EditIcon, HamburgerIcon, RepeatIcon } from "@chakra-ui/icons";
+import { ConfirmationDialog } from "../../Dialog/ConfirmationDialog";
+import SideBarLayout from "../../SidebarLayout/SideBarLayout";
+import { useCategories } from "../../../hooks/category/useCategories";
+import { useDeleteCategory } from "../../../hooks/category/useDeleteCategory";
+import { useUpdateArchiveCategory } from "../../../hooks/category/useUpdateArchiveCategory";
 
-type ProductTableProps = {
-  content: Transaction[];
-  handleTableHeadButtonClick?: (activeButton: string) => void;
-  onDeleteUser?: (userId: number) => void;
-  isLoading: boolean;
-  error: any;
+const columns: TableColumn[] = [
+  {
+    name: {
+      name: "name",
+      fontWeight: "medium"
+    },
+    align: "start",
+    label: "Nome",
+  },
+  {
+    name: {
+      name: "icon",
+      fontWeight: "medium"
+    },
+    align: "center",
+    label: "Ícone",
+  },
+  {
+    name: {
+      name: "color",
+      fontWeight: "medium",
+      function: ColorComponent
+    },
+    align: "center",
+    label: "Cor",
+  },
+  {
+    name: {
+      name: "categoryType",
+      fontWeight: "medium"
+    },
+    align: "center",
+    label: "Tipo",
+    tag: {
+      trueLabel: "Receita",
+      falseLabel: "Despesa"
+    }
+  }
+];
+
+const tableHead: TableHeadProps = {
+  menuOptions: [
+    {value: 'name', label: 'Nome'},
+  ],
+  buttonOptions: [
+    {value: null, label: 'Todos', active: true},
+    {value: 'REVENUE', label: 'Receitas', active: true},
+    {value: 'EXPENSE', label: 'Despesas', active: true},
+  ],
+  activeSearch: true
 }
 
-export default function CategoryTable({content, isLoading, error,}: ProductTableProps) {
-  const { colorMode } = useColorMode();
-  const bg = useColorModeValue("white", "gray.700");
-  const tableBg = useColorModeValue("gray.100", "gray.800");
-  const borderColor = useColorModeValue("gray.100", "gray.100");
+const buttonOptions: CustomButton = {
+  editPath: "#",
+  titleDelete: "Deletar Categoria",
+  descriptionDelete: "Deseja deletar esta categoria? Esta ação não poderá ser desfeita.",
+  buttonTextDelete: "Deletar",
+  deleteVariant: "danger"
+}
 
-  //STATES
-  const isMobile = useBreakpointValue({base: true, md: true, lg: false});
-  const [showIconButton, setShowIconButton] = useState({});
-  const [selectedProducts, setSelectedProducts] = React.useState([]);
-  const allProducts = content?.map((product) => product.id);
-  const allChecked = allProducts?.every((productId) => selectedProducts.includes(productId));
-  const isIndeterminate = selectedProducts.some(Boolean) && !allChecked;
-  const showFloatMenu = allChecked || isIndeterminate;
-  const {data: accounts} = useAccounts();
-  const {mutate: deleteTransaction} = useDeleteTransaction();
-  const {mutate: duplicateTransaction} = useDuplicateTransaction();
+const buttonsOptions: ButtonOptions = {
+  active: true,
+  editIsModal: {
+    active: false
+  },
+  isMenu: {
+    active: true,
+    component: CategoryMenu
+  },
+  deleteButton: false
+}
 
-  //FUNCTIONS
-  function handleDeleteTransaction(transactionId: number) {
-    deleteTransaction(transactionId)
-  }
+function ColorComponent(name) {
+  return (
+    <Flex justify={"center"}>
+      <Circle bg={name} size={"25px"} />
+    </Flex>
+  )
+}
 
-  function handleDuplicateTransaction(transactionId: number) {
-    duplicateTransaction(transactionId)
+type MenuProps = {
+  data: any;
+  del: (id: number) => void
+  info: {
+    toggleCategory: any;
+    archived: boolean;
+  };
+}
+
+function CategoryMenu({data, del, info}: MenuProps) {
+
+  function toggleArchiveCategory(id: number) {
+    info.toggleCategory.mutate(id)
   }
 
   return (
-    isLoading ? (
-        <SkeletonTable isMobile={isMobile} />
-      ) :
-      error ? (
-        <Flex justify="center">
-          <Text>Falha ao obter dados dos produtos</Text>
-        </Flex>
-      ) : (
-        <Table variant={isMobile ? 'unstyled' : 'simple'} bg={bg}>
-          {!isMobile && (
-            <Thead borderColor={borderColor} h={"35px"} bg={tableBg}>
-              <Tr borderColor={"none"}>
-                <Th textAlign="start">Descrição</Th>
-                <Th textAlign="center">Situação</Th>
-                <Th textAlign="center">Conta</Th>
-                <Th textAlign="center">Data</Th>
-                <Th textAlign="center">Categoria</Th>
-                <Th textAlign="center">Tipo</Th>
-                <Th textAlign="center">Valor</Th>
-                <Th textAlign="center">Opções</Th>
-              </Tr>
-            </Thead>
+    <Menu>
+      <MenuButton
+        mr={"20px"}
+        as={IconButton}
+        aria-label='#'
+        icon={<HamburgerIcon />}
+        variant='outline'
+      />
+      <MenuList>
+        <NewCategoryModal
+          categoryId={data?.id}
+          trigger={(open) => (
+            <MenuItem icon={<EditIcon />} onClick={open}>
+              Editar
+            </MenuItem>
           )}
-          <Tbody>
-            {content?.map((transaction, index) => (
-              <Tr
-                key={transaction.id}
-                _hover={{ bg: colorMode === 'light' ? 'gray.50' : '#333537' }}
-                h={"0px"}
-              >
-                {isMobile ? (
-                  isLoading ? (
-                    <Td p={"5px"}>
-                      <Flex p={4}
-                            borderWidth={1}
-                            borderRadius="md"
-                            boxShadow="sm"
-                            h={"100px"}
-                            justify={"space-between"}
-                            alignItems={"center"}
-                      >
-                        <HStack spacing={"15px"}>
-                          <Skeleton h='48px' w='48px' borderRadius={"5px"} />
-                          <VStack spacing={"5px"} justify={"flex-start"} alignItems={"flex-start"}>
-                            <Skeleton h='16px' w='120px' borderRadius={"5px"} />
-                            <Skeleton h='16px' w='120px' borderRadius={"5px"} />
-                          </VStack>
-                        </HStack>
-                        <VStack spacing={"0"} justify={"flex-start"} alignItems={"flex-start"}>
-                          <Skeleton h='16px' w='60px' borderRadius={"5px"} />
-                        </VStack>
-                      </Flex>
-                    </Td>
-                  ) : (
-                    <Td p={"2px"}>
-                      <NewTransactionModal
-                        transactionType={transaction.transactionType}
-                        transactionId={transaction.id}
-                        edit={true}
-                        trigger={(open) => (
-                          <Flex pl={"5px"} pr={"8px"} pb={"2px"} pt={"2px"}
-                                borderWidth={1}
-                                borderRadius="md"
-                                boxShadow="sm"
-                            // borderColor={"red"}
-                                justify={"space-between"}
-                                onClick={open}
-                          >
-                            <Flex direction={"row"} w={"full"} p={0} h={"50px"} alignItems={"center"}
-                                  justify={"space-between"}>
-                              <HStack>
-                                <Circle size={"42px"} bg={"gray.200"} />
-                                <VStack spacing={0} alignItems={"start"}>
-                                  <Text fontWeight={"bold"} size={"0.95rem"}>{transaction.description}</Text>
-                                  <Text fontWeight={"medium"} size={"0.95rem"}>
-                                    {category[transaction.transactionCategory]} | {
-                                    accounts?.filter(acc => acc.id === transaction.accountId)
-                                      .map((acc) => (
-                                        acc.description
-                                      ))} </Text>
-                                </VStack>
-                              </HStack>
+        />
+        <ConfirmationDialog
+          title={info.archived ? "Desarquivar categoria" : "Arquivar categoria"}
+          mainColor={"white"}
+          buttonText={info ? "Desarquivar" : "Arquivar"}
+          description={
+            <>
+              Você tem certeza que deseja arquivar a categoria <Text as="span" fontWeight="bold">{data.name}</Text>?
+            </>
+          }
+          onOk={() => toggleArchiveCategory(data.id)}
+          variant={"alert"}
+          trigger={(onOpen) =>
+            <MenuItem onClick={onOpen} icon={<RepeatIcon />}>
+              {info.archived ? "Desarquivar" : "Arquivar"}
+            </MenuItem>
+          }
+        />
+        { info.archived && (
+          <ConfirmationDialog
+            title={"Deletar"}
+            mainColor={"white"}
+            buttonText={"Deletar"}
+            description={"Deseja deletar esta categoria? Essa ação não poderá ser desfeita."}
+            onOk={() => del(data.id)}
+            variant={"danger"}
+            trigger={(onOpen) =>
+              <MenuItem onClick={onOpen} icon={<RepeatIcon />}>
+                Deletar categoria
+              </MenuItem>
+            }
+          />
+        ) }
+      </MenuList>
+    </Menu>
+  );
+}
 
-                              <VStack spacing={1} alignItems={"end"}>
-                                <Text fontWeight={"bold"}>{moneyFormat(transaction.amount)}</Text>
-                                {transaction.paid ? (
-                                  <Tooltip label='Pago' placement='auto-start'>
-                                    <Circle size='20px' bg='lime.400' color='lime.600' border={"1px"}
-                                            borderColor={"lime.500"}>
-                                      <CheckIcon h={"10px"} />
-                                    </Circle>
-                                  </Tooltip>
+export default function CategoryTable({ archived }: { archived: boolean }) {
+  const [size, setSize] = useState<number>(10);
+  const [page, setPage] = useState<number>(0);
+  const [sort, setSort] = useState<string>("name,asc");
+  const [active, setActive] = useState<string>(null);
+  const [keyword, setKeyword] = useState<string>("");
+  const { data: categories, isLoading } = useCategories(page, size, sort, active, keyword, archived);
+  const deleteCategory = useDeleteCategory();
+  const toggleCategory = useUpdateArchiveCategory();
 
-                                ) : (
-                                  <Tooltip label='Pendente' placement='auto-start'>
-                                    <Circle size='20px' bg='littlePink.400' color='littlePink.600' border={"1px"}
-                                            borderColor={"littlePink.500"}>
-                                      <SmallCloseIcon h={"14px"} />
-                                    </Circle>
-                                  </Tooltip>
-                                )}
-                              </VStack>
-                            </Flex>
-                          </Flex>
-                        )}
-                      />
-                    </Td>
-                  )
-                ) : (
-                  <>
-                    {/*DESCRIÇÃO*/}
-                    <Td pl={5} pb={"15px"} pt={"15px"}>
-                      <Flex justify="flex-start">
-                        <Text fontWeight={"medium"}>{transaction.description}</Text>
-                      </Flex>
-                    </Td>
+  const handleDelete = (id: number) => {
+    deleteCategory.mutate(id)
+  }
 
-                    {/*SITUAÇÃO*/}
-                    <Td pb={0} pt={0}>
-                      <Flex justify="center">
-                          <CircleTag isPaid={transaction.paid} />
-                      </Flex>
-                    </Td>
+  const handleSort = (sort: string) => {
+    setSort(sort)
+  }
 
-                    {/*CONTA*/}
-                    <Td pb={0} pt={0}>
-                      <Flex justify={"center"}>
-                        <Text fontWeight={"medium"}>
-                          {accounts?.filter(acc => acc.id === transaction.accountId).map((acc) => (
-                            acc.description
-                          ))}
-                        </Text>
-                      </Flex>
-                    </Td>
+  const handleActiveButtonClick = (activeButton: string) => {
+    setActive(activeButton);
+  };
 
-                    {/*DATA*/}
-                    <Td pb={0} pt={0}>
-                      <Flex justify="center">
-                        {formatDate(transaction.date)}
-                      </Flex>
-                    </Td>
+  const handleSizePerPage = (size: number) => {
+    setSize(size)
+  }
 
-                    {/*CATEGORIA*/}
-                    <Td pb={0} pt={0}>
-                      <Flex justify="center">
-                        <Text fontWeight={"medium"}>{category[transaction.transactionCategory]}</Text>
-                      </Flex>
-                    </Td>
+  const handlePage = (page: number) => {
+    setPage(page)
+  }
 
-                    {/*TIPO*/}
-                    <Td pb={0} pt={0}>
-                      <Flex justify="center">
-                        <Tag variant={transaction.transactionType === 'REVENUE' ? "green" : "red"}
-                             label={transaction.transactionType === 'REVENUE' ? "RECEITA" : "DESPESA"}
-                        />
-                      </Flex>
-                    </Td>
+  const handleKeyword = (keyword: string) => {
+    setKeyword(keyword)
+  }
 
-                    {/*VALOR*/}
-                    <Td pb={0} pt={0}>
-                      <Flex justify="center">
-                        <Text fontWeight={"bold"}>{moneyFormat(transaction.amount)}</Text>
-                      </Flex>
-                    </Td>
-
-                    {/*OPÇÕES*/}
-                    <Td pb={0} pt={0} textAlign={"center"}>
-                      <Menu>
-                        <MenuButton
-                          as={IconButton}
-                          aria-label='Options'
-                          icon={<HamburgerIcon />}
-                          variant='solid'
-                        />
-                        <MenuList>
-                          <NewTransactionModal
-                            transactionType={transaction.transactionType}
-                            edit={true}
-                            transactionId={transaction.id}
-                            trigger={(open) => (
-                                <MenuItem icon={<EditIcon />} onClick={open}>
-                                  Editar
-                                </MenuItem>
-                            )}
-                          />
-                          <ConfirmationDialog
-                            title={"Duplicar Transação"}
-                            mainColor={"white"}
-                            buttonText={"Duplicar"}
-                            description={"A duplicação cria uma nova transação com base nesta atual com a data somando mais um mês. Deseja continuar com a duplicação? "}
-                            variant={"alert"}
-                            onOk={() => handleDuplicateTransaction(transaction.id)}
-                            trigger={(onOpen) => (
-                              <MenuItem onClick={onOpen} icon={<RepeatIcon />}>
-                                Duplicar
-                              </MenuItem>
-                            )}
-                          />
-                          <ConfirmationDialog
-                            title={"Deletar Transação"}
-                            mainColor={"white"}
-                            buttonText={"Deletar"}
-                            description={"Deseja deletar essa transação?"}
-                            variant={"danger"}
-                            onOk={() => handleDeleteTransaction(transaction.id)}
-                            trigger={(onOpen) => (
-                              <MenuItem onClick={onOpen} icon={<Icon as={BiTrash} fontSize={"13px"} />}>
-                                Deletar
-                              </MenuItem>
-                            )}
-                          />
-                        </MenuList>
-                      </Menu>
-                    </Td>
-                  </>
-                )}
-              </Tr>
-            ))}
-          </Tbody>
-        </Table>
-      )
+  return (
+    <SideBarLayout>
+      <HStack justify={!archived ? "space-between" : "initial"}>
+        { archived && (
+          <NextLink href={"/categories"}>
+            <IconButton
+              isRound={true}
+              variant={"solid"}
+              aria-label={"button account"}
+              icon={<ChevronLeftIcon fontSize={"26px"} />}
+              size={"sm"}
+            />
+          </NextLink>
+        )}
+        <HeadingTable title={!archived ? "Categorias" : "Categorias arquivadas"} />
+        { !archived && (
+          <HStack spacing={"8px"}>
+            <NewCategoryModal
+              text={"Adicionar"}
+              trigger={onOpen =>
+                <LightMode>
+                  <Button size={"sm"}
+                          onClick={onOpen}
+                          fontSize={"sm"}
+                          variant={"default"}
+                          leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
+                  >Adicionar categoria
+                  </Button>
+                </LightMode>
+              }
+            />
+            <LightMode>
+              <NextLink href={"/categories/archived"}>
+                <Button as={"a"}
+                        size={"sm"}
+                        fontSize={"sm"}
+                        colorScheme={"purple"}
+                        leftIcon={<Icon as={RiArchiveLine} fontSize={"20"} />}
+                >Arquivados
+                </Button>
+              </NextLink>
+            </LightMode>
+          </HStack>
+        ) }
+      </HStack>
+      <CustomTable
+        columns={columns}
+        data={categories}
+        tableHeadOptions={tableHead}
+        actualPage={page}
+        sizePerPage={size}
+        onSort={handleSort}
+        onKeyword={handleKeyword}
+        onActive={handleActiveButtonClick}
+        onPage={handlePage}
+        onSizePerPage={handleSizePerPage}
+        buttonOptionalColumns={buttonsOptions}
+        buttonsOptions={buttonOptions}
+        activeSearch={true}
+        onDelete={handleDelete}
+        tableHeight={3}
+        isLoading={isLoading}
+        customInfo={{ toggleCategory, archived }}
+      />
+    </SideBarLayout>
   )
-};
+}

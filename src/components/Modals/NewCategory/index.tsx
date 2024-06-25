@@ -3,6 +3,7 @@ import {
   Button,
   Center,
   Divider,
+  Flex,
   HStack,
   LightMode,
   Modal,
@@ -13,6 +14,7 @@ import {
   ModalHeader,
   ModalOverlay,
   SimpleGrid,
+  Text,
   useColorModeValue,
   useDisclosure,
   VStack,
@@ -31,6 +33,7 @@ import { Category } from "../../../hooks/category/type";
 const categorySchema = yup.object().shape({
   name: yup.string().required('Nome obrigatório.'),
   categoryType: yup.string().required('Tipo da categoria obrigatória.'),
+  color: yup.string().required('Cor obrigatória.')
 });
 
 const initialValues = {
@@ -90,7 +93,7 @@ export function NewCategoryModal({onCancel, trigger, text, categoryId}: ModalTyp
         onClose={handleCancel}
         isOpen={isOpen}
         isCentered
-        size={{ base: "md", md: "md", lg: "lg" }}
+        size={{base: "md", md: "md", lg: "lg"}}
       >
         <ModalOverlay backdropFilter='blur(3px)' />
         <ModalContent bg={mainColor}>
@@ -99,10 +102,11 @@ export function NewCategoryModal({onCancel, trigger, text, categoryId}: ModalTyp
                   validationSchema={categorySchema}
                   validateOnChange={false}
           >
-            {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
+            {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue, setFieldTouched, touched}) =>
               <>
                 <form onSubmit={handleSubmit}>
-                  <ModalHeader fontSize="20px" fontWeight="medium">{text === 'edit' ? "Editar" : "Adicionar"} Categoria</ModalHeader>
+                  <ModalHeader fontSize="20px"
+                               fontWeight="medium">{text === 'edit' ? "Editar" : "Adicionar"} Categoria</ModalHeader>
                   <ModalCloseButton />
                   <Center>
                     <Divider maxW="550" borderColor="gray.150" />
@@ -128,23 +132,34 @@ export function NewCategoryModal({onCancel, trigger, text, categoryId}: ModalTyp
                             important={"*"}
                             showDefaultOption={true}
                             options={[
-                              { value: 'REVENUE', label: 'Despesa' },
-                              { value: 'EXPENSE', label: 'Receita' }
+                              {value: 'EXPENSE', label: 'Despesa'},
+                              {value: 'REVENUE', label: 'Receita'}
                             ]}
                           />
-                          <HStack>
-                            {colors.map((color, index) => {
-                              return (
-                                <RadioColorButton
-                                  key={color}
-                                  color={color}
-                                  value={color}
-                                  isChecked={values.color === color}
-                                  onChange={() => setFieldValue("color", color)}
-                                />
-                              );
-                            })}
-                          </HStack>
+                          <VStack w={"full"} justify={"start"} alignItems={"start"}>
+                            <HStack>
+                              {colors.map((color, index) => {
+                                return (
+                                  <RadioColorButton
+                                    key={color}
+                                    color={color}
+                                    value={color}
+                                    isChecked={values.color === color}
+                                    onChange={() => {
+                                      setFieldValue("color", color);
+                                      setFieldTouched("color", false);  // Marque o campo como "não tocado"
+                                    }}
+                                    hasError={errors.color && touched.color}
+                                  />
+                                );
+                              })}
+                            </HStack>
+                            {errors.color && touched.color && (
+                              <Text fontSize={"0.8rem"} fontWeight={"medium"} color={"red.500"}>
+                                Cor obrigatória
+                              </Text>
+                            )}
+                          </VStack>
                         </SimpleGrid>
                       </VStack>
                     </Box>
