@@ -1,13 +1,13 @@
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
-import { InfoDashboardCard } from "../../components/InfoCards";
-import { Box, Flex, SimpleGrid, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, SimpleGrid, Text, useBreakpointValue, useColorModeValue, VStack } from "@chakra-ui/react";
 import { getChartDataOptions } from "../../utils/chartData";
 import React, { useState } from "react";
 import { useMe } from "../../hooks/users/useMe";
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
 import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
 import dynamic from "next/dynamic";
+import { PieChartVehicleStatus } from "../../components/DonutPieChart";
 
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
   ssr: false
@@ -16,12 +16,12 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
 
 export default function ReportPage() {
   const mainColor = useColorModeValue('white', 'gray.800');
-  const isMobile = useBreakpointValue({base: true, md: true, lg: false});
+  const isMobile = useBreakpointValue({base: true, md: false, lg: false});
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
   const [showCardInfo, setShowCardInfo] = useState(true);
   const {data: user} = useMe();
-  const {data: expenseDash} = useDashboardExpenseGraph(user?.id, month, year);
+  const {data: expenseDash, isLoading} = useDashboardExpenseGraph(user?.id, month, year);
   const {data: revenueDash} = useDashboardRevenueGraph(user?.id, month, year);
 
   const handleChangeYear = (year: number) => {
@@ -32,46 +32,58 @@ export default function ReportPage() {
     setMonth(month)
   };
 
+  if (isLoading) {
+    return null;
+  }
+
   return (
-    <SideBarLayout >
-      <HeadingTable title={"Dashboard"} />
+    <SideBarLayout>
+      <HeadingTable title={"Relatórios"} />
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
         {
           isMobile ? (
-            <Flex flexDirection={"column"}
-                  alignItems={"center"}
-                  justify={"center"}
-                  h={"100%"}
-                  w={"100%"}
-                  mt={"10px"}
-            >
-              <Text mt={5}>Despesas por categoria</Text>
-              <ReactApexChart
-                //@ts-ignore
-                options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
-                series={expenseDash?.series?.length ? expenseDash.series : [0]}
-                type="donut"
-              />
-            </Flex>
-          ) : (
-            <SimpleGrid columns={{sm: 1, md: 2, xl: 2}} spacing='24px' h={"100hv"} mt={5}>
-              <Flex bg={mainColor} h={"auto"} justify={"center"} p={5} borderRadius={"25px"} flexDirection={"column"}
-                    alignItems={"center"}>
-                <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Despesas por categoria</Text>
-                <Box h={"100%"} w={"70%"}>
+            <VStack>
+              <Text fontWeight={"medium"} fontSize={"18px"}>Despesas por categoria</Text>
+              <Box h={"auto"} w={"100%"} border={"1px"} borderRadius={"5px"} borderColor={"gray.150"}>
+                <div style={{ margin: "10px" }}>
                   <ReactApexChart
                     //@ts-ignore
                     options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
                     series={expenseDash?.series?.length ? expenseDash.series : [0]}
                     type="donut"
                   />
-                </Box>
-              </Flex>
-            </SimpleGrid>
+                </div>
+              </Box>
+            </VStack>
+          ) : (
+            <>
+              <Box h={"100%"}
+                   w={"35%"}
+                   alignItems={"start"}
+                   border={"1px"}
+                   borderRadius={"5px"}
+                   borderColor={"gray.150"}
+              >
+                <ReactApexChart
+                  //@ts-ignore
+                  options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
+                  series={expenseDash?.series?.length ? expenseDash.series : [0]}
+                  type="donut"
+                />
+              </Box>
+              {/*<Flex w={"full"} h={"400px"} position={"relative"} >*/}
+              {/*  <PieChartVehicleStatus*/}
+              {/*    labels={expenseDash?.labels}*/}
+              {/*    series={expenseDash?.series}*/}
+              {/*  />*/}
+              {/*  <Box style={{ position: 'absolute', top: '50%', left: '50%', transform: "translate(-50%, -50%)" }} >*/}
+              {/*    1*/}
+              {/*  </Box>*/}
+              {/*</Flex>*/}
+            </>
           )
         }
       </Flex>
-
     </SideBarLayout>
   )
 }

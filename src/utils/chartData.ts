@@ -25,20 +25,10 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
     "#591313",
   ]
 
-  const getColor = (index) => {
-    return transactionType === 'REVENUE' ? revenueColors[index % revenueColors.length] : expenseColors[index % expenseColors.length];
-  };
-
-  const getIcon = (index) => {
-    const icons = ["fa fa-dollar-sign", "fa fa-shopping-cart", "fa fa-utensils", "fa fa-car", "fa fa-home"];
-    return icons[index % icons.length];
-  };
-
   return {
     options: {
       labels: translateCategories(labels),
-      chart: {
-      },
+      chart: {},
       legend: {
         show: true,
         showForSingleSeries: false,
@@ -47,10 +37,12 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
         position: 'right',
         horizontalAlign: 'center',
         floating: false,
-        fontSize: '15px',
+        fontSize: '16px',
         fontFamily: 'Inter',
         fontWeight: 500,
-        formatter: undefined,
+        formatter: function (w) {
+          return w;
+        },
         inverseOrder: false,
         width: undefined,
         height: undefined,
@@ -59,7 +51,7 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
         offsetX: 0,
         offsetY: 0,
         labels: {
-          colors: transactionType === 'REVENUE' ? revenueColors : expenseColors,
+          colors: ['#000000'],
           useSeriesColors: false
         },
         markers: {
@@ -69,13 +61,19 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
           strokeColor: '#000000',
           fillColors: undefined,
           radius: 20,
-          customHTML: function(a) {
-            return `<div style="display: flex; align-items: center; justify-content: center; width: 25px; height: 25px; margin-right: 50px; border-radius: 50%;">
+          customHTML: function () {
+            return `<div style="display: flex; 
+                                align-items: center; 
+                                justify-content: center; 
+                                width: 25px; 
+                                height: 25px; 
+                                margin-right: 50px; 
+                                border-radius: 50%;">
                       <div style="color: white; font-size: 12px;">
-                      <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
-                            <path d="${HouseIcon}" />
-                       </svg>
-                        </div>
+                        <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                              <path d="${HouseIcon}" />
+                        </svg>
+                      </div>
                     </div>`;
           },
           onClick: undefined,
@@ -94,29 +92,110 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
         },
       },
       dataLabels: {
-        enabled: false
+        enabled: false,
+        enabledOnSeries: undefined,
+        formatter: function (val, opts) {
+          return val
+        },
+        textAnchor: 'middle',
+        distributed: false,
+        offsetX: 0,
+        offsetY: 0,
+        style: {
+          fontSize: '14px',
+          fontFamily: 'Helvetica, Arial, sans-serif',
+          fontWeight: 'bold',
+          colors: undefined
+        },
+        background: {
+          enabled: false,
+          foreColor: '#fff',
+          padding: 4,
+          borderRadius: 2,
+          borderWidth: 1,
+          borderColor: '#fff',
+          opacity: 0.9,
+          dropShadow: {
+            enabled: true,
+            top: 1,
+            left: 1,
+            blur: 1,
+            color: '#000',
+            opacity: 1.0
+          }
+        },
+        dropShadow: {
+          enabled: true,
+          top: 1,
+          left: 1,
+          blur: 0,
+          color: '#000',
+          opacity: 1
+        }
       },
       tooltip: {
         enabled: true
       },
       fill: {
-        colors: transactionType === 'REVENUE' ? revenueColors : expenseColors
+        colors: undefined
       },
       states: {
-        hover: {filter: {type: "lighten", value: 0.5}},
-        active: {filter: {type: "none", value: 0}}
+        hover: {
+          filter: {
+            type: "none",
+            value: 1
+          }
+        },
+        active: {
+          filter: {
+            type: "none",
+            value: 1
+          }
+        }
       },
       stroke: {
-        width: 0
+        show: true,
+        curve: ['straight'],
+        lineCap: 'butt',
+        colors: ['#000000'],
+        width: 0,
+        dashArray: 0,
       },
       plotOptions: {
         pie: {
+          startAngle: 0,
+          endAngle: 360,
           expandOnClick: true,
+          offsetX: 0,
+          offsetY: 0,
+          customScale: 1,
+          dataLabels: {
+            offset: 0,
+            minAngleToShowLabel: 1
+          },
           donut: {
-            size: "70%",
+            size: "75%",
+            background: '#ffffff',
             labels: {
               show: true,
-              name: {show: true},
+              name: {
+                show: true,
+                color: '#000000',
+                formatter: function (val) {
+                  return val
+                }
+              },
+              value: {
+                show: true,
+                fontSize: '20px',
+                fontFamily: 'Inter',
+                fontWeight: 600,
+                color: '#000',
+                offsetY: 0,
+                formatter: function (val) {
+                  return "R$ " + val;
+                }
+              },
               total: {
                 show: true,
                 showAlways: true,
@@ -126,7 +205,10 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
                     return a + b;
                   }, 0);
 
-                  return total.toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' });
+                  return total.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  });
                 }
               },
             }
@@ -146,4 +228,4 @@ export function formatDate(date: string): string {
 export const HouseIcon = "M2.25 12l8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
 export const PeopleIcon = "M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"
 export const ReportsIcon = "M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75"
-export const AlertIcon =  "M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
+export const AlertIcon = "M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"
