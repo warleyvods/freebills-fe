@@ -52,7 +52,6 @@ export function ReadjustmentAccountModal({onCancel, trigger, text, accountId}: M
 
 
   const handleCreateAccount = (values) => {
-    console.log(values)
     updateAmount.mutate({...values, accountId})
     handleOk()
   }

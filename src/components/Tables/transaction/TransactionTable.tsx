@@ -6,7 +6,7 @@ import {
   Icon,
   IconButton,
   LightMode, Menu, MenuButton, MenuItem, MenuList,
-  Skeleton,
+  Skeleton, Spinner,
   Table,
   Tbody,
   Td,
@@ -67,7 +67,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
   const allChecked = allProducts?.every((productId) => selectedProducts.includes(productId));
   const isIndeterminate = selectedProducts.some(Boolean) && !allChecked;
   const showFloatMenu = allChecked || isIndeterminate;
-  const {data: categories} = useCategories();
+  const {data: categories, isLoading: isCategoryLoading} = useCategories();
   const {data: accounts} = useAccounts();
   const {mutate: deleteTransaction} = useDeleteTransaction();
   const {mutate: duplicateTransaction} = useDuplicateTransaction();
@@ -227,12 +227,16 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                     {/*CATEGORIA*/}
                     <Td pb={0} pt={0}>
                       <Flex justify="center">
-                        <Text fontWeight={"medium"}>
-                          {categories.content?.filter(cat => cat.id === transaction.categoryId)
-                            .map((category) => (
-                              category.name
-                            ))}
-                        </Text>
+                        { isCategoryLoading ? (
+                          <Spinner />
+                          ) : (
+                          <Text fontWeight={"medium"}>
+                            {categories.content?.filter(cat => cat.id === transaction.categoryId)
+                              .map((category) => (
+                                category.name
+                              ))}
+                          </Text>
+                        )}
                       </Flex>
                     </Td>
 

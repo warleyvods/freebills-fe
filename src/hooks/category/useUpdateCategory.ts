@@ -12,7 +12,7 @@ type ErrorType = {
 }
 
 export function useUpdateCategory(onSuccess?: () => {}, onError?: () => {}) {
-  const toast = useToast()
+  const toast = useToast();
 
   return useMutation(async (category: Category) => {
     const response = await api.put('v1/categories', {

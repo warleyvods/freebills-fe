@@ -25,6 +25,7 @@ import SideBarLayout from "../../SidebarLayout/SideBarLayout";
 import { useCategories } from "../../../hooks/category/useCategories";
 import { useDeleteCategory } from "../../../hooks/category/useDeleteCategory";
 import { useUpdateArchiveCategory } from "../../../hooks/category/useUpdateArchiveCategory";
+import { EmojiOrImageIcon } from "../../Modals/NewCategory/EmojiOrImageIcon";
 
 const columns: TableColumn[] = [
   {
@@ -38,7 +39,8 @@ const columns: TableColumn[] = [
   {
     name: {
       name: "icon",
-      fontWeight: "medium"
+      fontWeight: "medium",
+      function: IconComponent
     },
     align: "center",
     label: "Ícone",
@@ -102,6 +104,18 @@ function ColorComponent(name) {
   return (
     <Flex justify={"center"}>
       <Circle bg={name} size={"25px"} />
+    </Flex>
+  )
+}
+
+function IconComponent(icon) {
+  return (
+    <Flex alignItems={"center"} justify={"center"}>
+      <EmojiOrImageIcon
+        icon={icon}
+        emojiFontSize="2xl"
+        boxSize={"20px"}
+      />
     </Flex>
   )
 }

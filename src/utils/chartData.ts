@@ -25,16 +25,76 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
     "#591313",
   ]
 
+  const getColor = (index) => {
+    return transactionType === 'REVENUE' ? revenueColors[index % revenueColors.length] : expenseColors[index % expenseColors.length];
+  };
+
+  const getIcon = (index) => {
+    const icons = ["fa fa-dollar-sign", "fa fa-shopping-cart", "fa fa-utensils", "fa fa-car", "fa fa-home"];
+    return icons[index % icons.length];
+  };
+
   return {
     options: {
       labels: translateCategories(labels),
       chart: {
       },
       legend: {
-        show: false
+        show: true,
+        showForSingleSeries: false,
+        showForNullSeries: true,
+        showForZeroSeries: true,
+        position: 'right',
+        horizontalAlign: 'center',
+        floating: false,
+        fontSize: '15px',
+        fontFamily: 'Inter',
+        fontWeight: 500,
+        formatter: undefined,
+        inverseOrder: false,
+        width: undefined,
+        height: undefined,
+        tooltipHoverFormatter: undefined,
+        customLegendItems: [],
+        offsetX: 0,
+        offsetY: 0,
+        labels: {
+          colors: transactionType === 'REVENUE' ? revenueColors : expenseColors,
+          useSeriesColors: false
+        },
+        markers: {
+          width: 25,
+          height: 25,
+          strokeWidth: 0,
+          strokeColor: '#000000',
+          fillColors: undefined,
+          radius: 20,
+          customHTML: function(a) {
+            return `<div style="display: flex; align-items: center; justify-content: center; width: 25px; height: 25px; margin-right: 50px; border-radius: 50%;">
+                      <div style="color: white; font-size: 12px;">
+                      <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
+                            <path d="${HouseIcon}" />
+                       </svg>
+                        </div>
+                    </div>`;
+          },
+          onClick: undefined,
+          offsetX: 0,
+          offsetY: 0
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 4
+        },
+        onItemClick: {
+          toggleDataSeries: true
+        },
+        onItemHover: {
+          highlightDataSeries: true
+        },
       },
       dataLabels: {
-        enabled: true
+        enabled: false
       },
       tooltip: {
         enabled: true
@@ -51,7 +111,7 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
       },
       plotOptions: {
         pie: {
-          expandOnClick: false,
+          expandOnClick: true,
           donut: {
             size: "70%",
             labels: {

@@ -2,9 +2,11 @@ import {
   Box,
   Button,
   Center,
+  chakra,
+  Circle,
   Divider,
-  Flex,
   HStack,
+  IconButton,
   LightMode,
   Modal,
   ModalBody,
@@ -13,13 +15,19 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Popover,
+  PopoverArrow,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
   SimpleGrid,
   Text,
   useColorModeValue,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
-import React, { ReactNode, useCallback } from "react";
+import React, { ReactNode, useCallback, useRef, useState } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
@@ -29,17 +37,22 @@ import { useCreateCategory } from "../../../hooks/category/useCreateCategory";
 import { useUpdateCategory } from "../../../hooks/category/useUpdateCategory";
 import { useCategoryById } from "../../../hooks/category/useCategoryById";
 import { Category } from "../../../hooks/category/type";
+import { IconPicker } from "./IconPicker";
+import { EmojiOrImageIcon } from "./EmojiOrImageIcon";
+import { AddIcon } from "@chakra-ui/icons";
 
 const categorySchema = yup.object().shape({
   name: yup.string().required('Nome obrigatório.'),
   categoryType: yup.string().required('Tipo da categoria obrigatória.'),
-  color: yup.string().required('Cor obrigatória.')
+  color: yup.string().required('Cor obrigatória.'),
+  icon: yup.string().required('Icone obrigatória.')
 });
 
 const initialValues = {
   name: '',
   categoryType: '',
-  color: ''
+  color: '',
+  icon: ''
 }
 
 interface ModalTypes {
@@ -54,12 +67,15 @@ interface ModalTypes {
 export function NewCategoryModal({onCancel, trigger, text, categoryId}: ModalTypes) {
   const mainColor = useColorModeValue('white', 'gray.800');
   const inverseMainColor = useColorModeValue('gray.800', 'white');
+  const scrollContainer = useRef<HTMLDivElement>(null);
+  const initialFocusRef = React.useRef()
 
   const {isOpen, onOpen, onClose} = useDisclosure();
 
   const createCategory = useCreateCategory();
   const {data: accountFound} = useCategoryById(categoryId);
   const updateAccount = useUpdateCategory();
+  const [icon, setIcon] = useState("");
 
   const handleOk = useCallback(() => {
     onClose();
@@ -67,14 +83,22 @@ export function NewCategoryModal({onCancel, trigger, text, categoryId}: ModalTyp
 
   const handleUpdateCategory = async (values: Category) => {
     updateAccount.mutate({
-      ...values
+      ...values, icon
     })
     handleOk()
   };
 
-  const handleCreateCategory = (values) => {
-    createCategory.mutate(values);
+  const handleCreateCategory = (values: Category) => {
+    createCategory.mutate({
+      ...values, icon
+    });
     handleOk()
+  }
+
+  const onIconSelected = (url: string, setFieldValue, setFieldTouched) => {
+    setIcon(url);
+    setFieldValue("icon", url);
+    setFieldTouched("icon", true);
   }
 
   const handleCancel = useCallback(() => {
@@ -136,6 +160,42 @@ export function NewCategoryModal({onCancel, trigger, text, categoryId}: ModalTyp
                               {value: 'REVENUE', label: 'Receita'}
                             ]}
                           />
+
+                          <Popover isLazy initialFocusRef={initialFocusRef} placement='bottom'>
+                            <PopoverTrigger>
+                              <chakra.span>
+                                <HStack spacing={"10px"} alignItems={"start"}>
+                                  <VStack alignItems={"start"}>
+                                    <Circle bg={"gray.100"} size={"40px"} border={errors.icon && touched.icon ? '2px solid red' : 'none'}>
+                                      <EmojiOrImageIcon
+                                        icon={icon}
+                                        emojiFontSize="2xl"
+                                        boxSize={"25px"}
+                                      />
+                                    </Circle>
+                                  </VStack>
+                                  <IconButton
+                                    borderRadius={"25px"}
+                                    colorScheme='gray'
+                                    aria-label='Call Segun'
+                                    size='md'
+                                    icon={<AddIcon />}
+                                  />
+                                </HStack>
+                                { errors.icon && touched.icon && (
+                                  <Text fontSize={"0.8rem"} fontWeight={"medium"} color={"red.500"} mt={"5px"}>Ícone obrigatório</Text>
+                                ) }
+                              </chakra.span>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <PopoverHeader pt={4} fontWeight='bold' border='0'>
+                                Ícones
+                              </PopoverHeader>
+                              <PopoverCloseButton />
+                              <IconPicker onIconSelected={(url) => onIconSelected(url, setFieldValue, setFieldTouched)} />
+                            </PopoverContent>
+                          </Popover>
+
                           <VStack w={"full"} justify={"start"} alignItems={"start"}>
                             <HStack>
                               {colors.map((color, index) => {
@@ -147,7 +207,7 @@ export function NewCategoryModal({onCancel, trigger, text, categoryId}: ModalTyp
                                     isChecked={values.color === color}
                                     onChange={() => {
                                       setFieldValue("color", color);
-                                      setFieldTouched("color", false);  // Marque o campo como "não tocado"
+                                      setFieldTouched("color", false);
                                     }}
                                     hasError={errors.color && touched.color}
                                   />

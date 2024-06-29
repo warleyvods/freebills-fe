@@ -6,9 +6,11 @@ import {
   SelectProps as ChakraSelectProps,
   Text,
   HStack,
-  useColorModeValue
+  useColorModeValue, Button, LightMode, Icon
 } from "@chakra-ui/react";
-import React, { forwardRef, ForwardRefRenderFunction } from "react";
+import React, { forwardRef, ForwardRefRenderFunction, ReactNode } from "react";
+import { RiAddLine } from "react-icons/ri";
+import { NewAccountModal } from "../../Modals/NewAccount";
 
 interface SelectProps extends ChakraSelectProps {
   name?: string;
@@ -17,6 +19,7 @@ interface SelectProps extends ChakraSelectProps {
   options: { value: string; label: string }[];
   important?: string;
   showDefaultOption?: boolean;
+  modal?: ReactNode
 }
 
 const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
@@ -29,6 +32,7 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
   onChange,
   placeholder,
   showDefaultOption,
+  modal,
   ...rest
 }: SelectProps) => {
   const mainColor = useColorModeValue('gray.10', 'gray.900');
@@ -61,17 +65,34 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
         bgColor={mainColor}
         {...rest}
       >
-        { showDefaultOption && (
+        {showDefaultOption && (
           <option value='' disabled hidden>
             -
           </option>
         )}
-        { options.map((opt) => (
-          <option key={opt.value} value={opt.value}>
-            {opt.label}
-          </option>
-        ))}
+        {options?.length === 0 ? (
+          <>
+            <option value='' disabled hidden>
+              Nenhuma opção disponível
+            </option>
+            <option value='' disabled>
+              Nenhuma opção disponível
+            </option>
+          </>
+        ) : (
+          options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))
+        )}
       </ChakraSelect>
+
+      {options.length === 0 && !!modal && (
+        <Button mt={2} size={"sm"} variant={"default"}>
+          {modal}
+        </Button>
+      )}
 
       <FormErrorMessage mt={1}>
         <Text fontSize={"0.8rem"} fontWeight={"medium"}>
@@ -83,3 +104,4 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
 };
 
 export const SelectFormik = forwardRef(SelectBase);
+

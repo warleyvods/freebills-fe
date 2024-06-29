@@ -18,7 +18,7 @@ import {
   Switch, useBreakpointValue,
   useColorModeValue,
   useDisclosure,
-  VStack
+  VStack, Icon, Spinner
 } from '@chakra-ui/react'
 import React, { ReactNode, useCallback } from "react";
 import { Formik } from "formik";
@@ -32,6 +32,8 @@ import * as yup from "yup";
 import InputMoney from "../../Form/MoneyInput";
 import { SelectFormik } from "../../Form/SelectInput";
 import { useCategories } from "../../../hooks/category/useCategories";
+import { NewAccountModal } from "../NewAccount";
+import { RiAddLine } from "react-icons/ri";
 
 const createTransactionSchema = yup.object().shape({
   amount: yup.number().required('Valor obrigatório.'),
@@ -175,8 +177,8 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   const userId = user?.id;
   const createTransaction = useCreateTransaction();
   const updateTransaction = useUpdateTransaction();
-  const {data: accounts} = useAccounts();
-  const {data: categories} = useCategories();
+  const {data: accounts, isLoading: isAccountLoading} = useAccounts();
+  const {data: categories, isLoading: isCategoryLoading} = useCategories();
   const color = colorType(transactionType);
   const category = categoryMap(transactionType);
   const {data: transactionFound} = useTransactionById(transactionId);
@@ -186,7 +188,6 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   }, [onClose]);
 
   const handleUpdateTransaction = async (values) => {
-    console.log(values)
     updateTransaction.mutate({
       ...values, id: transactionId
     });
@@ -213,11 +214,6 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   const accountOptions = accounts?.map((acc) => ({
     value: acc.id.toString(),
     label: acc.description,
-  }));
-
-  const categoryOptions = category.map((acc) => ({
-    value: acc.category,
-    label: acc.categoryName,
   }));
 
   return (
@@ -281,17 +277,36 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                                        error={errors.description}
                           />
 
-                          <SelectFormik
-                            label="Tipo da Conta"
-                            name="accountId"
-                            error={errors.accountId}
-                            value={values.accountId}
-                            onChange={handleChange}
-                            important={"*"}
-                            options={accountOptions}
-                            showDefaultOption={true}
-                          />
-
+                          {isAccountLoading ? (
+                            <Spinner />
+                          ) : (
+                            <SelectFormik
+                              label="Tipo da Conta"
+                              name="accountId"
+                              error={errors.accountId}
+                              value={values.accountId}
+                              onChange={handleChange}
+                              important={"*"}
+                              options={accountOptions}
+                              showDefaultOption={true}
+                              modal={
+                                <NewAccountModal
+                                  text={"Adicionar"}
+                                  trigger={onOpen =>
+                                    <LightMode>
+                                      <Button size={"sm"}
+                                              onClick={onOpen}
+                                              fontSize={"sm"}
+                                              variant={"default"}
+                                              leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
+                                      >Adicionar conta
+                                      </Button>
+                                    </LightMode>
+                                  }
+                                />
+                              }
+                            />
+                          )}
                           <SelectFormik
                             label="Selecione uma Categoria"
                             name="categoryId"
@@ -315,6 +330,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                               </Select>
                             ) : null
                           }
+
                           {values.bankSlip ?
                             <HStack justify={"space-between"}>
                               <InputFormik id="barCode"

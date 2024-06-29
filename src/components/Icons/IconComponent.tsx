@@ -12,7 +12,6 @@ const IconComponent: React.FC<IconProps> = ({ name, width , height }) => {
   const svgString = icons[name];
 
   if (!svgString) {
-    console.error(`Ícone '${name}' não encontrado`);
     return null;
   }
 

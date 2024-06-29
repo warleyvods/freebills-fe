@@ -35,6 +35,8 @@
     "react-input-mask": "^2.0.4",
     "react-number-format": "4.4.1",
     "react-query": "^3.39.1",
+    "tinycolor2": "^1.6.0",
+    "use-debounce": "^10.0.1",
     "yup": "^0.32.11"
   },
   "devDependencies": {

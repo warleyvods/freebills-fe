@@ -56,8 +56,6 @@ export function beforeMaskedStateChange({ nextState }: any) {
     value = value.slice(0, -1);
   }
 
-  console.log(nextState)
-  console.log(value)
   return {
     ...nextState,
     value
