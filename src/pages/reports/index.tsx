@@ -47,6 +47,7 @@ export default function ReportPage() {
             >
               <Text mt={5}>Despesas por categoria</Text>
               <ReactApexChart
+                //@ts-ignore
                 options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
                 series={expenseDash?.series?.length ? expenseDash.series : [0]}
                 type="donut"
@@ -59,6 +60,7 @@ export default function ReportPage() {
                 <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Despesas por categoria</Text>
                 <Box h={"100%"} w={"70%"}>
                   <ReactApexChart
+                    //@ts-ignore
                     options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
                     series={expenseDash?.series?.length ? expenseDash.series : [0]}
                     type="donut"

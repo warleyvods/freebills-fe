@@ -54,12 +54,14 @@ export default function Dashboard() {
             >
               <Text mt={5}>Despesas por categoria</Text>
               <ReactApexChart
+                //@ts-ignore
                 options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
                 series={expenseDash?.series?.length ? expenseDash.series : [0]}
                 type="donut"
               />
               <Text mt={5}>Receitas por categoria</Text>
               <ReactApexChart
+                //@ts-ignore
                 options={getChartDataOptions(revenueDash?.labels?.length ? revenueDash.labels : [], 'REVENUE').options}
                 series={revenueDash?.series?.length ? revenueDash.series : [0]}
                 type="donut"
@@ -72,6 +74,7 @@ export default function Dashboard() {
                 <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Despesas por categoria</Text>
                 <Box h={"100%"} w={"70%"}>
                   <ReactApexChart
+                    //@ts-ignore
                     options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
                     series={expenseDash?.series?.length ? expenseDash.series : [0]}
                     type="donut"
@@ -83,6 +86,7 @@ export default function Dashboard() {
                 <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Receitas por categoria</Text>
                 <Box h={"100%"} w={"70%"}>
                   <ReactApexChart
+                    //@ts-ignore
                     options={getChartDataOptions(revenueDash?.labels?.length ? revenueDash.labels : [], 'REVENUE').options}
                     series={revenueDash?.series?.length ? revenueDash.series : [0]}
                     type="donut"
