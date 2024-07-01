@@ -1,102 +1,81 @@
-import { Box, Flex, SimpleGrid, Text, useBreakpointValue, useColorModeValue } from "@chakra-ui/react";
+import { Flex, HStack, SimpleGrid, Spinner, Text, useBreakpointValue } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useMe } from "../../hooks/users/useMe";
-import dynamic from 'next/dynamic'
-import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
-import { getChartDataOptions } from "../../utils/chartData";
-import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
-import HeadingTable from "../../components/Tables/HeadingTable";
-import { InfoDashboardCard } from "../../components/InfoCards";
+import CardsSkeleton from "../../components/Cards/CardsSkeleton";
+import CardsDashboard from "../../components/Cards/CardsDashboard";
+import { moneyFormat } from "../../components/Utils/utils";
+import { MdOutlineAttachMoney } from "react-icons/md";
+import { RiArrowDownLine, RiArrowUpLine } from "react-icons/ri";
+import { useDashboard } from "../../hooks/dashboard/useDashboard";
 
-const ReactApexChart = dynamic(() => import('react-apexcharts'), {
-  ssr: false
-});
 
 export default function Dashboard() {
-  const mainColor = useColorModeValue('white', 'gray.800');
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const [month, setMonth] = useState(new Date().getMonth() + 1)
   const [year, setYear] = useState(new Date().getFullYear())
-  const [showCardInfo, setShowCardInfo] = useState(true);
+  const {data: totalData, isLoading: totalIsLoading} = useDashboard(month, year);
   const {data: user} = useMe();
-  const {data: expenseDash} = useDashboardExpenseGraph(user?.id, month, year);
-  const {data: revenueDash} = useDashboardRevenueGraph(user?.id, month, year);
 
-  const handleChangeYear = (year: number) => {
-    setYear(year)
-  };
-
-  const handleChangeMonth = (month: number) => {
-    setMonth(month)
-  };
+  if (totalIsLoading) {
+    return (
+      <SideBarLayout>
+        <DashboardHeading mobile={isMobile} totalIsLoading={true} />
+        <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing="18px" pb={0} pt={3}>
+          <CardsSkeleton />
+          <CardsSkeleton />
+          <CardsSkeleton />
+          <CardsSkeleton />
+        </SimpleGrid>
+      </SideBarLayout>
+    )
+  }
 
   return (
     <SideBarLayout>
-      <HeadingTable title={"Dashboard"} />
-      <InfoDashboardCard
-        onUpdateYear={handleChangeYear}
-        onUpdateMonth={handleChangeMonth}
-        /* null é a maneira que inventei de usar o dashboard geral rsrs (refatorar depois) */
-        dashboardType={null}
-        showCardInfo={showCardInfo}
-      />
-
-      <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
-        {
-          isMobile ? (
-            <Flex flexDirection={"column"}
-                  alignItems={"center"}
-                  justify={"center"}
-                  h={"100%"}
-                  w={"100%"}
-                  mt={"10px"}
-            >
-              <Text mt={5}>Despesas por categoria</Text>
-              <ReactApexChart
-                //@ts-ignore
-                options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
-                series={expenseDash?.series?.length ? expenseDash.series : [0]}
-                type="donut"
-              />
-              <Text mt={5}>Receitas por categoria</Text>
-              <ReactApexChart
-                //@ts-ignore
-                options={getChartDataOptions(revenueDash?.labels?.length ? revenueDash.labels : [], 'REVENUE').options}
-                series={revenueDash?.series?.length ? revenueDash.series : [0]}
-                type="donut"
-              />
-            </Flex>
-          ) : (
-            <SimpleGrid columns={{sm: 1, md: 2, xl: 2}} spacing='24px' h={"100hv"} mt={5}>
-              <Flex bg={mainColor} h={"auto"} justify={"center"} p={5} borderRadius={"25px"} flexDirection={"column"}
-                    alignItems={"center"}>
-                <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Despesas por categoria</Text>
-                <Box h={"100%"} w={"70%"}>
-                  <ReactApexChart
-                    //@ts-ignore
-                    options={getChartDataOptions(expenseDash?.labels?.length ? expenseDash.labels : [], 'EXPENSE').options}
-                    series={expenseDash?.series?.length ? expenseDash.series : [0]}
-                    type="donut"
-                  />
-                </Box>
-              </Flex>
-              <Flex bg={mainColor} h={"auto"} justify={"center"} p={5} borderRadius={"25px"} flexDirection={"column"}
-                    alignItems={"center"}>
-                <Text fontSize={"16px"} fontWeight={"bold"} mb={"5px"}>Receitas por categoria</Text>
-                <Box h={"100%"} w={"70%"}>
-                  <ReactApexChart
-                    //@ts-ignore
-                    options={getChartDataOptions(revenueDash?.labels?.length ? revenueDash.labels : [], 'REVENUE').options}
-                    series={revenueDash?.series?.length ? revenueDash.series : [0]}
-                    type="donut"
-                  />
-                </Box>
-              </Flex>
-            </SimpleGrid>
-          )
-        }
-      </Flex>
+      <DashboardHeading mobile={isMobile} totalIsLoading={false} />
+      <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing="18px" pb={0} pt={3}>
+        <CardsDashboard
+          description={"Saldo Atual"}
+          value={moneyFormat(totalData.totalBalance)}
+          color={"blue.600"}
+          icon={MdOutlineAttachMoney}
+          path={"/transactions"}
+        />
+        <CardsDashboard
+          description={"Total de Receitas"}
+          value={moneyFormat(totalData?.totalRevenue)}
+          color={"green.600"}
+          icon={RiArrowDownLine}
+        />
+        <CardsDashboard
+          description={"Total de Despesas"}
+          value={moneyFormat(totalData?.totalExpensive)}
+          color={"red.600"}
+          icon={RiArrowUpLine}
+        />
+        <CardsDashboard
+          description={"Total de Despesas em Cartões"}
+          value={moneyFormat(totalData?.totalExpensiveCards)}
+          color={"red.600"}
+          icon={RiArrowUpLine}
+        />
+      </SimpleGrid>
     </SideBarLayout>
-  )
+  );
+}
+
+function DashboardHeading(props: { mobile: boolean, totalIsLoading: false | true }) {
+  return (
+    <Flex justifyContent={"space-between"} h={"70px"} alignItems={"center"} p={props.mobile ? "5px" : "0px"}>
+      <HStack spacing={"10px"}>
+        <>
+          <Text fontSize={"22px"} fontWeight={"medium"}>Dashboard</Text>
+          {props.totalIsLoading && (
+            <Spinner size={"sm"} />
+          )}
+        </>
+      </HStack>
+    </Flex>
+  );
 }

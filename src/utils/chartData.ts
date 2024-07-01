@@ -71,7 +71,6 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
                                 border-radius: 50%;">
                       <div style="color: white; font-size: 12px;">
                         <svg viewBox="0 0 24 24" width="12" height="12" fill="white">
-                              <path d="${HouseIcon}" />
                         </svg>
                       </div>
                     </div>`;
@@ -134,7 +133,67 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
         }
       },
       tooltip: {
-        enabled: true
+        enabled: true,
+        enabledOnSeries: undefined,
+        shared: true,
+        followCursor: false,
+        intersect: false,
+        inverseOrder: false,
+        custom: function({series, seriesIndex, dataPointIndex, w}) {
+          const total = w.globals.seriesTotals.reduce((a, b) => {
+            return a + b;
+          }, 0);
+
+          const singleValue = series[seriesIndex];
+          const percentage = (singleValue / total) * 100;
+          const label = w.globals.labels[seriesIndex];
+          const color = w.globals.colors[seriesIndex];
+
+          const valueInBrl = singleValue.toLocaleString('pt-BR', {
+            style: 'currency',
+            currency: 'BRL'
+          })
+
+          return `<div style="color: black; background: white; padding: 10px; border-radius: 5px;">
+            <div style="display: inline-block; width: 10px; height: 10px; background-color: ${color}; margin-right: 5px;"></div>
+            <strong>${label}: ${valueInBrl}</strong><br/>
+            <small style="font-size: 12px; font-weight: bold">${percentage.toFixed(2)}% do total</small>
+          </div>`;
+        },
+        hideEmptySeries: true,
+        fillSeriesColor: false,
+        theme: false,
+        style: {
+          fontSize: '14px',
+          fontFamily: undefined
+        },
+        onDatasetHover: {
+          highlightDataSeries: false,
+        },
+        x: {
+          show: true,
+          format: 'dd MMM',
+          formatter: undefined,
+        },
+        y: {
+          formatter: undefined,
+          title: {
+            formatter: (seriesName) => seriesName,
+          },
+        },
+        z: {
+          formatter: undefined,
+          title: 'Size: '
+        },
+        marker: {
+          show: true,
+        },
+        fixed: {
+          enabled: false,
+          position: 'topRight',
+          offsetX: 0,
+          offsetY: 0,
+        },
       },
       fill: {
         colors: undefined
@@ -174,15 +233,15 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
             minAngleToShowLabel: 1
           },
           donut: {
-            size: "75%",
+            size: "68%",
             background: '#ffffff',
             labels: {
               show: true,
               name: {
                 show: true,
                 color: '#000000',
-                formatter: function (val) {
-                  return val
+                formatter: function (label: string) {
+                  return label;
                 }
               },
               value: {
@@ -192,8 +251,12 @@ export function getChartDataOptions(labels: string[], transactionType: string) {
                 fontWeight: 600,
                 color: '#000',
                 offsetY: 0,
-                formatter: function (val) {
-                  return "R$ " + val;
+                formatter: function (val: string, opts) {
+                  const numericVal = Number(val);
+                  return numericVal.toLocaleString('pt-BR', {
+                    style: 'currency',
+                    currency: 'BRL'
+                  }).toString();
                 }
               },
               total: {
