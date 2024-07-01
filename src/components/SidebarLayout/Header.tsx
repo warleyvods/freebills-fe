@@ -19,6 +19,8 @@ import { FiChevronDown } from "react-icons/fi";
 import NextLink from "next/link";
 import { useMe } from "../../hooks/users/useMe";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
+import { ProfileModal } from "../Modals/Profile/ProfileModal";
+import IconComponent from "../Icons/IconComponent";
 
 export function Header({toggleSidebar}) {
   const mainColor = useColorModeValue("white", "gray.800");
@@ -120,9 +122,11 @@ export function Header({toggleSidebar}) {
             bg={useColorModeValue('white', 'gray.900')}
             borderColor={useColorModeValue('gray.200', 'gray.700')}
           >
-            <NextLink href={"/users/my-account"}>
-              <MenuItem isDisabled={true}>Minha conta</MenuItem>
-            </NextLink>
+            <ProfileModal
+              trigger={(onOpen) => (
+                <MenuItem onClick={onOpen} isDisabled={false}>Minha conta</MenuItem>
+              )}
+            />
             <NextLink href={"/logout"}>
               <MenuItem>
                 <Text color={"red"}>Desconectar</Text>
