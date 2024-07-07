@@ -1,7 +1,6 @@
 import { Flex, Stack, Text } from '@chakra-ui/react'
 import React from 'react'
-import { AppearanceRadioGroup } from "@/components/Modals/Profile/AppearanceRadioGroup";
-
+import { AppearanceRadioGroup } from "./AppearanceRadioGroup";
 
 export const UserPreference = () => {
 
