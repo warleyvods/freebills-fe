@@ -120,8 +120,9 @@ export function InternalTableHead({
             <InputLeftElement
               mt={"-3px"}
               pointerEvents="none"
-              children={<SearchIcon color="gray.300" fontSize={"14px"} />}
-            />
+            >
+              <SearchIcon color="gray.300" fontSize={"14px"} />
+            </InputLeftElement>
             <Input
               borderRadius={"5px"}
               size={"sm"}

@@ -100,15 +100,15 @@ const buttonsOptions: ButtonOptions = {
   deleteButton: false
 }
 
-function ColorComponent(name) {
+function ColorComponent({singleData: colorName}) {
   return (
     <Flex justify={"center"}>
-      <Circle bg={name} size={"25px"} />
+      <Circle bg={colorName} size={"25px"} />
     </Flex>
   )
 }
 
-function IconComponent(icon) {
+function IconComponent({singleData: icon}) {
   return (
     <Flex alignItems={"center"} justify={"center"}>
       <EmojiOrImageIcon

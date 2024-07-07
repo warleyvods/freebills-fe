@@ -50,13 +50,13 @@ export default function Dashboard() {
         />
         <CardsDashboard
           description={"Total de Despesas"}
-          value={moneyFormat(totalData?.totalExpensive)}
+          value={moneyFormat(totalData.totalExpensive)}
           color={"red.600"}
           icon={RiArrowUpLine}
         />
         <CardsDashboard
           description={"Total de Despesas em Cartões"}
-          value={moneyFormat(totalData?.totalExpensiveCards)}
+          value={moneyFormat(totalData.totalExpensiveCards)}
           color={"red.600"}
           icon={RiArrowUpLine}
         />

@@ -49,9 +49,10 @@ export function InternalUserTableHead({
   useEffect(() => {
     setSortComplete(`${attribute},${sortValue}`);
     onSortCompleteChange(`${attribute},${sortValue}`);
-  }, [attribute, sortValue]);
+  }, [attribute, sortValue, onSortCompleteChange]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
+    // @ts-ignore
     setSearchTerm(e.target.value);
   };
 

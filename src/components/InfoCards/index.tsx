@@ -33,9 +33,10 @@ type InfoCardsProps = {
   onUpdateYear: (year: number) => void;
   onUpdateMonth: (month: number) => void;
   showCardInfo?: boolean;
+  showMenu?: boolean;
 };
 
-export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, showCardInfo = true}: InfoCardsProps) {
+export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, showCardInfo = true, showMenu}: InfoCardsProps) {
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const [month, setMonth] = useState(new Date().getMonth() + 1);
   const [year, setYear] = useState(new Date().getFullYear());
@@ -45,24 +46,7 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
   const expenseData = useDashboardExpense(month, year);
   const totalData = useDashboard(month, year);
 
-  const toggleShow = () => {
-    setShow((prevShow) => !prevShow);
-  };
 
-  const useDashboardData = (dashboardType: string, revenueData, expenseData, totalData) => {
-    switch (dashboardType) {
-      case "REVENUE":
-        return revenueData;
-      case "EXPENSE":
-        return expenseData;
-      case null:
-        return totalData;
-      default:
-        throw new Error("Tipo de dashboard inválido");
-    }
-  };
-
-  const {data: dashboardData, isLoading} = useDashboardData(dashboardType, revenueData, expenseData, totalData);
 
   const incrementMonthWithYear = useCallback(() => {
     let newMonth;
@@ -95,6 +79,25 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
       return newYear;
     });
   }, [onUpdateMonth, onUpdateYear]);
+
+  const toggleShow = () => {
+    setShow((prevShow) => !prevShow);
+  };
+
+  const useDashboardData = (dashboardType: string, revenueData, expenseData, totalData) => {
+    switch (dashboardType) {
+      case "REVENUE":
+        return revenueData;
+      case "EXPENSE":
+        return expenseData;
+      case null:
+        return totalData;
+      default:
+        throw new Error("Tipo de dashboard inválido");
+    }
+  };
+
+  const {data: dashboardData, isLoading} = useDashboardData(dashboardType, revenueData, expenseData, totalData);
 
   let cards: ReactNode;
 
@@ -227,8 +230,8 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
             </ScaleFade>
 
           )}
-
-          <Stack direction={[isMobile ? "column" : "row"]} justify={"space-between"} p={2}>
+          { !showMenu && (
+            <Stack direction={[isMobile ? "column" : "row"]} justify={"space-between"} p={2}>
             {isMobile ? (
               <HStack justify={"center"}>
                 <Text textAlign={"center"} fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
@@ -303,7 +306,6 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
                   </MenuList>
                 </Menu>
               </Flex>
-
             )}
 
             {dashboardType !== null && (
@@ -324,7 +326,7 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
                 } />
             )}
           </Stack>
-
+          ) }
         </>
       )}
     </>

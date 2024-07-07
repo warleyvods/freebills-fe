@@ -22,6 +22,7 @@ import { RiCloseLine, RiPencilLine } from "react-icons/ri";
 import { CategoryResponse } from "../../hooks/category/useCategories";
 import Tag from "../Tag/Tag";
 import { ConfirmationDialog } from "../Dialog/ConfirmationDialog";
+import { TransferResponse } from "../../hooks/transfer/useTransfer";
 
 type CustomTableProps = {
   columns: TableColumn[];
@@ -39,8 +40,9 @@ type CustomTableProps = {
   onDelete?: (id: number) => void;
   tableHeight: number;
   isLoading?: boolean;
-  data: CategoryResponse,
+  data: CategoryResponse | TransferResponse
   customInfo?: any;
+  accounts?: any;
 };
 
 export default function CustomTable({
@@ -60,7 +62,8 @@ export default function CustomTable({
   onDelete,
   tableHeight,
   isLoading,
-  customInfo
+  customInfo,
+  accounts
 }: CustomTableProps) {
 
   if (data?.content.length === 0) {
@@ -176,7 +179,10 @@ export default function CustomTable({
                     </>
                   ) : (
                     <Text fontWeight={column.name.fontWeight}>
-                      {typeof column.name.function === 'function' ? (column.name.function(rowData[column.name.name])) : (rowData[column.name.name])}
+                      {typeof column.name.function === 'function' ? (column.name.function({
+                        singleData: rowData[column.name.name],
+                        accounts: accounts
+                      })) : (rowData[column.name.name])}
                     </Text>
                   )}
                 </Td>

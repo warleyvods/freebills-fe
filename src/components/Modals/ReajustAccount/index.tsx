@@ -39,7 +39,6 @@ interface ModalTypes {
 }
 
 export function ReadjustmentAccountModal({onCancel, trigger, text, accountId}: ModalTypes) {
-
   const mainColor = useColorModeValue('white', 'gray.800');
   const inverseMainColor = useColorModeValue('gray.800', 'white');
   const {isOpen, onOpen, onClose} = useDisclosure();
