@@ -1,10 +1,6 @@
 import { Button, Flex, Modal, ModalContent, ModalOverlay, Stack, Text, useDisclosure, } from '@chakra-ui/react'
 import React, { useState } from "react";
 import { MyAccountForm } from "./MyAccountForm";
-import { UserPreference } from "./UserPreference";
-import { WorkspaceConfig } from "./WorkspaceConfig";
-
-
 
 
 interface ModalTypes {
