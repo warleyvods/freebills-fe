@@ -1,25 +1,24 @@
-import { Avatar, Box, Button, Flex, HStack, PinInput, PinInputField } from "@chakra-ui/react";
+import { Text, useMediaQuery } from "@chakra-ui/react";
 
 export const New = () => {
-  return (
-    <Flex minW={"100px"} minH={"100px"} flexDirection={"column"} justify={"center"} mt={"50px"}>
-      <Box maxH={"100px"} maxW={"100px"}>
-        <Avatar
-          src="https://img.elo7.com.br/product/zoom/3254FDB/bob-esponja-e-patrick-em-camadas-arquivo-de-corte-personalizados-bob-esponja-e-patrick.jpg"
-          size="lg"
-        />
-        <HStack>
-          <PinInput type='alphanumeric'>
-            <PinInputField />
-            <PinInputField />
-            <PinInputField />
-            <PinInputField />
-          </PinInput>
-        </HStack>
-        <Button>ENTRAR</Button>
-      </Box>
-    </Flex>
-  );
+  const [isLargerThanHD, isDisplayingInBrowser] = useMediaQuery([
+    '(min-width: 1920px)',
+    '(display-mode: browser)',
+  ])
+
+  function determineText() {
+    if (isLargerThanHD) {
+      return `high resolution you got there ${
+        isDisplayingInBrowser ? 'in your browser' : 'on your screen'
+      }`
+    }
+
+    return isDisplayingInBrowser
+      ? 'rendering in a browser'
+      : 'rendering on something else, e.g. PWA'
+  }
+
+  return <Text>{determineText()}</Text>
 }
 
 export default New;

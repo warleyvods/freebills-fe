@@ -18,6 +18,7 @@ import React from "react";
 import { RiMastercardFill, RiMore2Fill } from "react-icons/ri";
 import { EditIcon, ExternalLinkIcon, RepeatIcon } from "@chakra-ui/icons";
 import { moneyFormat } from "../Utils/utils";
+import { ConfirmationDialog } from "../Dialog/ConfirmationDialog";
 
 type CardProps = {
   description: string;

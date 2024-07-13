@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   Flex,
@@ -9,7 +9,7 @@ import {
   SimpleGrid,
   Spinner,
   Text,
-  useBreakpointValue
+  useBreakpointValue, useMediaQuery
 } from "@chakra-ui/react";
 import { RiAddLine, RiArchiveLine } from "react-icons/ri";
 import CardsAccount from "../../components/Cards/CardsAccounts";
@@ -21,8 +21,21 @@ import HeadingTable from "../../components/Tables/HeadingTable";
 import IconComponent from "../../components/Icons/IconComponent";
 
 export default function Accounts() {
+  const [isLargerThanHD, isDisplayingInBrowser] = useMediaQuery([
+    '(min-width: 1366px)',
+    '(display-mode: browser)',
+  ], {
+    ssr: false,
+    fallback: false,
+  })
+
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const {data: accounts, isLoading, isFetching, error} = useAccounts();
+
+  useEffect(() => {
+    console.log("isLargerThanHD", isLargerThanHD);
+    console.log("isDisplayingInBrowser", isDisplayingInBrowser);
+  }, [isLargerThanHD, isDisplayingInBrowser]);
 
   return (
     <SideBarLayout>
@@ -90,7 +103,7 @@ export default function Accounts() {
                 </Flex>
               )
             }
-            <SimpleGrid columns={{sm: 1, md: 2, xl: 4}} spacing='18px'>
+            <SimpleGrid columns={{sm: 1, md: 1, xl: isLargerThanHD ? 2 : 4}} spacing='18px'>
               {
                 accounts?.map(acc => (
                   <CardsAccount

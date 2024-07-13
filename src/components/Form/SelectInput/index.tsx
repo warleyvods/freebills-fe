@@ -80,7 +80,7 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
             </option>
           </>
         ) : (
-          options.map((opt) => (
+          options?.map((opt) => (
             <option key={opt.value} value={opt.value}>
               {opt.label}
             </option>
@@ -88,7 +88,7 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
         )}
       </ChakraSelect>
 
-      {options.length === 0 && !!modal && (
+      {options?.length === 0 && !!modal && (
         <Button mt={2} size={"sm"} variant={"default"}>
           {modal}
         </Button>

@@ -1,5 +1,6 @@
 import { api } from "../../services/api";
 import { useQuery } from "react-query";
+import { QueryKeys } from "../queryKeys";
 
 type CreditCard = {
   id: number;
@@ -17,5 +18,5 @@ async function getAccountById(creditCardId: number): Promise<CreditCard> {
 }
 
 export function useCreditCardById(creditCardId: number) {
-  return useQuery(['credit-card', creditCardId], async () => getAccountById(creditCardId), { enabled: creditCardId != undefined })
+  return useQuery([QueryKeys.GET_CREDIT_CARD, creditCardId], async () => getAccountById(creditCardId), { enabled: creditCardId != undefined })
 }

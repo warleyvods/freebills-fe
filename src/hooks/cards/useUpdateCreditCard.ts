@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
+import { QueryKeys } from "../queryKeys";
 
 export type creditCardFormData = {
   accountId: number;
@@ -29,7 +30,7 @@ export function useUpdateCreditCard(onSuccess?: () => {}, onError?: () => {}) {
     return response.data.user;
   }, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['credit-cards'])
+      await queryClient.invalidateQueries([QueryKeys.GET_CREDIT_CARD])
       onSuccess?.()
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()

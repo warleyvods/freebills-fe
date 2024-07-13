@@ -64,7 +64,6 @@ export function NewTransferModal({onCancel, trigger, transferId}: ModalTypes) {
   }
 
   const handleUpdateTransfer = (values: Transfer) => {
-    console.log("udpdate transfer: ", values)
     updateTransfer.mutate({...values});
     handleOk();
   }
@@ -81,11 +80,10 @@ export function NewTransferModal({onCancel, trigger, transferId}: ModalTypes) {
   return (
     <>
       {trigger(onOpen, onClose)}
-      <Modal
-        onClose={handleCancel}
-        isOpen={isOpen}
-        isCentered
-        size={{base: "md", md: "md", lg: "lg"}}
+      <Modal onClose={handleCancel}
+             isOpen={isOpen}
+             isCentered
+             size={{base: "md", md: "md", lg: "lg"}}
       >
         <ModalOverlay backdropFilter='blur(3px)' />
         <ModalContent>
@@ -97,7 +95,8 @@ export function NewTransferModal({onCancel, trigger, transferId}: ModalTypes) {
             {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
               <>
                 <form onSubmit={handleSubmit}>
-                  <ModalHeader fontSize="20px" fontWeight="medium">{!!transferId ? 'Editar' : 'Criar'} transferência</ModalHeader>
+                  <ModalHeader fontSize="20px"
+                               fontWeight="medium">{!!transferId ? 'Editar' : 'Criar'} transferência</ModalHeader>
                   <ModalCloseButton />
                   <Center>
                     <Divider maxW="550" borderColor="gray.150" />

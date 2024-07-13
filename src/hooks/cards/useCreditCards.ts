@@ -1,23 +1,19 @@
 import { useQuery } from "react-query";
 import { api } from "../../services/api";
+import { QueryKeys } from "../queryKeys";
+import { CreditCard } from "./type";
 
-type CreditCard = {
-  id: number;
-  accountId: number;
-  cardLimit: number;
-  description: string;
-  cardFlag: string;
-  expirationDay: boolean;
-  closingDay: string;
-}
-
-export async function getCards(): Promise<CreditCard[]> {
-  const response = await api.get('v1/cards');
+export async function getCreditCards({archived}: {archived: boolean}): Promise<CreditCard[]> {
+  const response = await api.get('v1/credit-card', {
+    params: {
+      archived: archived
+    }
+  });
   return response.data;
 }
 
-export function useCreditCards() {
-  return useQuery(['credit-cards'], () => getCards(), {
+export function useCreditCards(archived: boolean) {
+  return useQuery([QueryKeys.GET_CREDIT_CARD], () => getCreditCards({archived}), {
     staleTime: 0,
     cacheTime: 0
   })

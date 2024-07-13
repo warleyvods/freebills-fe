@@ -2,28 +2,28 @@ import { useToast } from "@chakra-ui/react";
 import { useMutation } from "react-query";
 import { queryClient } from "../../services/queryClient";
 import { api } from "../../services/api";
+import { QueryKeys } from "../queryKeys";
 
 export function useDeleteCard() {
   const toast = useToast();
   return useMutation(async (cardId: number) => {
-    return await api.delete(`v1/cards/${cardId}`);
+    return await api.delete(`v1/credit-card/${cardId}`);
   }, {
     onSuccess: async () => {
       toast({
-        title: "Cartão Excluído com Sucesso!",
         description: "Cartão excluído com sucesso!",
         status: 'success',
         duration: 2000,
         isClosable: true,
+        position: 'top'
       })
-      await queryClient.invalidateQueries(['credit-cards'])
-      await queryClient.invalidateQueries(['credit-cards-archived'])
+      await queryClient.invalidateQueries([QueryKeys.GET_CREDIT_CARD])
     }, onError: (err: any) => {
       toast({
         title: err.response.data.title,
         description: err.response.data.details,
         status: 'error',
-        duration: 3000,
+        duration: 2000,
         isClosable: true,
       })
     }
