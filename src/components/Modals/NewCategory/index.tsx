@@ -16,7 +16,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Popover,
-  PopoverArrow,
   PopoverCloseButton,
   PopoverContent,
   PopoverHeader,

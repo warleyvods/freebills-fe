@@ -88,7 +88,7 @@ export function InternalTableHead({
           justifyContent={"space-between"}
     >
       <HStack>
-        {buttonsOptions.map((option) => (
+        {buttonsOptions?.map((option) => (
           <Button
             key={option.value}
             variant="ghost"

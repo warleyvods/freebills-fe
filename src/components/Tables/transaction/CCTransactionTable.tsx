@@ -45,40 +45,32 @@ import { CircleTag } from "../../Tag/CircleTag";
 import { useDuplicateTransaction } from "../../../hooks/transactions/useDuplicateTransaction";
 import { useCategories } from "../../../hooks/category/useCategories";
 import { CCTransaction } from "../../../hooks/cc-transactions/type";
+import { RiAddLine } from "react-icons/ri";
+import { NewCCTransactionModal } from "../../Modals/Transaction/CCTransaction";
 
-type ProductTableProps = {
-  content: Transaction[] | CCTransaction[];
+type CCTransactionProps = {
+  content: CCTransaction[];
   handleTableHeadButtonClick?: (activeButton: string) => void;
   onDeleteUser?: (userId: number) => void;
   isLoading: boolean;
   error: any;
 }
 
-export default function ProductsTable({content, isLoading, error}: ProductTableProps) {
-  const {colorMode} = useColorMode();
+export default function CCTransactionTable({content, isLoading, error}: CCTransactionProps) {
+  const { colorMode } = useColorMode();
   const bg = useColorModeValue("white", "gray.700");
   const tableBg = useColorModeValue("gray.100", "gray.800");
   const borderColor = useColorModeValue("gray.100", "gray.100");
 
   //STATES
   const isMobile = useBreakpointValue({base: true, md: true, lg: false});
-  const [selectedProducts, setSelectedProducts] = React.useState([]);
-  const allProducts = content?.map((product) => product.id);
-  const allChecked = allProducts?.every((productId) => selectedProducts.includes(productId));
-  const isIndeterminate = selectedProducts.some(Boolean) && !allChecked;
-  const showFloatMenu = allChecked || isIndeterminate;
   const {data: categories, isLoading: isCategoryLoading} = useCategories();
   const {data: accounts} = useAccounts();
   const {mutate: deleteTransaction} = useDeleteTransaction();
-  const {mutate: duplicateTransaction} = useDuplicateTransaction();
 
   //FUNCTIONS
-  function handleDeleteTransaction(transactionId: number) {
-    deleteTransaction(transactionId)
-  }
-
-  function handleDuplicateTransaction(transactionId: number) {
-    duplicateTransaction(transactionId)
+  function handleDeleteCCTransaction(ccTransactionId: number) {
+    deleteTransaction(ccTransactionId)
   }
 
   return (
@@ -96,12 +88,10 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
               <Tr borderColor={"none"}>
                 <Th textAlign="start">Descrição</Th>
                 <Th textAlign="center">Situação</Th>
-                <Th textAlign="center">Conta</Th>
                 <Th textAlign="center">Data</Th>
                 <Th textAlign="center">Categoria</Th>
-                <Th textAlign="center">Tipo</Th>
                 <Th textAlign="center">Valor</Th>
-                <Th textAlign="center">Opções</Th>
+                <Th textAlign="end">Opções</Th>
               </Tr>
             </Thead>
           )}
@@ -137,57 +127,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                     </Td>
                   ) : (
                     <Td p={"2px"}>
-                      <NewTransactionModal
-                        transactionType={transaction.transactionType}
-                        transactionId={transaction.id}
-                        edit={true}
-                        trigger={(open) => (
-                          <Flex pl={"5px"} pr={"8px"} pb={"2px"} pt={"2px"}
-                                borderWidth={1}
-                                borderRadius="md"
-                                boxShadow="sm"
-                                justify={"space-between"}
-                                onClick={open}
-                          >
-                            <Flex direction={"row"} w={"full"} p={0} h={"50px"} alignItems={"center"}
-                                  justify={"space-between"}>
-                              <HStack>
-                                <Circle size={"42px"} bg={"gray.200"} />
-                                <VStack spacing={0} alignItems={"start"}>
-                                  <Text fontWeight={"bold"} size={"0.95rem"}>{transaction.description}</Text>
-                                  <Text fontWeight={"medium"} size={"0.95rem"}>
-                                    {category[transaction.transactionCategory]} | {
-                                    accounts?.filter(acc => acc.id === transaction.accountId)
-                                      .map((acc) => (
-                                        acc.description
-                                      ))}
-                                  </Text>
-                                </VStack>
-                              </HStack>
 
-                              <VStack spacing={1} alignItems={"end"}>
-                                <Text fontWeight={"bold"}>{moneyFormat(transaction.amount)}</Text>
-                                {transaction.paid ? (
-                                  <Tooltip label='Pago' placement='auto-start'>
-                                    <Circle size='20px' bg='lime.400' color='lime.600' border={"1px"}
-                                            borderColor={"lime.500"}>
-                                      <CheckIcon h={"10px"} />
-                                    </Circle>
-                                  </Tooltip>
-
-                                ) : (
-                                  <Tooltip label='Pendente' placement='auto-start'>
-                                    <Circle size='20px' bg='littlePink.400' color='littlePink.600' border={"1px"}
-                                            borderColor={"littlePink.500"}>
-                                      <SmallCloseIcon h={"14px"} />
-                                    </Circle>
-                                  </Tooltip>
-                                )}
-                              </VStack>
-                            </Flex>
-                          </Flex>
-                        )}
-                      />
                     </Td>
                   )
                 ) : (
@@ -202,18 +142,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                     {/*SITUAÇÃO*/}
                     <Td pb={0} pt={0}>
                       <Flex justify="center">
-                        <CircleTag isPaid={transaction.paid} />
-                      </Flex>
-                    </Td>
-
-                    {/*CONTA*/}
-                    <Td pb={0} pt={0}>
-                      <Flex justify={"center"}>
-                        <Text fontWeight={"medium"}>
-                          {accounts?.filter(acc => acc.id === transaction.accountId).map((acc) => (
-                            acc.description
-                          ))}
-                        </Text>
+                        -
                       </Flex>
                     </Td>
 
@@ -228,24 +157,15 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                     <Td pb={0} pt={0}>
                       <Flex justify="center">
                         { isCategoryLoading ? (
-                          <Spinner />
+                          <Spinner size={"sm"} />
                           ) : (
                           <Text fontWeight={"medium"}>
-                            {categories.content?.filter(cat => cat.id === transaction.categoryId)
+                            {categories.content?.filter(cat => cat.id === Number(transaction.categoryId))
                               .map((category) => (
                                 category.name
                               ))}
                           </Text>
                         )}
-                      </Flex>
-                    </Td>
-
-                    {/*TIPO*/}
-                    <Td pb={0} pt={0}>
-                      <Flex justify="center">
-                        <Tag variant={transaction.transactionType === 'REVENUE' ? "green" : "red"}
-                             label={transaction.transactionType === 'REVENUE' ? "RECEITA" : "DESPESA"}
-                        />
                       </Flex>
                     </Td>
 
@@ -257,7 +177,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                     </Td>
 
                     {/*OPÇÕES*/}
-                    <Td pb={0} pt={0} textAlign={"center"}>
+                    <Td pb={0} pt={0} pr={3} textAlign={"end"}>
                       <Menu>
                         <MenuButton
                           as={IconButton}
@@ -266,27 +186,13 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                           variant='solid'
                         />
                         <MenuList>
-                          <NewTransactionModal
-                            transactionType={transaction.transactionType}
+                          <NewCCTransactionModal
                             edit={true}
-                            transactionId={transaction.id}
-                            trigger={(open) => (
-                              <MenuItem icon={<EditIcon />} onClick={open}>
-                                Editar
-                              </MenuItem>
-                            )}
-                          />
-                          <ConfirmationDialog
-                            title={"Duplicar Transação"}
-                            mainColor={"white"}
-                            buttonText={"Duplicar"}
-                            description={"A duplicação cria uma nova transação com base nesta atual com a data somando mais um mês. Deseja continuar com a duplicação? "}
-                            variant={"alert"}
-                            onOk={() => handleDuplicateTransaction(transaction.id)}
-                            trigger={(onOpen) => (
-                              <MenuItem onClick={onOpen} icon={<RepeatIcon />}>
-                                Duplicar
-                              </MenuItem>
+                            ccTransactionId={transaction.id}
+                            trigger={onOpen => (
+                                <MenuItem onClick={onOpen} icon={<EditIcon />}>
+                                  Editar
+                                </MenuItem>
                             )}
                           />
                           <ConfirmationDialog
@@ -295,7 +201,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                             buttonText={"Deletar"}
                             description={"Deseja deletar essa transação?"}
                             variant={"danger"}
-                            onOk={() => handleDeleteTransaction(transaction.id)}
+                            onOk={() => handleDeleteCCTransaction(transaction.id)}
                             trigger={(onOpen) => (
                               <MenuItem onClick={onOpen} icon={<Icon as={BiTrash} fontSize={"13px"} />}>
                                 Deletar

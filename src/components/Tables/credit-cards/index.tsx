@@ -15,7 +15,7 @@ import {
   SimpleGrid,
   Skeleton,
   Text,
-  useBreakpointValue,
+  useBreakpointValue, useColorModeValue,
   VStack
 } from "@chakra-ui/react";
 import { RiAddLine, RiArchiveLine, RiMastercardFill, RiMore2Fill } from "react-icons/ri";
@@ -183,6 +183,8 @@ type CardProps = {
 }
 
 function CreditCard({card, archived}: CardProps) {
+  const isActive = useColorModeValue("gray.50", "#333537");
+  const hover = useColorModeValue("gray.50", "#333537");
   const archive = useUpdateArchiveCC();
   const deleteCard = useDeleteCard();
 
@@ -195,84 +197,112 @@ function CreditCard({card, archived}: CardProps) {
   }
 
   return (
-    <Flex w={"full"}
-          borderRadius={"10px"}
-          p={"20px"}
-          boxShadow={"md"}
-          border={"1px"}
-          borderColor={"gray.100"}
-          mt={"15px"}
-          flexDirection={"column"}
+    <NextLink href={{
+      pathname: "/cards/transactions/[id]",
+      query: {id: card.id}
+    }}
+    passHref
     >
-      {/*HEADING WITH MENU*/}
-      <HStack justifyContent={"space-between"} align={"center"} mb={"5px"}>
-        <HStack>
-          <RiMastercardFill size={"40px"} />
-          <Text fontWeight="bold" fontSize={"1.2rem"}>{card.description}</Text>
-        </HStack>
-        <Menu>
-          <MenuButton
-            as={IconButton}
-            borderRadius={"10px"}
-            borderColor={"gray.100"}
-            aria-label={"button account"}
-            icon={<RiMore2Fill />}
-            variant='outline'
-          />
-          <MenuList>
-            {!archived && (
-              <MenuItem icon={<EditIcon />}>
-                Editar
-              </MenuItem>
-            )}
-            <ConfirmationDialog
-              mainColor={"white"}
-              title={!archived ? "Arquivar Cartão de Crédito" : "Desarquivar Cartão de Crédito"}
-              description={!archived ? "Você deseja arquivar este cartão?" : "Você deseja desarquivar este cartão?"}
-              buttonText={"Arquivar"}
-              variant={"alert"}
-              onOk={() => handleArchiveCreditCard(card.id)}
-              trigger={(onOpen) =>
-                <MenuItem icon={<ExternalLinkIcon />} onClick={onOpen}>
-                  {!archived ? "Arquivar Cartão" : "Desarquivar Cartão"}
-                </MenuItem>
-              }
+      <Flex
+        w={"full"}
+        borderRadius={"10px"}
+        p={"20px"}
+        boxShadow={"md"}
+        border={"1px"}
+        borderColor={"gray.100"}
+        mt={"15px"}
+        flexDirection={"column"}
+        cursor="pointer"
+        transition="transform 0.2s, boxShadow 0.2s"
+        _hover={{
+          transform: "translateY(0px) translateX(0px)",
+          boxShadow: "-1px 1px 5px rgba(0, 0, 0, 0.1)",
+          bg: hover
+        }}
+        _active={{
+          boxShadow: "none",
+          bg: isActive
+        }}
+      >
+        {/*HEADING WITH MENU*/}
+        <HStack justifyContent={"space-between"} align={"center"} mb={"5px"}>
+          <HStack>
+            <RiMastercardFill size={"40px"} />
+            <Text fontWeight="bold" fontSize={"1.2rem"}>{card.description}</Text>
+          </HStack>
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              borderRadius={"10px"}
+              borderColor={"gray.100"}
+              aria-label={"button account"}
+              icon={<RiMore2Fill />}
+              variant='outline'
+              onClick={(e) => e.stopPropagation()}
             />
-            {archived && (
+            <MenuList>
+              {!archived && (
+                <MenuItem icon={<EditIcon />} onClick={(e) => {
+                  e.stopPropagation();
+                }}>
+                  Editar
+                </MenuItem>
+              )}
               <ConfirmationDialog
                 mainColor={"white"}
-                title={"Deletar Cartão"}
-                description={"Você deseja deletar este cartão? Essa ação não pode ser desfeita."}
-                buttonText={"Deletar"}
-                variant={"danger"}
-                onOk={() => handleDelete(card.id)}
+                title={!archived ? "Arquivar Cartão de Crédito" : "Desarquivar Cartão de Crédito"}
+                description={!archived ? "Você deseja arquivar este cartão?" : "Você deseja desarquivar este cartão?"}
+                buttonText={"Arquivar"}
+                variant={"alert"}
+                onOk={() => handleArchiveCreditCard(card.id)}
                 trigger={(onOpen) =>
-                  <MenuItem icon={<ExternalLinkIcon />} onClick={onOpen}>
-                    Deletar Cartão
+                  <MenuItem icon={<ExternalLinkIcon />} onClick={(e) => {
+                    e.stopPropagation();
+                    onOpen();
+                  }}>
+                    {!archived ? "Arquivar Cartão" : "Desarquivar Cartão"}
                   </MenuItem>
                 }
               />
-            )}
-          </MenuList>
-        </Menu>
-      </HStack>
-      <HStack>
-        <Text fontWeight={"bold"} fontSize={"1rem"}>Fatura aberta</Text>
-      </HStack>
+              {archived && (
+                <ConfirmationDialog
+                  mainColor={"white"}
+                  title={"Deletar Cartão"}
+                  description={"Você deseja deletar este cartão? Essa ação não pode ser desfeita."}
+                  buttonText={"Deletar"}
+                  variant={"danger"}
+                  onOk={() => handleDelete(card.id)}
+                  trigger={(onOpen) =>
+                    <MenuItem icon={<ExternalLinkIcon />} onClick={(e) => {
+                      e.stopPropagation();
+                      onOpen();
+                    }}>
+                      Deletar Cartão
+                    </MenuItem>
+                  }
+                />
+              )}
+            </MenuList>
+          </Menu>
+        </HStack>
+        <HStack>
+          <Text fontWeight={"bold"} fontSize={"1rem"}>Fatura aberta</Text>
+        </HStack>
 
-      <HStack justify={"space-between"} mt={"15px"}>
-        <Text fontWeight="medium" fontSize={"0.9rem"}>Valor Parcial</Text>
-        <Text fontFamily={"Poppins"} fontWeight="medium" fontSize={"0.9rem"} color="green">R$ 100,00</Text>
-      </HStack>
+        <HStack justify={"space-between"} mt={"15px"}>
+          <Text fontWeight="medium" fontSize={"0.9rem"}>Valor Parcial</Text>
+          <Text fontFamily={"Poppins"} fontWeight="medium" fontSize={"0.9rem"} color="green">R$ 100,00</Text>
+        </HStack>
 
-      <HStack justify={"space-between"} mt={"5px"}>
-        <Text fontWeight="medium" fontSize={"0.9rem"}>Fecha em</Text>
-        <Text fontWeight="bold" fontSize={"0.9rem"}>10 de agosto de 2024</Text>
-      </HStack>
+        <HStack justify={"space-between"} mt={"5px"}>
+          <Text fontWeight="medium" fontSize={"0.9rem"}>Fecha em</Text>
+          <Text fontWeight="bold" fontSize={"0.9rem"}>10 de agosto de 2024</Text>
+        </HStack>
 
-      <Text fontWeight="bold" fontSize={"0.9rem"} mt={"5px"}>R$ 100,00 de {moneyFormat(1000)}</Text>
-      <Progress size={"sm"} value={20} borderRadius={"5px"} mb={"5px"} mt={"5px"} />
-      <Text fontWeight="normal" fontSize={"0.75rem"}>Limite Disponível {moneyFormat(card.cardLimit)}</Text>
-    </Flex>
+        <Text fontWeight="bold" fontSize={"0.9rem"} mt={"5px"}>R$ 100,00 de {moneyFormat(1000)}</Text>
+        <Progress size={"sm"} value={20} borderRadius={"5px"} mb={"5px"} mt={"5px"} />
+        <Text fontWeight="normal" fontSize={"0.75rem"}>Limite Disponível {moneyFormat(card.cardLimit)}</Text>
+      </Flex>
+    </NextLink>
   )
 }

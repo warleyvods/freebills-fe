@@ -250,7 +250,6 @@ export function InfoDashboardCard({dashboardType, onUpdateMonth, onUpdateYear, s
             ) : (
               <Text fontSize={"18px"} fontWeight={"medium"}>Transações</Text>
             )}
-
             <Flex flexDirection="row" justifyContent={"center"} pb={0} pt={0} alignItems={"center"}>
               <HStack justify={"center"}>
                 <IconButton

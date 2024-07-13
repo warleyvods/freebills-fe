@@ -5,7 +5,6 @@ import { AppearanceRadioGroup } from "./AppearanceRadioGroup";
 export const UserPreference = () => {
 
   const changeAppearance = async (value: string) => {
-    console.log(value)
   }
 
   return (

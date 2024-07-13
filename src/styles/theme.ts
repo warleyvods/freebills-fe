@@ -15,13 +15,6 @@ export const theme = extendTheme(config, {
     Card,
     CardBody
   },
-  breakpoints: {
-    sm: "30em",
-    md: "48em",
-    lg: "62em",
-    xl: "80em",
-    "2xl": "96em",
-  },
   colors: {
     gray: {
       "900": "#181B23",

@@ -9,10 +9,9 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@chakra-ui/core": "^0.8.0",
-    "@chakra-ui/icons": "^2.0.2",
-    "@chakra-ui/react": "^2.0.0-next.5",
-    "@emotion/react": "^11.9.0",
+    "@chakra-ui/icons": "^2.1.1",
+    "@chakra-ui/react": "^2.8.2",
+    "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.8.1",
     "@hookform/resolvers": "^2.8.10",
     "@types/faker": "^5.1.2",
@@ -20,6 +19,7 @@
     "axios": "^0.27.2",
     "chart.js": "^3.9.1",
     "components": "^0.1.0",
+    "date-fns": "^3.6.0",
     "formik": "^2.2.9",
     "framer-motion": "^6.3.3",
     "highcharts-react-official": "^3.2.1",
