@@ -87,32 +87,71 @@ export function InternalTableHead({
           borderColor={borderColor}
           justifyContent={"space-between"}
     >
-      <HStack>
-        {buttonsOptions?.map((option) => (
-          <Button
-            key={option.value}
-            variant="ghost"
-            size="sm"
-            fontWeight="medium"
-            border={activeButton === option.value ? "1px" : "0px"}
-            borderColor={activeButton === option.value ? option.borderColor : "transparent"}
-            color={activeButton === option.value ? option.textColor : "initial"}
-            bg={activeButton === option.value ? option.bgColor : "initial"}
-            _hover={{
-              color: option.value === 'REVENUE' ? 'lime.600' : option.value === 'EXPENSE' ? 'littlePink.600' : 'white',
-              bg: option.value === 'REVENUE' ? 'lime.400' : option.value === 'EXPENSE' ? 'littlePink.400' : 'indigo.300',
-            }}
-            _active={{
-              color: option.value === 'REVENUE' ? 'lime.600' : option.value === 'EXPENSE' ? 'littlePink.600' : 'white',
-              bg: option.value === 'REVENUE' ? 'lime.500' : option.value === 'EXPENSE' ? 'littlePink.500' : 'indigo.400',
-            }}
-            onClick={() => handleButtonClick(option.value)}
-            isDisabled={option.active}
-          >
-            {option.label}
-          </Button>
-        ))}
-      </HStack>
+      {buttonsOptions.length > 0 && (
+        <HStack>
+          {buttonsOptions.map((option) => {
+            const isActive = activeButton === option.value;
+            const getColor = () => {
+              switch (option.value) {
+                case 'REVENUE':
+                  return 'lime.600';
+                case 'EXPENSE':
+                  return 'littlePink.600';
+                default:
+                  return 'white';
+              }
+            };
+
+            const getBg = () => {
+              switch (option.value) {
+                case 'REVENUE':
+                  return 'lime.400';
+                case 'EXPENSE':
+                  return 'littlePink.400';
+                default:
+                  return 'indigo.300';
+              }
+            };
+
+            const getActiveBg = () => {
+              switch (option.value) {
+                case 'REVENUE':
+                  return 'lime.500';
+                case 'EXPENSE':
+                  return 'littlePink.500';
+                default:
+                  return 'indigo.400';
+              }
+            };
+
+            return (
+              <Button
+                key={option.value}
+                variant="ghost"
+                size="sm"
+                fontWeight="medium"
+                border={isActive ? "1px" : "0px"}
+                borderColor={isActive ? option.borderColor : "transparent"}
+                color={isActive ? option.textColor : "initial"}
+                bg={isActive ? option.bgColor : "initial"}
+                _hover={{
+                  color: getColor(),
+                  bg: getBg(),
+                }}
+                _active={{
+                  color: getColor(),
+                  bg: getActiveBg(),
+                }}
+                onClick={() => handleButtonClick(option.value)}
+                isDisabled={option.active}
+              >
+                {option.label}
+              </Button>
+            );
+          })}
+        </HStack>
+      )}
+
 
       <HStack spacing={"2px"}>
         {!isMobile && activeSearchBar && (

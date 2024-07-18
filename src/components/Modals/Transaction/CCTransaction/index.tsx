@@ -10,7 +10,8 @@ import {
   ModalHeader,
   ModalOverlay,
   useColorModeValue,
-  useDisclosure, VStack
+  useDisclosure,
+  VStack
 } from '@chakra-ui/react'
 import React, { ReactNode, useCallback } from "react";
 import { Formik } from "formik";
@@ -37,8 +38,6 @@ const ccTransactionSchema = yup.object().shape({
   expirationDate: yup.string().required('Dt. fechamento obrigatório.'),
 });
 
-
-
 const initialValues = {
   amount: 0,
   date: new Date().toLocaleDateString("pt-BR", {
@@ -54,13 +53,14 @@ const initialValues = {
 
 interface ModalTypes {
   ccTransactionId?: number;
+  ccId?: number;
   onOk?: () => void;
   onCancel?: () => void;
   trigger: (onOpen?: () => void, onClose?: () => void) => ReactNode;
   edit?: boolean;
 }
 
-export function NewCCTransactionModal({onCancel, trigger, ccTransactionId, edit}: ModalTypes) {
+export function NewCCTransactionModal({onCancel, trigger, ccTransactionId, ccId, edit}: ModalTypes) {
   const mainColor = useColorModeValue('white', 'gray.800');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const createCcTransaction = useCreateCCTransaction();
@@ -100,7 +100,7 @@ export function NewCCTransactionModal({onCancel, trigger, ccTransactionId, edit}
   }));
 
   const expirationDates = creditCards
-    ?.filter(cc => cc.id === ccTransactionId)
+    ?.filter(cc => cc.id === ccId)
     ?.flatMap(cc => {
       const today = new Date();
       const currentMonth = today.getMonth();
@@ -117,9 +117,6 @@ export function NewCCTransactionModal({onCancel, trigger, ccTransactionId, edit}
         return { value, label };
       }).filter(Boolean);
     });
-
-  console.log("expirationDates", expirationDates)
-  console.log("creditCards", creditCards)
 
   return (
     <>

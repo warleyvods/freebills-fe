@@ -73,6 +73,7 @@ export const LoginForm = ({formik}: LoginFormProps) => {
         </Stack>
         <Button variant={"default"} type="submit" marginTop={6} isLoading={formik.isSubmitting}>Entrar</Button>
         <Button
+          isDisabled={true}
           leftIcon={<GithubIcon />}
           onClick={handleGitHubClick}
           data-testid="github"
@@ -82,6 +83,7 @@ export const LoginForm = ({formik}: LoginFormProps) => {
           Continuar com Github
         </Button>
         <Button
+          isDisabled={true}
           leftIcon={<GoogleLogo />}
           onClick={handleGoogleClick}
           data-testid="github"

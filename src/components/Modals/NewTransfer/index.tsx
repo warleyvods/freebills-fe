@@ -26,6 +26,7 @@ import { useCreateTransfer } from "../../../hooks/transfer/useCreateTransfer";
 import { Transfer } from "../../../hooks/transfer/type";
 import { useTransferById } from "../../../hooks/transfer/useTransferById";
 import { useUpdateTransfer } from "../../../hooks/transfer/useUpdateTransfer";
+import * as yup from "yup";
 
 interface ModalTypes {
   transferId?: number;
@@ -41,6 +42,12 @@ const initialValues = {
   toAccountId: '',
   observation: ''
 }
+
+const transferSchema = yup.object().shape({
+  date: yup.string().required('Data obrigatório'),
+  fromAccountId: yup.string().required('Conta de origem obrigatória'),
+  toAccountId: yup.string().required('Conta de destino obrigatória'),
+})
 
 export function NewTransferModal({onCancel, trigger, transferId}: ModalTypes) {
   const {isOpen, onOpen, onClose} = useDisclosure();
@@ -77,6 +84,21 @@ export function NewTransferModal({onCancel, trigger, transferId}: ModalTypes) {
     label: acc.description,
   }));
 
+  const handleChangeAccount = (setFieldValue, values, field, value) => {
+    setFieldValue(field, value);
+    if (field === "fromAccountId") {
+      setFieldValue("toAccountId", values.toAccountId === value ? "" : values.toAccountId);
+    } else {
+      setFieldValue("fromAccountId", values.fromAccountId === value ? "" : values.fromAccountId);
+    }
+  };
+
+  const accountOptionsWithDisabled = (selectedAccountId) =>
+    accountOptions?.map(option => ({
+      ...option,
+      isDisabled: option.value === selectedAccountId,
+    }));
+
   return (
     <>
       {trigger(onOpen, onClose)}
@@ -89,7 +111,7 @@ export function NewTransferModal({onCancel, trigger, transferId}: ModalTypes) {
         <ModalContent>
           <Formik initialValues={foundTransfer || initialValues}
                   onSubmit={!!transferId ? handleUpdateTransfer : handleCreateTransfer}
-                  validationSchema={null}
+                  validationSchema={transferSchema}
                   validateOnChange={false}
           >
             {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
@@ -132,9 +154,10 @@ export function NewTransferModal({onCancel, trigger, transferId}: ModalTypes) {
                             name="fromAccountId"
                             error={errors.fromAccountId}
                             value={values.fromAccountId}
-                            onChange={handleChange}
+                            //@ts-ignore
+                            onChange={(e) => handleChangeAccount(setFieldValue, values, "fromAccountId", e.target.value)}
                             important={"*"}
-                            options={accountOptions}
+                            options={accountOptionsWithDisabled(values.toAccountId)}
                             showDefaultOption={true}
                           />
                           <SelectFormik
@@ -142,9 +165,10 @@ export function NewTransferModal({onCancel, trigger, transferId}: ModalTypes) {
                             name="toAccountId"
                             error={errors.toAccountId}
                             value={values.toAccountId}
-                            onChange={handleChange}
+                            //@ts-ignore
+                            onChange={(e) => handleChangeAccount(setFieldValue, values, "toAccountId", e.target.value)}
                             important={"*"}
-                            options={accountOptions}
+                            options={accountOptionsWithDisabled(values.fromAccountId)}
                             showDefaultOption={true}
                           />
                           <InputFormik

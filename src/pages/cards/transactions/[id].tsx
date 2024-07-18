@@ -26,9 +26,7 @@ const menuOptions: Options[] = [
   {value: 'amount', label: 'Valor'},
 ];
 
-const buttonOptions = [
-  {},
-];
+const buttonOptions = [];
 
 type RouteParams = {
   id: string;
@@ -45,10 +43,16 @@ export default function CardTransactions() {
   const [keyword, setKeyword] = useState(null);
   const [sortComplete, setSortComplete] = useState('');
   const [size, setSize] = useState(10);
-  const [selectedCard, setSelectedCard] = useState(null); // Estado para armazenar o cartão selecionado
+  const [selectedCard, setSelectedCard] = useState(null);
 
-  const { data: creditCards, isLoading: isLoadingCreditCard } = useCreditCards(false);
-  const {data: transactions, isLoading: isLoadingCcTransaction, error} = useCCTransactions(Number(id), page, size, sortComplete, keyword);
+  const cardIsLoadead = Number.isFinite(selectedCard);
+
+  const {data: creditCards, isLoading: isLoadingCreditCard} = useCreditCards(false);
+  const {
+    data: transactions,
+    isLoading: isLoadingCcTransaction,
+    error
+  } = useCCTransactions(Number(id), page, size, sortComplete, keyword);
 
   const handleChangeYear = (year: number) => {
     setYear(year)
@@ -78,10 +82,10 @@ export default function CardTransactions() {
     setKeyword(keyword)
   }
 
-  const handleCardSelect = (event) => {
+  const handleCardSelect = (event: any) => {
     const selectedCardId = event.target.value;
     router.replace(`/cards/transactions/${selectedCardId}`);
-    queryClient.invalidateQueries([QueryKeys.GET_CC_TRANSACTIONS])
+    queryClient.invalidateQueries([QueryKeys.GET_CC_TRANSACTIONS]);
   };
 
   useEffect(() => {
@@ -112,10 +116,10 @@ export default function CardTransactions() {
                 size={"sm"}
               />
             </NextLink>
-            { isLoadingCreditCard ? (
+            {isLoadingCreditCard ? (
               <Flex bg="indigo.400"
                     color="white"
-                    _focus={{ boxShadow: "outline" }}
+                    _focus={{boxShadow: "outline"}}
                     borderRadius="full"
                     w={"200px"}
                     h={"32px"}
@@ -124,32 +128,34 @@ export default function CardTransactions() {
               >
                 <Spinner size={"sm"} />
               </Flex>
-              ) : (
-              <Select
-                onChange={handleCardSelect}
-                borderRadius="full"
-                border="none"
-                bg="indigo.400"
-                color="white"
-                _focus={{ boxShadow: "outline" }}
-                value={selectedCard}
-                width="fit-content"
-                size={"sm"}
-              >
-                {creditCards?.map((card) => (
-                  <option key={card.id} value={card.id} style={{
-                    backgroundColor: "blue.500",
-                    color: "black",
-                    borderRadius: "0px"
-                  }}>
-                    Transações: {card.description}
-                  </option>
-                ))}
-              </Select>
-            ) }
-
+            ) : (
+               cardIsLoadead && (
+                  <Select
+                    onChange={handleCardSelect}
+                    borderRadius="full"
+                    border="none"
+                    bg="indigo.400"
+                    color="white"
+                    _focus={{boxShadow: "outline"}}
+                    value={selectedCard}
+                    width="fit-content"
+                    size={"sm"}
+                  >
+                    {creditCards?.map((card) => (
+                      <option key={card.id} value={card.id} style={{
+                        backgroundColor: "blue.500",
+                        color: "black",
+                        borderRadius: "0px"
+                      }}>
+                        Transações: {card.description}
+                      </option>
+                    ))}
+                  </Select>
+                )
+            )}
           </HStack>
           <NewCCTransactionModal
+            ccId={selectedCard}
             trigger={onOpen => (
               <LightMode>
                 <Button
@@ -171,6 +177,7 @@ export default function CardTransactions() {
           boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
         >
           <InternalTableHead
+            key={id}
             onTableHeadButtonClick={handleTableHeadButtonClick}
             onSortCompleteChange={handleSortCompleteChange}
             menuOptions={menuOptions}
