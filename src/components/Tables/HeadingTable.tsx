@@ -28,9 +28,9 @@ export default function HeadingTable({
       <HStack spacing={"10px"}>
         <>
           <Text fontSize={"22px"} fontWeight={"medium"}>{title}</Text>
-          {isLoading ? (
+          {isLoading && (
             <Spinner size={"sm"} />
-          ) : () => null}
+          )}
         </>
       </HStack>
       <HStack>

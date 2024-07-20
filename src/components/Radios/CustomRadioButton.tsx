@@ -1,9 +1,6 @@
-import { Box, Flex, useRadio, UseRadioProps } from '@chakra-ui/react';
+import { Box, Flex, Radio, useRadio, UseRadioProps } from '@chakra-ui/react';
 import React, { ReactNode } from 'react';
-
-interface CustomRadioButtonProps extends UseRadioProps {
-  value: string;
-}
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 interface CustomRadioButtonProps extends UseRadioProps {
   value: string;
@@ -13,11 +10,14 @@ interface CustomRadioButtonProps extends UseRadioProps {
 
 const CustomRadioButton: React.FC<CustomRadioButtonProps> = ({value, children, hasError, ...props}) => {
   const {getInputProps, getRadioProps} = useRadio(props);
+  const { bgColor, secondBorderColor } = useThemeColors();
 
   const input = getInputProps();
   const checkbox = getRadioProps();
 
   const borderRadius = "10px";
+
+  console.log("hasError", hasError)
 
   return (
     <Box as="label">
@@ -36,8 +36,8 @@ const CustomRadioButton: React.FC<CustomRadioButtonProps> = ({value, children, h
         _focus={{
           boxShadow: 'outline',
         }}
-        border={hasError ? '2px solid red' : '1px'}
-        borderColor={"gray.100"}
+        border={'1px'}
+        borderColor={hasError ? 'red' : secondBorderColor}
       >
         <Flex w={"full"}
               h={"full"}

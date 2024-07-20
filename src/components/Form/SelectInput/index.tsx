@@ -11,6 +11,7 @@ import {
 import React, { forwardRef, ForwardRefRenderFunction, ReactNode } from "react";
 import { RiAddLine } from "react-icons/ri";
 import { NewAccountModal } from "../../Modals/NewAccount";
+import { useThemeColors } from "../../../hooks/useThemeColors";
 
 interface SelectProps extends ChakraSelectProps {
   name?: string;
@@ -34,8 +35,8 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
   showDefaultOption,
   modal,
   ...rest
-}: SelectProps) => {
-  const mainColor = useColorModeValue('gray.10', 'gray.900');
+}, ref) => {
+  const { bgColor } = useThemeColors();
 
   // Limpar o erro ao selecionar uma opção válida
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
@@ -54,7 +55,6 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
           </HStack>
         </FormLabel>
       )}
-
       <ChakraSelect
         id={name}
         name={name}
@@ -62,7 +62,8 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
         onChange={handleSelectChange}
         placeholder={placeholder}
         focusBorderColor={"blue.500"}
-        bgColor={mainColor}
+        bgColor={bgColor}
+        ref={ref}
         {...rest}
       >
         {showDefaultOption && (

@@ -17,7 +17,6 @@ import {
   Skeleton,
   Switch,
   Tooltip,
-  useColorModeValue,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
@@ -78,9 +77,9 @@ const SkeletonLoader = ({borderColor}) => {
         <Skeleton h={"30px"} w={"18%"} borderRadius={"5px"} />
       </ModalFooter>
     </>
-
   )
 }
+
 const useAccountData = (accountId: number, isOpen: boolean) => {
   const [localAccountId, setLocalAccountId] = useState<number | null>(null);
   const {data: accountFound, isFetching, isLoading} = useAccountById(localAccountId);
@@ -95,7 +94,7 @@ const useAccountData = (accountId: number, isOpen: boolean) => {
 };
 
 const AccountForm = ({initialValues, onSubmit, edit}) => {
-  const mainColor = useColorModeValue('gray.800', 'white');
+  const { secondBorderColor } = useThemeColors()
 
   return (
     <Formik
@@ -109,7 +108,7 @@ const AccountForm = ({initialValues, onSubmit, edit}) => {
           <ModalHeader fontSize="20px" fontWeight="medium">{edit ? "Editar" : "Adicionar"} Conta</ModalHeader>
           <ModalCloseButton />
           <Center>
-            <Divider maxW="550" borderColor="gray.150" color={"red"} />
+            <Divider maxW="550" borderColor={secondBorderColor} color={"red"} />
           </Center>
           <ModalBody justifyContent={"end"}>
             <Box flex={1} borderRadius={8} pt={5} pl={"5px"} pr={"5px"} pb={8}>
@@ -225,8 +224,6 @@ export function NewAccountModal({onCancel, trigger, edit, accountId}: ModalTypes
 
   const {accountFound, isFetching} = useAccountData(accountId, isOpen);
 
-  const handleOk = () => onClose();
-
   const handleUpdateAccount = async (values) => {
     updateAccount.mutate({accountId, ...values});
     handleOk();
@@ -236,6 +233,8 @@ export function NewAccountModal({onCancel, trigger, edit, accountId}: ModalTypes
     createAccount.mutate({...values, userId});
     handleOk();
   };
+
+  const handleOk = () => onClose();
 
   const handleCancel = () => {
     onCancel?.();

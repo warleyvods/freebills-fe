@@ -1,18 +1,16 @@
 import {
-  Avatar,
-  Image,
   Box,
-  Button, Circle,
+  Button,
   Flex,
   HStack,
   IconButton,
+  Image,
   LightMode,
   Menu,
   MenuButton,
   MenuItem,
   MenuList,
-  Text,
-  useColorModeValue, useColorMode
+  Text
 } from "@chakra-ui/react";
 import React from "react";
 import { RiMore2Fill } from "react-icons/ri";
@@ -64,7 +62,7 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
   }
 
   return (
-    <Box w={"auto"} borderRadius={"10px"} border={"1px"} borderColor={borderColor} p={"15px"} boxShadow={"lg"} bg={bgColor}
+    <Box w={"auto"} borderRadius={"5px"} border={"1px"} borderColor={borderColor} p={"15px"} boxShadow={"lg"} bg={bgColor}
          _hover={{bg: hover}}>
       <HStack justifyContent={"space-between"} spacing={0} align={"center"}>
         <HStack spacing={3}>
