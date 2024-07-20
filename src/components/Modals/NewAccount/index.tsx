@@ -13,14 +13,14 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  SimpleGrid,
+  SimpleGrid, Skeleton,
   Switch,
   Tooltip,
   useColorModeValue,
   useDisclosure,
   VStack,
 } from '@chakra-ui/react'
-import React, { ReactNode, useCallback } from "react";
+import React, { ReactNode, useCallback, useEffect, useState } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
@@ -60,10 +60,18 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
   const inverseMainColor = useColorModeValue('gray.800', 'white');
   const {isOpen, onOpen, onClose} = useDisclosure();
   const createAccount = useCreateAccount();
-  const {data: accountFound} = useAccountById(accountId);
   const updateAccount = useUpdateAccount();
   const {data: user} = useMe();
   const userId = user?.id;
+
+  const [localAccountId, setLocalAccountId] = useState<number | null>(null);
+  const {data: accountFound, isFetching, isLoading} = useAccountById(localAccountId);
+
+  useEffect(() => {
+    if (accountId && isOpen) {
+      setLocalAccountId(accountId);
+    }
+  }, [accountId, isOpen]);
 
   const handleOk = useCallback(() => {
     onClose();
@@ -88,6 +96,46 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
     onClose();
   }, [onClose, onCancel])
 
+  if (isFetching) {
+    return (
+      <>
+        {trigger(onOpen, onClose)}
+        <Modal
+          onClose={handleCancel}
+          isOpen={isOpen}
+          isCentered
+          size={{base: "md", md: "md", lg: "lg"}}
+        >
+          <ModalOverlay backdropFilter='blur(3px)' />
+          <ModalContent bg={mainColor}>
+            <ModalHeader fontSize="20px" fontWeight="medium">{text === 'edit' ? "Editar" : "Adicionar"} Conta</ModalHeader>
+            <ModalCloseButton />
+            <Center>
+              <Divider maxW="550" borderColor="gray.150" />
+            </Center>
+
+            <ModalBody justifyContent={"end"}>
+              <Box flex={1} color={inverseMainColor} borderRadius={8} pt={5} pl={"5px"} pr={"5px"} pb={8}>
+                <VStack spacing={8}>
+                  <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
+                    <Skeleton h={"35px"} w={"full"} borderRadius={"5px"} />
+                    <Skeleton h={"35px"} w={"full"} borderRadius={"5px"} />
+                    <Skeleton h={"35px"} w={"full"} borderRadius={"5px"} />
+                    <Skeleton h={"35px"} w={"full"} borderRadius={"5px"} />
+                    <Skeleton h={"25px"} w={"50%"} mt={"25px"} />
+                  </SimpleGrid>
+                </VStack>
+              </Box>
+            </ModalBody>
+            <ModalFooter>
+              <Skeleton h={"30px"} w={"18%"} mt={"25px"} />
+            </ModalFooter>
+          </ModalContent>
+        </Modal>
+      </>
+    )
+  }
+
   return (
     <>
       {trigger(onOpen, onClose)}
@@ -95,7 +143,7 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
         onClose={handleCancel}
         isOpen={isOpen}
         isCentered
-        size={{ base: "md", md: "md", lg: "lg" }}
+        size={{base: "md", md: "md", lg: "lg"}}
       >
         <ModalOverlay backdropFilter='blur(3px)' />
         <ModalContent bg={mainColor}>
@@ -112,7 +160,6 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                   <Center>
                     <Divider maxW="550" borderColor="gray.150" />
                   </Center>
-
                   <ModalBody justifyContent={"end"}>
                     <Box flex={1} color={inverseMainColor} borderRadius={8} pt={5} pl={"5px"} pr={"5px"} pb={8}>
                       <VStack spacing={8}>
@@ -148,11 +195,11 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                             important={"*"}
                             showDefaultOption={true}
                             options={[
-                              { value: 'CHECKING_ACCOUNT', label: 'Conta Corrente' },
-                              { value: 'SAVINGS', label: 'Poupança' },
-                              { value: 'MONEY', label: 'Dinheiro' },
-                              { value: 'INVESTMENTS', label: 'Investimento' },
-                              { value: 'OTHERS', label: 'Outros' },
+                              {value: 'CHECKING_ACCOUNT', label: 'Conta Corrente'},
+                              {value: 'SAVINGS', label: 'Poupança'},
+                              {value: 'MONEY', label: 'Dinheiro'},
+                              {value: 'INVESTMENTS', label: 'Investimento'},
+                              {value: 'OTHERS', label: 'Outros'},
                             ]}
                           />
 
@@ -165,15 +212,15 @@ export function NewAccountModal({onCancel, trigger, text, accountId}: ModalTypes
                             important={"*"}
                             showDefaultOption={true}
                             options={[
-                              { value: 'INTER', label: 'Banco Inter' },
-                              { value: 'NUBANK', label: 'Nubank' },
-                              { value: 'CAIXA', label: 'Caixa' },
-                              { value: 'SANTANDER', label: 'Santander' },
-                              { value: 'BRADESCO', label: 'Bradesco' },
-                              { value: 'BB', label: 'Banco do Brasil' },
-                              { value: 'ITAU', label: 'Itau' },
-                              { value: 'SICOOB', label: 'Sicoob' },
-                              { value: 'OTHERS', label: 'Outros' },
+                              {value: 'INTER', label: 'Banco Inter'},
+                              {value: 'NUBANK', label: 'Nubank'},
+                              {value: 'CAIXA', label: 'Caixa'},
+                              {value: 'SANTANDER', label: 'Santander'},
+                              {value: 'BRADESCO', label: 'Bradesco'},
+                              {value: 'BB', label: 'Banco do Brasil'},
+                              {value: 'ITAU', label: 'Itau'},
+                              {value: 'SICOOB', label: 'Sicoob'},
+                              {value: 'OTHERS', label: 'Outros'},
                             ]}
                           />
 

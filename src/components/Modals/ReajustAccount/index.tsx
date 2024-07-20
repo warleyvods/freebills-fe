@@ -9,8 +9,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Radio,
-  RadioGroup,
   SimpleGrid,
   Text,
   useColorModeValue,
@@ -21,13 +19,13 @@ import React, { ReactNode, useCallback } from "react";
 import * as yup from "yup";
 import { Formik } from "formik";
 import { useAccountById } from "../../../hooks/accounts/useAccountById";
-import MaskMoney from "../../Form/MaskMoney";
 import { useAdjustAmountAccount } from "../../../hooks/accounts/useAdjustAmountAccount";
+import InputMoney from "../../Form/MoneyInput";
+import CustomRadioButton from "../../Radios/CustomRadioButton";
 
-const createAddressValidationSchema = yup.object().shape({
-  description: yup.string().required('Descrição Obrigatória.'),
-  accountType: yup.string().required('Tipo da conta obrigatória.'),
-  bankType: yup.string().required('Tipo do banco obrigatório.')
+const readjustSchema = yup.object().shape({
+  amount: yup.string().required('Descrição Obrigatória.'),
+  type: yup.string().required('Tipo da conta obrigatória.'),
 });
 
 interface ModalTypes {
@@ -39,10 +37,11 @@ interface ModalTypes {
 }
 
 export function ReadjustmentAccountModal({onCancel, trigger, text, accountId}: ModalTypes) {
+  const {isOpen, onOpen, onClose} = useDisclosure();
   const mainColor = useColorModeValue('white', 'gray.800');
   const inverseMainColor = useColorModeValue('gray.800', 'white');
-  const {isOpen, onOpen, onClose} = useDisclosure();
-  const {data: accountFound} = useAccountById(accountId);
+
+  // const {data: accountFound} = useAccountById(accountId);
   const updateAmount = useAdjustAmountAccount();
 
   const handleOk = useCallback(() => {
@@ -50,7 +49,7 @@ export function ReadjustmentAccountModal({onCancel, trigger, text, accountId}: M
   }, [onClose]);
 
 
-  const handleCreateAccount = (values) => {
+  const handleUpdateAmountAccount = (values) => {
     updateAmount.mutate({...values, accountId})
     handleOk()
   }
@@ -70,65 +69,63 @@ export function ReadjustmentAccountModal({onCancel, trigger, text, accountId}: M
         size="xl"
       >
         <ModalOverlay backdropFilter='blur(1px)' />
-        <ModalContent bg={mainColor} borderRadius={"25px"}>
-          <Formik initialValues={{amount: accountFound?.amount, type: ''}}
-                  onSubmit={handleCreateAccount}
-            // validationSchema={createAddressValidationSchema}
+        <ModalContent bg={mainColor} borderRadius={"5px"}>
+          <Formik initialValues={{}}
+                  onSubmit={handleUpdateAmountAccount}
+                  validationSchema={readjustSchema}
                   validateOnChange={false}
           >
-            {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
+            {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue, setFieldTouched, touched}) =>
               <>
                 <form onSubmit={handleSubmit}>
-                  <ModalHeader fontSize="25px" fontWeight="bold">Reajuste de saldo</ModalHeader>
+                  <ModalHeader fontSize="20px" fontWeight="medium">Reajuste de saldo</ModalHeader>
                   <ModalCloseButton mt={2} />
                   <ModalBody justifyContent="center">
                     <Box flex={1} color={inverseMainColor} borderRadius={8} pt={2}>
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth="auto" spacing={5} w="100%">
-                          <MaskMoney
+                          <InputMoney
                             onChange={(value) => {
                               setFieldValue("amount", value);
                             }}
                             value={values.amount}
-                           name={"amount"}/>
-                          <RadioGroup defaultValue='1'>
-                            <VStack border={"1px"} alignItems={"center"} borderRadius={"15px"} p={3}>
-                              <VStack spacing={"2px"}>
-                                <Text fontWeight={"bold"} fontSize={"15px"}>CRIAR TRANSAÇÃO DE AJUSTE</Text>
-                                <Text fontWeight={"normal"} fontSize={"14px"} textAlign={"center"}>Para ajustar seu
-                                  saldo uma despesa de
-                                  ajuste será
-                                  criada.
-                                </Text>
-                              </VStack>
-                              <Radio value='ADJUST'
-                                     id={"type"}
-                                     name={"type"}
-                                     onChange={(e) => setFieldValue(
-                                       'type',
-                                       // @ts-ignore
-                                       e.target.checked)}
-                                     isChecked={values.type}>
-                              </Radio>
+                            name={"amount"}
+                            error={errors.amount}
+                            fontSize={{base: "0.9rem", md: "1rem"}}
+                            fontWeight={"medium"}
+                            important={false}
+                          />
+
+                          <CustomRadioButton
+                            value={"type"}
+                            onChange={() => {
+                              setFieldValue("type", "ADJUST");
+                              setFieldTouched("type", false);
+                            }}
+                            hasError={errors.color && touched.color}
+                          >
+                            <VStack spacing={"20px"}>
+                              <Text fontWeight={"medium"} fontSize={"15px"}>Criar Transação de Ajuste</Text>
+                              <Text>Para ajustar seu saldo uma despesa de ajuste será criada.</Text>
                             </VStack>
-                            <VStack border={"1px"} alignItems={"center"} mt={2} borderRadius={"15px"} p={3}>
-                              <VStack spacing={"2px"}>
-                                <Text fontWeight={"bold"} fontSize={"15px"}>MODIFICAR SALDO INICIAL</Text>
-                                <Text fontWeight={"normal"} textAlign={"center"} fontSize={"14px"}>Essa opção altera
-                                  seu saldo inicial
-                                  para reajustar seu saldo atual. Ao fazer isso, alguns dos seus saldos do final do
-                                  mês
-                                  serão impactados.
-                                </Text>
-                              </VStack>
-                              <Radio value='NO-ADJUST'
-                                     id={"type"}
-                                     name={"type"}
-                                     onChange={handleChange}
-                                     isChecked={values.type}>
-                              </Radio>
+                          </CustomRadioButton>
+
+                          <CustomRadioButton
+                            value={"type"}
+                            onChange={() => {
+                              setFieldValue("type", "MODIFY");
+                              setFieldTouched("type", false);
+                            }}
+                            hasError={errors.color && touched.color}
+                          >
+                            <VStack spacing={"20px"}>
+                              <Text fontWeight={"medium"} fontSize={"15px"}>Modificar Saldo Inicial</Text>
+                              <Text fontWeight={"normal"} textAlign={"center"} fontSize={"13px"}>Essa opção altera
+                                seu saldo inicial para reajustar seu saldo atual. Ao fazer isso, alguns dos seus saldos do final do mês serão impactados.
+                              </Text>
                             </VStack>
-                          </RadioGroup>
+                          </CustomRadioButton>
+
                         </SimpleGrid>
                       </VStack>
                     </Box>

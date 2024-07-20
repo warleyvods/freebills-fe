@@ -25,7 +25,7 @@ async function getCCTransaction(id: number, page: number, sort?: string, keyword
 
 export function useCCTransactions(id: number, page?: number, size?: number, sort?: string, keyword?: string, year?: number, month?: number) {
   return useQuery(
-    [QueryKeys.GET_CC_TRANSACTIONS, id, page, sort, size, keyword, year, month],
+    [QueryKeys.CC_TRANSACTIONS, id, page, sort, size, keyword, year, month],
     () => getCCTransaction(id, page, sort, keyword, size, month, year), {
       staleTime: 1000,
       enabled: Number.isFinite(id)

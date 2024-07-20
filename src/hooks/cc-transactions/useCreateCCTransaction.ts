@@ -24,7 +24,7 @@ export function useCreateCCTransaction(onSuccess?: () => {}, onError?: () => {})
     return response.data;
   }, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries([QueryKeys.GET_CC_TRANSACTIONS])
+      await queryClient.invalidateQueries([QueryKeys.CC_TRANSACTIONS])
       onSuccess?.()
       toast({
         description: "Transação criada com sucesso!",

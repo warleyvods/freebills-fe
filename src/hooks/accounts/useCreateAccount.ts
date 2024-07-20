@@ -3,6 +3,7 @@ import { useMutation } from "react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
+import { QueryKeys } from "../queryKeys";
 
 export type accountFormData = {
   userId: number;
@@ -29,7 +30,7 @@ export function useCreateAccount(onSuccess?: () => {}, onError?: () => {}) {
     return response.data.user;
   }, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['accounts'])
+      await queryClient.invalidateQueries([QueryKeys.ACCOUNTS])
       onSuccess?.()
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()

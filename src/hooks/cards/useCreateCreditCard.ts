@@ -22,7 +22,7 @@ export function useCreateCreditCard(onSuccess?: () => {}, onError?: () => {}) {
     return response.data.user;
   }, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries([QueryKeys.GET_CREDIT_CARD])
+      await queryClient.invalidateQueries([QueryKeys.CREDIT_CARDS])
       onSuccess?.()
 
     }, onError: (error: AxiosError<ErrorType>) => {

@@ -21,7 +21,7 @@ async function getCCTransactionById(cctId: number): Promise<CCTransaction> {
 }
 
 export function useCCTransactionById(transactionId: number) {
-  return useQuery([QueryKeys.GET_CC_TRANSACTIONS, transactionId], async () => getCCTransactionById(transactionId), {
+  return useQuery([QueryKeys.CC_TRANSACTIONS, transactionId], async () => getCCTransactionById(transactionId), {
     enabled: Number.isFinite(transactionId)
   })
 }

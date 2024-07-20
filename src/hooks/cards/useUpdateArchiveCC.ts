@@ -19,7 +19,7 @@ export function useUpdateArchiveCC(onSuccess?: () => {}, onError?: () => {}) {
     return null;
   }, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries([QueryKeys.GET_CREDIT_CARD])
+      await queryClient.invalidateQueries([QueryKeys.CREDIT_CARDS])
       onSuccess?.()
 
       toast({

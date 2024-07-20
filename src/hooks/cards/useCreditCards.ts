@@ -13,7 +13,7 @@ export async function getCreditCards({archived}: {archived: boolean}): Promise<C
 }
 
 export function useCreditCards(archived: boolean) {
-  return useQuery([QueryKeys.GET_CREDIT_CARD], () => getCreditCards({archived}), {
+  return useQuery([QueryKeys.CREDIT_CARDS], () => getCreditCards({archived}), {
     staleTime: 0,
     cacheTime: 0
   })

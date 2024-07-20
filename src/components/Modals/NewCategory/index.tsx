@@ -31,7 +31,7 @@ import * as yup from "yup";
 import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
 import { SelectFormik } from "../../Form/SelectInput";
-import RadioColorButton from "../../Radios";
+import RadioColorButton from "../../Radios/RadioColorButton";
 import { useCreateCategory } from "../../../hooks/category/useCreateCategory";
 import { useUpdateCategory } from "../../../hooks/category/useUpdateCategory";
 import { useCategoryById } from "../../../hooks/category/useCategoryById";

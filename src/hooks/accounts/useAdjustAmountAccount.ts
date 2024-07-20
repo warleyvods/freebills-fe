@@ -3,8 +3,9 @@ import { useMutation } from "react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
+import { QueryKeys } from "../queryKeys";
 
-export type updateAccountAmountFormData = {
+export type UpdateAccount = {
   accountId: number;
   amount: number;
   type: string
@@ -18,15 +19,15 @@ type ErrorType = {
 export function useAdjustAmountAccount(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast();
 
-  return useMutation(async (account: updateAccountAmountFormData) => {
+  return useMutation(async (account: UpdateAccount) => {
     const response = await api.patch('v1/accounts/readjustment', {
       ...account
-    })
+    });
 
     return response.data.user;
   }, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['accounts'])
+      await queryClient.invalidateQueries([QueryKeys.ACCOUNTS])
       onSuccess?.()
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()
@@ -35,8 +36,9 @@ export function useAdjustAmountAccount(onSuccess?: () => {}, onError?: () => {})
         title: error.response.data.title,
         description: error.response.data.details,
         status: 'error',
-        duration: 4000,
+        duration: 2000,
         isClosable: true,
+        position: 'top'
       })
     }
   });

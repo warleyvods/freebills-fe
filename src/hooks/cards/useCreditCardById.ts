@@ -18,5 +18,5 @@ async function getAccountById(creditCardId: number): Promise<CreditCard> {
 }
 
 export function useCreditCardById(creditCardId: number) {
-  return useQuery([QueryKeys.GET_CREDIT_CARD, creditCardId], async () => getAccountById(creditCardId), { enabled: creditCardId != undefined })
+  return useQuery([QueryKeys.CREDIT_CARDS, creditCardId], async () => getAccountById(creditCardId), { enabled: creditCardId != undefined })
 }

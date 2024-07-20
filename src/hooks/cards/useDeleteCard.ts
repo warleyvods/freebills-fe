@@ -17,7 +17,7 @@ export function useDeleteCard() {
         isClosable: true,
         position: 'top'
       })
-      await queryClient.invalidateQueries([QueryKeys.GET_CREDIT_CARD])
+      await queryClient.invalidateQueries([QueryKeys.CREDIT_CARDS])
     }, onError: (err: any) => {
       toast({
         title: err.response.data.title,
