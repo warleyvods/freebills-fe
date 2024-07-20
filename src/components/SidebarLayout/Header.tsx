@@ -21,6 +21,7 @@ import { useMe } from "../../hooks/users/useMe";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import { ProfileModal } from "../Modals/Profile/ProfileModal";
 import IconComponent from "../Icons/IconComponent";
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 export function Header({toggleSidebar}) {
   const mainColor = useColorModeValue("white", "gray.800");
@@ -30,6 +31,7 @@ export function Header({toggleSidebar}) {
   const isBase = useBreakpointValue({ base: true, md: false });
   const handleClick = isBase ? (isOpen ? onClose : onOpen) : null;
   const { colorMode, toggleColorMode } = useColorMode()
+  const {bgColor} = useThemeColors();
 
   return (
     <Flex

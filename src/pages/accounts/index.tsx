@@ -31,20 +31,21 @@ export default function Accounts() {
         <HeadingTable title={"Contas"} isLoading={isLoading} />
         <HStack spacing={"8px"}>
           <NewAccountModal
-            text={"Adicionar"}
-            trigger={onOpen =>
+            edit={false}
+            trigger={(onOpen) => (
               <LightMode>
-                <Button size={"sm"}
-                        onClick={onOpen}
-                        fontSize={"sm"}
-                        variant={"default"}
-                        leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
-                >Adicionar conta
+                <Button
+                  size={"sm"}
+                  onClick={onOpen}
+                  fontSize={"sm"}
+                  variant={"default"}
+                  leftIcon={<Icon as={RiAddLine} fontSize={"20"} />}
+                >
+                  Adicionar conta
                 </Button>
               </LightMode>
-            }
+            )}
           />
-
           <LightMode>
             <NextLink href={"/accounts/archiveds"}>
               { isMobile ? (
@@ -67,7 +68,6 @@ export default function Accounts() {
               )}
             </NextLink>
           </LightMode>
-
         </HStack>
       </HStack>
       <Flex flexDirection='column' pt={{base: "0px", md: "0"}}>
@@ -76,8 +76,8 @@ export default function Accounts() {
             <Spinner />
           </Flex>
         ) : error ? (
-          <Flex justify={"center"}>
-            <Text>Falha ao obter dados das contas</Text>
+          <Flex justify={"center"} p={"20px"}>
+            <Text fontWeight={"medium"} fontSize={"18px"}>Falha ao obter dados das contas</Text>
           </Flex>
         ) : (
           <>
@@ -91,8 +91,7 @@ export default function Accounts() {
               )
             }
             <SimpleGrid columns={{sm: 1, md: 1, xl: 4}} spacing='18px'>
-              {
-                accounts?.map(acc => (
+              {accounts?.map(acc => (
                   <CardsAccount
                     key={acc.id}
                     amount={acc.amount}
@@ -100,8 +99,7 @@ export default function Accounts() {
                     accId={acc.id}
                     bankType={acc.bankType}
                   />
-                ))
-              }
+                ))}
             </SimpleGrid>
           </>
         )}

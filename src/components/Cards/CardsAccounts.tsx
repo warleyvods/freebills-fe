@@ -22,6 +22,7 @@ import { NewAccountModal } from "../Modals/NewAccount";
 import { ConfirmationDialog } from "../Dialog/ConfirmationDialog";
 import { useUpdateArchiveAccount } from "../../hooks/accounts/useUpdateArchiveAcc";
 import { ReadjustmentAccountModal } from "../Modals/ReajustAccount";
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 type AccountProps = {
   amount: number;
@@ -30,19 +31,12 @@ type AccountProps = {
   accId?: number;
 }
 
-export default function CardsAccount({ amount, description, accId, bankType }: AccountProps) {
-  const { colorMode } = useColorMode();
+const descriptionArchive = "Arquivar conta é uma opção muito útil quando temos aquela conta que não movimentamos mais e desejamos apenas tirá-la da relação de contas," +
+  " mantendo os lançamentos vinculados a ela. Você tem certeza que deseja arquivar a conta?";
 
-  const mainColor = useColorModeValue("black", "gray.600");
-  const bg = useColorModeValue("white", "#1E1F20");
-  const hover = useColorModeValue("gray.50", "#333537");
-  const borderColor = useColorModeValue("gray.100", "gray.700");
-  const positiveAmountColor = useColorModeValue('green', 'green.400');
-  const negativeAmountColor = useColorModeValue('red', 'red.400');
+export default function CardsAccount({amount, description, accId, bankType}: AccountProps) {
+  const {bgInverse, bgColor, hover, borderColor, positiveAmountColor, negativeAmountColor} = useThemeColors();
   const updateArchiveAcc = useUpdateArchiveAccount();
-
-  const descriptionArchive = "Arquivar conta é uma opção muito útil quando temos aquela conta que não movimentamos mais e desejamos apenas tirá-la da relação de contas," +
-    " mantendo os lançamentos vinculados a ela. Você tem certeza que deseja arquivar a conta?";
 
   const handleArchiveChange = async (id: number) => {
     const archived = true;
@@ -70,7 +64,8 @@ export default function CardsAccount({ amount, description, accId, bankType }: A
   }
 
   return (
-    <Box w={"auto"} borderRadius={"10px"} border={"1px"} borderColor={borderColor} p={"15px"} boxShadow={"lg"} bg={bg} _hover={{ bg: hover }}>
+    <Box w={"auto"} borderRadius={"10px"} border={"1px"} borderColor={borderColor} p={"15px"} boxShadow={"lg"} bg={bgColor}
+         _hover={{bg: hover}}>
       <HStack justifyContent={"space-between"} spacing={0} align={"center"}>
         <HStack spacing={3}>
           <Image
@@ -84,22 +79,28 @@ export default function CardsAccount({ amount, description, accId, bankType }: A
         <Menu>
           <MenuButton
             as={IconButton}
-            borderRadius={25}
+            borderRadius={"5px"}
             aria-label={"button account"}
             icon={<RiMore2Fill />}
-            color={mainColor}
+            color={bgInverse}
             variant='outline'
+            borderColor={borderColor}
           />
           <MenuList>
             <NewAccountModal
               accountId={accId}
-              text={"edit"}
+              edit={true}
               trigger={(open) =>
                 <MenuItem icon={<EditIcon />} onClick={open}>
                   Editar
                 </MenuItem>
               }
             />
+            <ReadjustmentAccountModal accountId={accId} trigger={(onOpen) =>
+              <MenuItem icon={<RepeatIcon />} onClick={onOpen}>
+                Reajuste de Saldo
+              </MenuItem>
+            } />
             <ConfirmationDialog
               mainColor={"white"}
               title={"Arquivar Conta"}
@@ -113,11 +114,6 @@ export default function CardsAccount({ amount, description, accId, bankType }: A
                 </MenuItem>
               }
             />
-            <ReadjustmentAccountModal accountId={accId} trigger={(onOpen) =>
-              <MenuItem icon={<RepeatIcon />} onClick={onOpen}>
-                Reajuste de Saldo
-              </MenuItem>
-            } />
           </MenuList>
         </Menu>
       </HStack>
