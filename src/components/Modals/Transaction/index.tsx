@@ -291,7 +291,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                               showDefaultOption={true}
                               modal={
                                 <NewAccountModal
-                                  edit={"Adicionar"}
+                                  edit={false}
                                   trigger={onOpen =>
                                     <LightMode>
                                       <Button size={"sm"}
