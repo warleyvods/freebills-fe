@@ -10,7 +10,7 @@ export async function getAccounts(): Promise<Account[]> {
 
 export function useAccounts() {
   return useQuery([QueryKeys.ACCOUNTS], () => getAccounts(), {
-    staleTime: 0,
-    cacheTime: 0,
+    staleTime: 1000 * 60,
+    cacheTime: 1000 * 60
   })
 }
