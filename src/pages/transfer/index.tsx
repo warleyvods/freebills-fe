@@ -29,6 +29,8 @@ import { EditIcon, HamburgerIcon, RepeatIcon } from "@chakra-ui/icons";
 import { NewCategoryModal } from "../../components/Modals/NewCategory";
 import { ConfirmationDialog } from "../../components/Dialog/ConfirmationDialog";
 import { useAccounts } from "../../hooks/accounts/useAccounts";
+import { formatDate } from "../../utils/chartData";
+import { moneyFormat, moneyFormatWithObject } from "../../components/Utils/utils";
 
 const columns: TableColumn[] = [
   {
@@ -42,7 +44,7 @@ const columns: TableColumn[] = [
   {
     name: {
       name: "date",
-      fontWeight: "medium"
+      fontWeight: "medium",
     },
     align: "center",
     label: "Data",
@@ -68,12 +70,12 @@ const columns: TableColumn[] = [
   {
     name: {
       name: "amount",
-      fontWeight: "medium"
+      fontWeight: "medium",
+      function: moneyFormatWithObject
     },
     align: "center",
     label: "Valor",
   }
-
 ];
 
 const tableHead: TableHeadProps = {

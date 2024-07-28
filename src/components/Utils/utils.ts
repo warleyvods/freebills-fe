@@ -25,12 +25,21 @@ export function moneyFormat(value: number) {
   }).format(parseFloat(roundedValue));
 }
 
-export function CEPFormat(str){
+export function moneyFormatWithObject(value: any) {
+  const roundedValue = (Math.round(value.singleData * 100) / 100).toFixed(2)
+
+  return new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  }).format(parseFloat(roundedValue));
+}
+
+export function CEPFormat(str) {
   var re = /^([\d]{2})\.?([\d]{3})\-?([\d]{3})/;
 
-  if(re.test(str)){
-    return str.replace(re,"$1.$2-$3");
-  }else{
+  if (re.test(str)) {
+    return str.replace(re, "$1.$2-$3");
+  } else {
     alert("CEP inválido!");
   }
 
@@ -50,8 +59,8 @@ export const profilesTypes = {
   'CASADO': 'Casado'
 }
 
-export function beforeMaskedStateChange({ nextState }: any) {
-  let { value } = nextState;
+export function beforeMaskedStateChange({nextState}: any) {
+  let {value} = nextState;
   if (value.endsWith("/")) {
     value = value.slice(0, -1);
   }
@@ -90,6 +99,6 @@ export const accountType = {
 }
 
 function alert(arg0: string) {
-    throw new Error("Function not implemented.");
+  throw new Error("Function not implemented.");
 }
 
