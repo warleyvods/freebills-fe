@@ -3,6 +3,7 @@ import React, { ReactNode } from "react";
 import { Flex, Icon, useColorModeValue } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/router";
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 type NavItemProps = {
   icon?: IconType | ReactNode;
@@ -12,7 +13,7 @@ type NavItemProps = {
 }
 
 export const NavItem = ({icon, children, href, ...rest}: NavItemProps) => {
-  const bg = useColorModeValue('white', 'gray.700');
+  const { secondBorderColor, bgColor, bgInverse, textColor, bgColor2 } = useThemeColors()
   const router = useRouter();
   const isSelected = router.asPath === href;
 
@@ -23,8 +24,8 @@ export const NavItem = ({icon, children, href, ...rest}: NavItemProps) => {
         borderRadius={"md"}
         align="center"
         cursor="pointer"
-        bg={isSelected ? bg : "inherit"}
-        color={isSelected ? "indigo.400" : "inherit"}
+        bg={isSelected ? bgColor2 : "inherit"}
+        color={isSelected ? bgInverse : "inherit"}
         w={{ base: "288px", lg: "255px" }}
         gap={3}
         p={"8px"}
@@ -33,8 +34,8 @@ export const NavItem = ({icon, children, href, ...rest}: NavItemProps) => {
         transition=".15s ease"
         fontSize={"14px"}
         _hover={{
-          bg: "littleGray.300",
-          color: "#6366F1",
+          bg: secondBorderColor,
+          color: bgInverse,
         }}
         {...rest}
       >

@@ -18,6 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { ArrowDownIcon, ArrowUpIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { TbArrowsSort } from "react-icons/tb";
+import { useThemeColors } from "../../../hooks/useThemeColors";
 
 export function InternalTableHead({
   onTableHeadButtonClick,
@@ -76,6 +77,8 @@ export function InternalTableHead({
     setSearchTerm("");
   };
 
+  const { buttonGreen, borderButtonGreen, internalIconGreen, buttonRed, borderButtonRed, internalIconRed } = useThemeColors();
+
   return (
     <Flex p={"8px"}
           h={"50px"}
@@ -94,9 +97,9 @@ export function InternalTableHead({
             const getColor = () => {
               switch (option.value) {
                 case 'REVENUE':
-                  return 'lime.600';
+                  return internalIconGreen;
                 case 'EXPENSE':
-                  return 'littlePink.600';
+                  return internalIconRed;
                 default:
                   return 'white';
               }
@@ -105,9 +108,9 @@ export function InternalTableHead({
             const getBg = () => {
               switch (option.value) {
                 case 'REVENUE':
-                  return 'lime.400';
+                  return borderButtonGreen;
                 case 'EXPENSE':
-                  return 'littlePink.400';
+                  return borderButtonRed;
                 default:
                   return 'indigo.300';
               }

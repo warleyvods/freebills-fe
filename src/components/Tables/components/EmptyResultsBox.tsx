@@ -12,8 +12,7 @@ type EmptyResultsBoxProps = {
 
 export function EmptyResultsBox({title, path, buttonText}: EmptyResultsBoxProps) {
   return (
-    <Flex bg={"white"} borderBottomRadius={"5px"} h={"400px"} w={"full"} justifyContent={"center"}
-          alignItems={"center"}>
+    <Flex borderBottomRadius={"5px"} h={"400px"} w={"full"} justifyContent={"center"} alignItems={"center"}>
       <VStack spacing={"15px"}>
         <Flex justify={"center"} align={"center"} flexDir={"column"} w={"full%"} h={"60vh"}>
           <Text fontSize={"lg"} fontWeight={"medium"} mb={"30px"}>{title}</Text>

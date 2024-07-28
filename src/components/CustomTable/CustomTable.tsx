@@ -23,6 +23,7 @@ import { CategoryResponse } from "../../hooks/category/useCategories";
 import Tag from "../Tag/Tag";
 import { ConfirmationDialog } from "../Dialog/ConfirmationDialog";
 import { TransferResponse } from "../../hooks/transfer/useTransfer";
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 type CustomTableProps = {
   columns: TableColumn[];
@@ -66,6 +67,8 @@ export default function CustomTable({
   accounts
 }: CustomTableProps) {
 
+  const {bgColor, bgInverse, borderColor, hoverRow} = useThemeColors();
+
   if (data?.content.length === 0) {
     return (
       <>
@@ -82,8 +85,6 @@ export default function CustomTable({
                  borderRight={"1px"}
                  borderTop={"1px"}
                  h={"35px"}
-                 bg={"gray.50"}
-                 borderColor={"gray.100"}
           >
             <Tr>
               {columns.map((column, index) => (
@@ -104,8 +105,7 @@ export default function CustomTable({
             <Spinner />
           </>
         ) : (
-          <Flex bg={"white"}
-                w={"full"}
+          <Flex w={"full"}
                 h={"200px"}
                 border={"1px"}
                 borderColor={"gray.100"}
@@ -138,7 +138,7 @@ export default function CustomTable({
                borderRight={"1px"}
                borderTop={"1px"}
                h={"35px"}
-               bg={"gray.50"}
+               bg={"black"}
                borderColor={"gray.100"}
         >
           <Tr>
@@ -154,9 +154,9 @@ export default function CustomTable({
             )}
           </Tr>
         </Thead>
-        <Tbody borderLeft={"1px"} borderRight={"1px"} borderColor={"gray.100"}>
+        <Tbody borderLeft={"1px"} borderRight={"1px"} >
           {data?.content?.map((rowData: any, rowIndex: number) => (
-            <Tr key={rowIndex} bg={"white"} _hover={{bg: 'gray.50'}}>
+            <Tr key={rowIndex}  _hover={{bg: hoverRow }}>
               {columns.map((column, columnIndex) => (
                 <Td key={columnIndex} fontWeight={column.name.fontWeight ? column.name.fontWeight : 'initial'}
                     textAlign={column.align} pt={tableHeight} pb={tableHeight}>

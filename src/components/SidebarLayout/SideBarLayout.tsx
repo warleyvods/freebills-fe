@@ -69,7 +69,7 @@ function SidebarContent({ isAdmin }) {
         <NavItem icon={<Icon as={FaList} fontSize={"19px"} />} href={"/categories"}>Categorias</NavItem>
         {/*<NavItem icon={<Icon as={FaMoneyCheck} fontSize={"20px"} />} href={"/cards"}>Cartões</NavItem>*/}
         <NavItem icon={<Icon as={FaChartBar} fontSize={"20px"} />} href={"/reports"}>Relatórios</NavItem>
-        { isAdmin && (<NavItem icon={<Icon as={FaUsers} fontSize={"20px"} />} href={"/users"}>Usuários</NavItem>)}
+        { isAdmin && (<NavItem icon={<Icon as={FaUsers} fontSize={"20px"} />} href={"/users"}>Usuários</NavItem>) }
       </Stack>
     </Flex>
   )

@@ -55,7 +55,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
   const borderColor = useColorModeValue("gray.100", "gray.100");
 
   //STATES
-  const isMobile = useBreakpointValue({base: true, md: true, lg: false});
+  const isMobile = useBreakpointValue({ base: true, md: true, lg: false });
   const [selectedProducts, setSelectedProducts] = React.useState([]);
   const allProducts = content?.map((product) => product.id);
   const allChecked = allProducts?.every((productId) => selectedProducts.includes(productId));
@@ -221,9 +221,9 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                     {/*CATEGORIA*/}
                     <Td pb={0} pt={0}>
                       <Flex justify="center">
-                        { isCategoryLoading ? (
+                        {isCategoryLoading ? (
                           <Spinner />
-                          ) : (
+                        ) : (
                           <Text fontWeight={"medium"}>
                             {categories.content?.filter(cat => cat.id === transaction.categoryId)
                               .map((category) => (

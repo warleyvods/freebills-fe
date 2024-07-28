@@ -11,6 +11,7 @@ import { Pagination } from "../../../components/Pagination";
 import { Options } from "../../../utils/utils";
 import { InfoDashboardCard } from "../../../components/InfoCards";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { useThemeColors } from "../../../hooks/useThemeColors";
 
 const menuOptions: Options[] = [
   {value: 'description', label: 'Descrição'},
@@ -22,42 +23,23 @@ const menuOptions: Options[] = [
   {value: 'amount', label: 'Valor'},
 ];
 
-const buttonOptions = [
-  {
-    value: null,
-    label: 'Tudo',
-    active: false,
-    bgColor: 'indigo.300',
-    borderColor: 'indigo.300',
-    textColor: 'white'
-  },
-  {
-    value: 'REVENUE',
-    label: 'Entradas',
-    active: false,
-    bgColor: 'lime.400',
-    borderColor: 'lime.500',
-    textColor: 'lime.600'
-  },
-  {
-    value: 'EXPENSE',
-    label: 'Saídas',
-    active: false,
-    bgColor: 'littlePink.400',
-    borderColor: 'littlePink.500',
-    textColor: 'littlePink.600'
-  },
-];
-
 export default function TransactionRevenue() {
-  const [month, setMonth] = useState(new Date().getMonth() + 1)
-  const [year, setYear] = useState(new Date().getFullYear())
+  const [month, setMonth] = useState(new Date().getMonth() + 1);
+  const [year, setYear] = useState(new Date().getFullYear());
   const [showCardInfo, setShowCardInfo] = useState(true);
   const [active, setActive] = useState(null);
   const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState(null);
   const [sortComplete, setSortComplete] = useState('');
   const [selectedValuePage, setSelectedValuePage] = useState(10);
+  const {
+    buttonGreen,
+    borderButtonGreen,
+    internalIconGreen,
+    buttonRed,
+    borderButtonRed,
+    internalIconRed
+  } = useThemeColors();
 
   const {
     data: transactions,
@@ -66,6 +48,33 @@ export default function TransactionRevenue() {
   } = useTransaction(page, keyword, month, year, sortComplete, active, selectedValuePage);
 
   const {mutate: deleteTransaction} = useDeleteTransaction();
+
+  const buttonOptions = [
+    {
+      value: null,
+      label: 'Tudo',
+      active: false,
+      bgColor: 'indigo.300',
+      borderColor: 'indigo.300',
+      textColor: 'white'
+    },
+    {
+      value: 'REVENUE',
+      label: 'Entradas',
+      active: false,
+      bgColor: buttonGreen,
+      borderColor: borderButtonGreen,
+      textColor: internalIconGreen
+    },
+    {
+      value: 'EXPENSE',
+      label: 'Saídas',
+      active: false,
+      bgColor: buttonRed,
+      borderColor: borderButtonRed,
+      textColor: internalIconRed
+    }
+  ];
 
   const handleChangeYear = (year: number) => {
     setYear(year)

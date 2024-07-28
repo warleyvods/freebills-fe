@@ -17,12 +17,7 @@ export function PaginationItem({isCurrent = false, number, onPageChange}: Pagina
                 width={4}
                 variant={"default"}
                 disabled
-                _hover={{
-                  bg: 'indigo.300'
-                }}
-                _disabled={{
-                  bgColor: 'default',
-                }}>
+        >
           {number}
         </Button>
       </LightMode>
@@ -36,10 +31,10 @@ export function PaginationItem({isCurrent = false, number, onPageChange}: Pagina
               borderRadius={0}
               border={"1px"}
               borderLeft={0}
-              borderColor={"gray.150"}
+
               fontSize="xs"
               width={4}
-              bg={"white"}
+
               _hover={{
                 bg: 'littleGray.500'
               }}>
