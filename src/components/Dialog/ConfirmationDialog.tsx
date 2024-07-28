@@ -14,6 +14,7 @@ import {
 import { ReactNode, useCallback } from "react";
 import { CustomIcon } from "../Icons/House";
 import { AlertIcon } from "../../utils/chartData";
+import { useThemeColors } from "../../hooks/useThemeColors";
 
 interface ModalProps {
   onOk: () => void;
@@ -29,7 +30,7 @@ interface ModalProps {
 
 export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, disabled, description, buttonText, variant, title }: ModalProps) {
   const {isOpen, onOpen, onClose} = useDisclosure();
-
+  const { bgColor, bgColor2, hoverRow } = useThemeColors();
   const handleCancel = useCallback(() => {
     onCancel?.();
     onClose();
@@ -48,7 +49,7 @@ export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, disabled
           bg='blackAlpha.500'
           backdropFilter='blur(1px)'
         />
-        <ModalContent bg={mainColor}>
+        <ModalContent bg={bgColor}>
           {/*<ModalHeader fontWeight={"medium"}>{title}</ModalHeader>*/}
           {/*<ModalCloseButton />*/}
           <ModalBody justifyContent={"center"} p={"24px"}>
@@ -62,7 +63,7 @@ export function ConfirmationDialog({onOk, onCancel, trigger, mainColor, disabled
               </Flex>
             </Flex>
           </ModalBody>
-          <ModalFooter borderBottomRadius={"md"} bg={"gray.50"}>
+          <ModalFooter borderBottomRadius={"md"} bg={hoverRow}>
             <Stack spacing={2} direction={{ base: 'column', md: 'row' }} w={"full"} justify={{ base: 'center', md: 'flex-end' }}>
               <Button variant={"cancel"} onClick={handleCancel}>Cancelar</Button>
               <Button variant={variant} onClick={handleOk}>{buttonText}</Button>

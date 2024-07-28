@@ -38,7 +38,8 @@ export default function TransactionRevenue() {
     internalIconGreen,
     buttonRed,
     borderButtonRed,
-    internalIconRed
+    internalIconRed,
+    borderColor
   } = useThemeColors();
 
   const {
@@ -132,11 +133,7 @@ export default function TransactionRevenue() {
           dashboardType={active}
           showCardInfo={showCardInfo}
         />
-        <Box
-          borderRadius={5}
-          border={"1px solid gray.100"}
-          boxShadow="0px 0px 4px rgba(0, 0, 0, 0.1)"
-        >
+        <Box borderRadius={5}>
           <InternalTableHead
             onTableHeadButtonClick={handleTableHeadButtonClick}
             onSortCompleteChange={handleSortCompleteChange}

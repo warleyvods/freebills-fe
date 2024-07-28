@@ -39,6 +39,7 @@ import { CircleTag } from "../../Tag/CircleTag";
 import { useDuplicateTransaction } from "../../../hooks/transactions/useDuplicateTransaction";
 import { useCategories } from "../../../hooks/category/useCategories";
 import { CCTransaction } from "../../../hooks/cc-transactions/type";
+import { useThemeColors } from "../../../hooks/useThemeColors";
 
 type ProductTableProps = {
   content: Transaction[] | CCTransaction[];
@@ -52,7 +53,8 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
   const {colorMode} = useColorMode();
   const bg = useColorModeValue("white", "gray.700");
   const tableBg = useColorModeValue("gray.100", "gray.800");
-  const borderColor = useColorModeValue("gray.100", "gray.100");
+
+  const { hoverRow, secondBorderColor, borderColor } = useThemeColors();
 
   //STATES
   const isMobile = useBreakpointValue({ base: true, md: true, lg: false });
@@ -86,7 +88,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
       ) : (
         <Table variant={isMobile ? 'unstyled' : 'simple'} bg={bg}>
           {!isMobile && (
-            <Thead borderColor={borderColor} h={"35px"} bg={tableBg}>
+            <Thead borderColor={secondBorderColor} h={"35px"} bg={tableBg}>
               <Tr borderColor={"none"}>
                 <Th textAlign="start">Descrição</Th>
                 <Th textAlign="center">Situação</Th>
@@ -103,8 +105,11 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
             {content?.map((transaction, index) => (
               <Tr
                 key={transaction.id}
-                _hover={{bg: colorMode === 'light' ? 'gray.50' : '#333537'}}
+                _hover={{bg: hoverRow}}
                 h={"0px"}
+                borderLeft={'1px'}
+                borderRight={'1px'}
+                borderColor={borderColor}
               >
                 {isMobile ? (
                   isLoading ? (

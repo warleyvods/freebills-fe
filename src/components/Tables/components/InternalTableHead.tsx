@@ -86,7 +86,8 @@ export function InternalTableHead({
           bg={color}
           borderTopRadius={"5px"}
           borderTop={"1px"}
-          borderBottom={"1px"}
+          borderLeft={"1px"}
+          borderRight={"1px"}
           borderColor={borderColor}
           justifyContent={"space-between"}
     >
@@ -154,7 +155,6 @@ export function InternalTableHead({
           })}
         </HStack>
       )}
-
 
       <HStack spacing={"2px"}>
         {!isMobile && activeSearchBar && (

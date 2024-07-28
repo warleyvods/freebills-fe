@@ -20,6 +20,7 @@ import { TbArrowsSort } from "react-icons/tb";
 import { ArrowDownIcon, ArrowUpIcon, CloseIcon, SearchIcon } from "@chakra-ui/icons";
 import { TableHeadProps } from "../types/ColumnTypes";
 import { ChangeEvent, useEffect, useState } from "react";
+import { useThemeColors } from "../../../hooks/useThemeColors";
 
 
 export default function TableHead({buttonOptions, menuOptions, onActiveButton, onKeyword, onSort, activeSearch}: TableHeadProps) {
@@ -28,6 +29,7 @@ export default function TableHead({buttonOptions, menuOptions, onActiveButton, o
   const [sortValue, setSortValue] = useState('asc');
   const [searchTerm, setSearchTerm] = useState("");
   const [sortComplete, setSortComplete] = useState('');
+  const { bgColor, bgColor2 } = useThemeColors();
 
 
   useEffect(() => {
@@ -74,9 +76,9 @@ export default function TableHead({buttonOptions, menuOptions, onActiveButton, o
     <Flex p={"8px"}
           h={"50px"}
           w={"full"}
-          bg={"white"}
+          bg={bgColor}
           borderTopRadius={"5px"}
-          color={"gray.100"}
+          color={bgColor2}
           borderLeft={"1px"}
           borderRight={"1px"}
           borderTop={"1px"}

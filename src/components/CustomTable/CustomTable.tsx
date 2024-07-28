@@ -67,7 +67,7 @@ export default function CustomTable({
   accounts
 }: CustomTableProps) {
 
-  const {bgColor, bgInverse, borderColor, hoverRow} = useThemeColors();
+  const {bgColor, bgInverse, borderColor, hoverRow, tableHead, bgColor2, tableRow} = useThemeColors();
 
   if (data?.content.length === 0) {
     return (
@@ -138,8 +138,8 @@ export default function CustomTable({
                borderRight={"1px"}
                borderTop={"1px"}
                h={"35px"}
-               bg={"black"}
-               borderColor={"gray.100"}
+               bg={tableHead}
+               borderColor={tableHead}
         >
           <Tr>
             {columns.map((column, index) => (
@@ -154,7 +154,7 @@ export default function CustomTable({
             )}
           </Tr>
         </Thead>
-        <Tbody borderLeft={"1px"} borderRight={"1px"} >
+        <Tbody borderLeft={"1px"} borderRight={"1px"} bg={tableRow} borderColor={borderColor} >
           {data?.content?.map((rowData: any, rowIndex: number) => (
             <Tr key={rowIndex}  _hover={{bg: hoverRow }}>
               {columns.map((column, columnIndex) => (

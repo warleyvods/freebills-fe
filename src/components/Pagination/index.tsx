@@ -34,11 +34,8 @@ export function Pagination({
   handleSizeChange,
   totalSurveyValues
 }: PaginationProps) {
-
-  const bg = useColorModeValue("white", "gray.700");
-  const borderColor = useColorModeValue("gray.100", "red");
   const [selectedValue, setSelectedValue] = useState<number>(registerPerPage);
-  const {bgInverse} = useThemeColors();
+  const {bgInverse, bgColor, bgColor2, borderColor} = useThemeColors();
 
   const lastPage: number = totalCountOfRegisters % registerPerPage == 0 ? (totalCountOfRegisters / registerPerPage) - 1 : Math.floor(totalCountOfRegisters / registerPerPage)
   const previousPages: number[] = currentPage > 0 ? generatePagesArray(currentPage - 1 - siblingsCount, currentPage - 1) : []
@@ -67,7 +64,11 @@ export function Pagination({
       pb={3}
       pl={4}
       pr={2}
-      bg={bg}
+      bg={bgColor}
+      borderLeft={'1px'}
+      borderRight={'1px'}
+      borderBottom={'1px'}
+      borderColor={borderColor}
       borderBottomRadius={"5px"}
     >
       {changePageSize && (
@@ -99,7 +100,6 @@ export function Pagination({
           </Box>
         </HStack>
       )}
-
       <HStack spacing={0}>
         <Text fontWeight={"medium"}
               mr={"15px"}>{!!totalSurveyValues ? `Soma: ${moneyFormat(totalSurveyValues)}` : ""}</Text>
@@ -114,7 +114,6 @@ export function Pagination({
         >
           <Icon as={ChevronLeftIcon} fontSize={"18"} color={bgInverse} />
         </Button>
-
         <Stack direction={"row"} spacing={"0px"}>
           {currentPage > 1 && (
             <>
@@ -124,7 +123,7 @@ export function Pagination({
                         h={"auto"}
                         border={"1px"}
                         borderLeft={0}
-                        borderColor={borderColor}
+                        borderColor={bgColor2}
                         textAlign={"center"}
                   >
                       <Text color={"black"} width={8}>...</Text>

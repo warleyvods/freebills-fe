@@ -34,12 +34,16 @@ export function useThemeColors() {
   const borderButtonRed = useColorModeValue('#f9dede', '#614040');
   const internalIconRed = useColorModeValue('#b81c1c', '#fd8d8d');
 
-  const hoverRow = useColorModeValue('gray.50', ColorKeys.BORDER_COLOR_DARK);
+  const tableRow = useColorModeValue('#fdfdfd','#1e1f20');
+  const hoverRow = useColorModeValue('#f7f8f9','#333537');
+  const tableHead = useColorModeValue('#e5e5e7','#131314');
 
   const positiveAmountColor = useColorModeValue('green', 'green.400');
   const negativeAmountColor = useColorModeValue('red', 'red.400');
 
   return {
+    tableRow,
+    tableHead,
     hoverRow,
     buttonRed,
     borderButtonRed,
