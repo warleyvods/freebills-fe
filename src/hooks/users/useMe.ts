@@ -8,6 +8,7 @@ type User = {
   login: string;
   email: string;
   admin: boolean;
+  imgUrl: string;
   active: boolean;
   createdAt: string;
 }

@@ -72,7 +72,7 @@ export function ModalPassword({onOk, onCancel, trigger, id, }: ModalTypes) {
         size={"sm"}
       >
         <ModalOverlay backdropFilter='blur(1px)' />
-        <ModalContent bg={"white"}>
+        <ModalContent >
           <Formik initialValues={initialValues}
                   validationSchema={passwordValidationSchema}
                   onSubmit={handleCreateAddress}
@@ -87,7 +87,7 @@ export function ModalPassword({onOk, onCancel, trigger, id, }: ModalTypes) {
                   </Stack>
 
                   <ModalBody justifyContent={"center"}>
-                    <Box flex={1} borderRadius={8} bg={"white"} >
+                    <Box flex={1} borderRadius={8} >
                       <VStack spacing={8}>
                         <SimpleGrid minChildWidth={"150px"} spacing={5} w={"100%"}>
                           <SimpleGrid minChildWidth={"240px"} spacing={5} w={"100%"}>

@@ -29,7 +29,7 @@ import { api } from "../../services/api";
 import { useUpdateUser } from "../../hooks/users/useUpdateUser";
 
 
-const updateUserValidationSchema = yup.object().shape({
+export const updateUserValidationSchema = yup.object().shape({
   name: yup.string().required('Nome obrigatório'),
 })
 

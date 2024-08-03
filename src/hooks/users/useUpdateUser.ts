@@ -34,7 +34,16 @@ export function useUpdateUser(onSuccess?: () => {}, onError?: () => {}) {
       return response.data.user;
   }, {
     onSuccess: async () => {
+      toast({
+        description: 'Atualizado com sucesso!',
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top'
+      })
+
       await queryClient.invalidateQueries(['users'])
+      await queryClient.invalidateQueries(['me'])
       onSuccess?.()
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()

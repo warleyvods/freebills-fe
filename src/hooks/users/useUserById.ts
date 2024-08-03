@@ -7,8 +7,8 @@ async function getUserById(userId: number): Promise<User> {
   return response.data
 }
 
-export function useTransactionById(userId: number) {
+export function useUserById(userId: number) {
   return useQuery(['user', userId], async () => getUserById(userId), {
-      enabled: userId != undefined
-    });
+    enabled: Number.isFinite(userId)
+  });
 }
