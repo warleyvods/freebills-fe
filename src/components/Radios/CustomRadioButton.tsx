@@ -17,8 +17,6 @@ const CustomRadioButton: React.FC<CustomRadioButtonProps> = ({value, children, h
 
   const borderRadius = "10px";
 
-  console.log("hasError", hasError)
-
   return (
     <Box as="label">
       <input {...input} />

@@ -47,7 +47,7 @@ export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
         title: error.response.data.title,
         description: error.response.data.details,
         status: 'error',
-        duration: 4000,
+        duration: 2000,
         isClosable: true,
       })
     }

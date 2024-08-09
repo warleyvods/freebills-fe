@@ -1,7 +1,8 @@
-import { Box, Button, Circle, HStack, Icon, Text, useBreakpoint, useColorModeValue, VStack } from "@chakra-ui/react";
+import { Box, Circle, HStack, Icon, Text, useColorModeValue, VStack } from "@chakra-ui/react";
 import React from "react";
 import { IconType } from "react-icons";
-import NextLink from "next/link";
+import Counter from "../Form/Counter";
+import { moneyFormat } from "../Utils/utils";
 
 type DashBoardProps = {
   description?: string;
@@ -9,16 +10,18 @@ type DashBoardProps = {
   color?: string;
   icon?: IconType;
   path?: string;
+  amountCounter?: number;
 }
 
-export default function CardsDashboard({icon, description, value, color}: DashBoardProps) {
+export default function CardsDashboard({icon, description, value, color, amountCounter}: DashBoardProps) {
   const borderColor = useColorModeValue("gray.100", "gray.700");
   const bg = useColorModeValue("white", "gray.700");
 
   return (
-    <Box w={"auto"} minH={"105px"} maxH={"105px"} h={"105px"} borderRadius={"10px"} p={"15px"} boxShadow={"sm"} as={"a"} border={"1px"} borderColor={borderColor} bg={bg}>
-      <HStack justifyContent={"space-between"} align={"center"}>
-        <VStack justify={"flex-start"} p={2} alignItems={"start"}>
+    <Box w={"auto"} minH={"105px"} maxH={"105px"} h={"105px"} borderRadius={"10px"} p={"15px"} boxShadow={"sm"} as={"a"}
+         border={"1px"} borderColor={borderColor} bg={bg}>
+      <HStack justifyContent={"space-between"} align={"center"} h={"full"}>
+        <VStack justify={"flex-start"} p={2} alignItems={"start"} h={"full"}>
           <Text
             fontWeight="medium"
             fontSize={{base: "0.8rem", sm: "1rem", md: "0.95rem"}}
@@ -27,10 +30,20 @@ export default function CardsDashboard({icon, description, value, color}: DashBo
                 fontSize: "0.97rem",
               },
             }}
-          >{description}</Text>
-          <Text fontWeight="bold" fontSize={"1.1rem"}>{value}</Text>
+          >{description}
+          </Text>
+          {amountCounter!! && amountCounter > 0 ? (
+            <Counter
+              targetValue={amountCounter}
+              direction={"up"}
+              fontSize={"1.1rem"}
+              fontWeight={"bold"}
+            />
+          ) : (
+            <Text fontWeight="bold" fontSize={"1.1rem"}>{moneyFormat(0)}</Text>
+          )}
         </VStack>
-        { icon && (
+        {icon && (
           <Circle
             size={"45px"}
             bg={color}

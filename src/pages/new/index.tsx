@@ -1,24 +1,20 @@
-import { Text, useMediaQuery } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
+import React from "react";
+import { RiArrowDownLine } from "react-icons/ri";
+import CardsDashboard from "../../components/Cards/CardsDashboard";
 
 export const New = () => {
-  const [isLargerThanHD, isDisplayingInBrowser] = useMediaQuery([
-    '(min-width: 1920px)',
-    '(display-mode: browser)',
-  ])
 
-  function determineText() {
-    if (isLargerThanHD) {
-      return `high resolution you got there ${
-        isDisplayingInBrowser ? 'in your browser' : 'on your screen'
-      }`
-    }
-
-    return isDisplayingInBrowser
-      ? 'rendering in a browser'
-      : 'rendering on something else, e.g. PWA'
-  }
-
-  return <Text>{determineText()}</Text>
+  return (
+    <Flex w={"full"} justify={"center"} h={"500px"} >
+      <CardsDashboard
+        description={"Total de Receitas"}
+        amountCounter={0}
+        color={"green.600"}
+        icon={RiArrowDownLine}
+      />
+    </Flex>
+  )
 }
 
 export default New;

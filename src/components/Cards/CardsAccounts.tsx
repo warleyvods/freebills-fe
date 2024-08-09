@@ -14,13 +14,13 @@ import {
 } from "@chakra-ui/react";
 import React from "react";
 import { RiMore2Fill } from "react-icons/ri";
-import { moneyFormat } from "../Utils/utils";
 import { EditIcon, ExternalLinkIcon, RepeatIcon } from "@chakra-ui/icons";
 import { NewAccountModal } from "../Modals/NewAccount";
 import { ConfirmationDialog } from "../Dialog/ConfirmationDialog";
 import { useUpdateArchiveAccount } from "../../hooks/accounts/useUpdateArchiveAcc";
 import { ReadjustmentAccountModal } from "../Modals/ReajustAccount";
 import { useThemeColors } from "../../hooks/useThemeColors";
+import Counter from "../Form/Counter";
 
 type AccountProps = {
   amount: number;
@@ -118,9 +118,13 @@ export default function CardsAccount({amount, description, accId, bankType}: Acc
 
       <HStack justify={"space-between"} spacing={0} mt={"35px"}>
         <Text fontWeight={"medium"} fontSize={"0.97rem"}>Saldo atual</Text>
-        <Text fontWeight={"medium"} fontSize={"0.97rem"}
-              color={amount >= 0 ? positiveAmountColor : negativeAmountColor}>{!!amount ? moneyFormat(amount) : 'R$ 0,00'}
-        </Text>
+        <Counter
+          targetValue={amount}
+          direction={"up"}
+          color={amount >= 0 ? positiveAmountColor : negativeAmountColor}
+          fontSize={"0.97rem"}
+          fontWeight={"bold"}
+        />
       </HStack>
 
       <HStack justify={"space-between"} spacing={0} mt={"5px"}>
