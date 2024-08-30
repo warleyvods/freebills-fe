@@ -1,16 +1,16 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
-  Box,
   Button,
   Flex,
   HStack,
   Icon,
   IconButton,
   LightMode,
-  SimpleGrid, Skeleton,
-  Spinner,
+  SimpleGrid,
+  Skeleton,
   Text,
-  useBreakpointValue, useMediaQuery, VStack
+  useBreakpointValue,
+  VStack
 } from "@chakra-ui/react";
 import { RiAddLine, RiArchiveLine } from "react-icons/ri";
 import CardsAccount from "../../components/Cards/CardsAccounts";

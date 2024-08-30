@@ -34,21 +34,28 @@ export function useUpdateTransaction(onSuccess?: () => {}, onError?: () => {}) {
     return response.data.transaction;
   }, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['balance-expense'])
-      await queryClient.invalidateQueries(['balance-revenue'])
-      await queryClient.invalidateQueries(['transaction-expense'])
-      await queryClient.invalidateQueries(['transaction-revenue'])
-      await queryClient.invalidateQueries(['transaction'])
-      await queryClient.invalidateQueries(['balance'])
       onSuccess?.()
+      toast({
+        description: "Transação atualizada com sucesso.",
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top'
+      })
+
+      queryClient.invalidateQueries(['balance-expense'])
+      queryClient.invalidateQueries(['balance-revenue'])
+      queryClient.invalidateQueries(['transaction-expense'])
+      queryClient.invalidateQueries(['transaction-revenue'])
+      queryClient.invalidateQueries(['transaction'])
+      queryClient.invalidateQueries(['balance'])
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()
-
       toast({
         title: error.response.data.title,
         description: error.response.data.details,
         status: 'error',
-        duration: 4000,
+        duration: 2000,
         isClosable: true,
       })
     }

@@ -30,7 +30,7 @@ export default function TransactionRevenue() {
   const [active, setActive] = useState(null);
   const [page, setPage] = useState(0);
   const [keyword, setKeyword] = useState(null);
-  const [sortComplete, setSortComplete] = useState('');
+  const [sortComplete, setSortComplete] = useState('description,desc');
   const [selectedValuePage, setSelectedValuePage] = useState(10);
   const {
     buttonGreen,

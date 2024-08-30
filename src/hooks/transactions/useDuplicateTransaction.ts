@@ -44,12 +44,12 @@ export function useDuplicateTransaction(onSuccess?: () => {}, onError?: () => {}
         position: 'top'
       })
 
-      await queryClient.invalidateQueries(['balance-expense'])
-      await queryClient.invalidateQueries(['balance-revenue'])
-      await queryClient.invalidateQueries(['transaction-expense'])
-      await queryClient.invalidateQueries(['transaction-revenue'])
-      await queryClient.invalidateQueries(['transaction'])
-      await queryClient.invalidateQueries(['balance'])
+      queryClient.invalidateQueries(['balance-expense'])
+      queryClient.invalidateQueries(['balance-revenue'])
+      queryClient.invalidateQueries(['transaction-expense'])
+      queryClient.invalidateQueries(['transaction-revenue'])
+      queryClient.invalidateQueries(['transaction'])
+      queryClient.invalidateQueries(['balance'])
       onSuccess?.()
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()

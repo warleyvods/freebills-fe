@@ -22,8 +22,8 @@ export function useCreateTransfer(onSuccess?: () => {}, onError?: () => {}) {
     return response.data.transaction;
   }, {
     onSuccess: async () => {
-      onSuccess?.()
-      queryClient.invalidateQueries(['transfer'])
+      onSuccess?.();
+      queryClient.invalidateQueries(['transfer']);
 
       toast({
         title: "Transfer criado com sucesso!",

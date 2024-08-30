@@ -26,7 +26,7 @@ export function useUpdateTransfer(onSuccess?: () => {}, onError?: () => {}) {
       queryClient.invalidateQueries(['transfer'])
 
       toast({
-        title: "Transfer criado com sucesso!",
+        title: "Transfer atualizado com sucesso.",
         status: 'success',
         duration: 2000,
         isClosable: true,

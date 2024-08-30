@@ -31,12 +31,10 @@ export default function TableHead({buttonOptions, menuOptions, onActiveButton, o
   const [sortComplete, setSortComplete] = useState('');
   const { bgColor, bgColor2 } = useThemeColors();
 
-
   useEffect(() => {
     const timer = setTimeout(() => {
       onKeyword(searchTerm);
     }, 500);
-
 
     return () => {
       clearTimeout(timer);
@@ -85,7 +83,7 @@ export default function TableHead({buttonOptions, menuOptions, onActiveButton, o
           justifyContent={"space-between"}
     >
       <HStack w={"full"}>
-        {buttonOptions.map((option) => (
+        { buttonOptions.map((option) => (
           <Button
             key={option.value}
             variant="ghost"
@@ -99,11 +97,11 @@ export default function TableHead({buttonOptions, menuOptions, onActiveButton, o
           >
             {option.label}
           </Button>
-        ))}
+        )) }
       </HStack>
 
       <HStack spacing={"2px"}>
-        {activeSearch && (
+        { activeSearch && (
           <InputGroup>
             {/* eslint-disable-next-line react/no-children-prop */}
             <InputLeftElement pointerEvents="none" children={<SearchIcon color="gray.500" />} />
@@ -128,8 +126,7 @@ export default function TableHead({buttonOptions, menuOptions, onActiveButton, o
               </InputRightElement>
             )}
           </InputGroup>
-        )}
-
+        ) }
         <Box padding="0">
           <Menu closeOnSelect={false}>
             <MenuButton

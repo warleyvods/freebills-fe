@@ -33,13 +33,22 @@ export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
     return response.data.transaction;
   }, {
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['balance-expense'])
-      await queryClient.invalidateQueries(['balance-revenue'])
-      await queryClient.invalidateQueries(['transaction-expense'])
-      await queryClient.invalidateQueries(['transaction-revenue'])
-      await queryClient.invalidateQueries(['transaction'])
-      await queryClient.invalidateQueries(['balance'])
+      toast({
+        description: "Transação criada com sucesso.",
+        status: 'success',
+        duration: 2000,
+        isClosable: true,
+        position: 'top'
+      })
+
+      queryClient.invalidateQueries(['balance-expense'])
+      queryClient.invalidateQueries(['balance-revenue'])
+      queryClient.invalidateQueries(['transaction-expense'])
+      queryClient.invalidateQueries(['transaction-revenue'])
+      queryClient.invalidateQueries(['transaction'])
+      queryClient.invalidateQueries(['balance'])
       onSuccess?.()
+
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
