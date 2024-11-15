@@ -88,12 +88,12 @@ export default function SignIn() {
         flexDir="column"
         alignItems="center"
       >
-        <Image
-          width={"auto"}
-          height={"40px"}
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Your Company"
-        />
+        {/*<Image*/}
+        {/*  width={"auto"}*/}
+        {/*  height={"40px"}*/}
+        {/*  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"*/}
+        {/*  alt="Your Company"*/}
+        {/*/>*/}
         <Text
           mt={10}
           textAlign="center"

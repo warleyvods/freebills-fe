@@ -52,12 +52,12 @@ function SidebarContent({ isAdmin }) {
     >
       {/*LOGO*/}
       <Flex flex="none" h="16" alignItems="center" gap={3}>
-        <Image
-          src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-          alt="Freebills Logo"
-          h="8"
-          w="auto"
-        />
+        {/*<Image*/}
+        {/*  src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"*/}
+        {/*  alt="Freebills Logo"*/}
+        {/*  h="8"*/}
+        {/*  w="auto"*/}
+        {/*/>*/}
         <Text fontWeight={"bold"} fontSize={"25px"}>Freebills<span style={{ color: "red" }}>.</span></Text>
       </Flex>
       {/*NAVIGATION*/}
