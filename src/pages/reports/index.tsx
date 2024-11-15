@@ -118,12 +118,13 @@ export default function ReportPage() {
 
           {/* Tabela */}
           <VStack
+            ml={"60px"}
             w={"full"}
             maxW={"400px"}
             align={"flex-start"}
             spacing={4}
-            mt={4}
-            p={4}
+            mt={0}
+            p={3}
             bg={tableBg} // Cor de fundo adaptada para o modo escuro
             borderRadius={"8px"}
             boxShadow={"md"}
@@ -139,14 +140,14 @@ export default function ReportPage() {
                   w={"full"}
                   justify={"space-between"}
                   align={"center"}
-                  bg={cellBgColor} // Cor das células
-                  p={3}
+                  bg={cellBgColor}
+                  p={2}
                   borderRadius={"8px"}
                   boxShadow={"sm"}
                 >
                   <Flex justify={"flex-start"} align={"center"} gap={3}>
                     {/* Bolinha colorida */}
-                    <Box w={"20px"} h={"20px"} bg={color} borderRadius={"full"}></Box>
+                    <Box w={"25px"} h={"25px"} bg={color} borderRadius={"full"}></Box>
                     <Text fontWeight={"medium"} color={textColor}>
                       {label}
                     </Text>
