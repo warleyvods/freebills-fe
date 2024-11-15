@@ -132,7 +132,7 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
     ? currencyFormatter.format(series[selectedSliceIndex] || 0)
     : currencyFormatter.format(total);
   const centerPercentage = selectedSliceIndex !== null
-    ? `${((series[selectedSliceIndex] / total) * 100).toFixed(1)}%`
+    ? `${((series[selectedSliceIndex] / total) * 100).toFixed(2)}%`
     : '';
 
   const innerCircleFillColor = selectedSliceIndex !== null
