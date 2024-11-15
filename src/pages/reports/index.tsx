@@ -19,8 +19,8 @@ export default function ReportPage() {
     <SideBarLayout>
       <HeadingTable title={"Relatórios"} />
 
-      <Flex w={"full"} h={"full"} border={'1px'} p={"50px"} borderRadius={"10px"} borderColor={"gray.150"}>
-        <Box h={"300px"} w={"300px"} bg={"tomato"}>
+      <Flex w={"full"} h={"full"} border={'1px'} p={"20px"} borderRadius={"10px"} borderColor={"gray.150"}>
+        <Box h={"300px"} w={"300px"}>
           <PieChart series={expenseDash?.series} labels={expenseDash?.labels} />
         </Box>
       </Flex>
