@@ -18,7 +18,7 @@ async function getDashboard(userId: number, month?: number, year?: number): Prom
   return response.data;
 }
 
-export function useDashboardExpenseGraph(userId: number, month?: number, year?: number) {
+export function useDashboardExpenseGraph(userId?: number, month?: number, year?: number) {
   return useQuery(['balance-expense-graph', userId, month, year],
     async () => getDashboard(userId, month, year));
 }

@@ -118,7 +118,7 @@ export function ReadjustmentAccountModal({onCancel, trigger, text, accountId}: M
                           >
                             <VStack spacing={"10px"}>
                               <Text fontWeight={"medium"} fontSize={"15px"}>Criar Transação de Ajuste</Text>
-                              <Text>Para ajustar seu saldo uma despesa de ajuste será criada.</Text>
+                              <Text>Para ajustar seu saldo uma transação de ajuste será criada.</Text>
                             </VStack>
                           </CustomRadioButton>
 

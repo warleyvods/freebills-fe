@@ -18,7 +18,7 @@ async function getDashboard(userId: number, month?: number, year?: number): Prom
   return response.data;
 }
 
-export function useDashboardRevenueGraph(userId: number, month?: number, year?: number) {
+export function useDashboardRevenueGraph(userId?: number, month?: number, year?: number) {
   return useQuery(['balance-revenue-graph', userId, month, year],
     async () => getDashboard(userId, month, year));
 }
