@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box, VStack, Text } from '@chakra-ui/react';
+import { Box, VStack, Text, useColorModeValue } from '@chakra-ui/react';
 
 const PieChart = ({ labels = [], series = [] }) => {
   const [tooltipContent, setTooltipContent] = useState('');
@@ -7,8 +7,15 @@ const PieChart = ({ labels = [], series = [] }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [selectedSliceIndex, setSelectedSliceIndex] = useState(null);
 
+  // Move useColorModeValue hooks to the top level
+  const strokeColor = useColorModeValue('#fff', '#1A202C'); // Adjust dark mode color as needed
+  const tooltipBg = useColorModeValue('gray.700', 'gray.300');
+  const tooltipColor = useColorModeValue('white', 'black');
+  const defaultInnerCircleFillColor = useColorModeValue('#ffffff', '#1A202C'); // For inner circle
+
   const total = series.reduce((acc, value) => acc + value, 0);
 
+  // Now it's safe to have early returns after hooks
   if (total === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100%">
@@ -125,7 +132,7 @@ const PieChart = ({ labels = [], series = [] }) => {
         key={index}
         d={pathData}
         fill={colors[index % colors.length]}
-        stroke="#fff"
+        stroke={strokeColor}
         strokeWidth="1"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
@@ -146,6 +153,11 @@ const PieChart = ({ labels = [], series = [] }) => {
     ? `${((series[selectedSliceIndex] / total) * 100).toFixed(1)}%`
     : '';
 
+  // Ensure useColorModeValue is not called conditionally
+  const innerCircleFillColor = selectedSliceIndex !== null
+    ? colors[selectedSliceIndex % colors.length]
+    : defaultInnerCircleFillColor; // Use the default color mode value
+
   return (
     <Box position="relative" width="100%" height="100%">
       <svg
@@ -162,12 +174,8 @@ const PieChart = ({ labels = [], series = [] }) => {
             innerCircleInnerRadius,
             innerCircleOuterRadius
           )}
-          fill={
-            selectedSliceIndex !== null
-              ? colors[selectedSliceIndex % colors.length]
-              : '#ffffff'
-          }
-          stroke="#fff"
+          fill={innerCircleFillColor}
+          stroke={strokeColor}
           strokeWidth="1"
         />
       </svg>
@@ -197,8 +205,8 @@ const PieChart = ({ labels = [], series = [] }) => {
           position="fixed"
           left={`${tooltipPosition.x + 10}px`}
           top={`${tooltipPosition.y + 10}px`}
-          bg="gray.700"
-          color="white"
+          bg={tooltipBg}
+          color={tooltipColor}
           px="2"
           py="1"
           borderRadius="md"
