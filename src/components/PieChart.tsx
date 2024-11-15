@@ -114,13 +114,17 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
       <path
         key={index}
         d={pathData}
-        fill={colors[index % colors.length] || '#ccc'} // Usar a cor do backend ou fallback
+        fill={colors[index % colors.length] || '#ccc'}
         stroke={strokeColor}
         strokeWidth="1"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         cursor="pointer"
+        style={{
+          transition: 'fill 0.2s ease, opacity 0.2s ease',
+          opacity: selectedSliceIndex === index ? 0.7 : 1,
+        }}
       />
     );
   });
@@ -199,6 +203,7 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
           pointerEvents="none"
           fontSize="sm"
           zIndex="tooltip"
+          style={{ opacity: 0, animation: 'fadeIn 0.3s forwards' }}
         >
           {tooltipContent}
         </Box>

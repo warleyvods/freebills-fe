@@ -1,6 +1,17 @@
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
-import { Box, Flex, IconButton, Select, Spinner, Switch, Text, useColorModeValue, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  LightMode,
+  Select,
+  Spinner,
+  Switch,
+  Text,
+  useColorModeValue,
+  VStack
+} from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
 import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
@@ -78,7 +89,9 @@ export default function ReportPage() {
 
       <Flex align="center" gap="2">
         <Text>Exibir mês:</Text>
-        <Switch size="sm" isChecked={showMonth} onChange={toggleShowMonth} />
+        <LightMode>
+          <Switch size="sm" isChecked={showMonth} onChange={toggleShowMonth} />
+        </LightMode>
       </Flex>
 
       {/* Flex para centralizar o Select no celular */}
@@ -184,34 +197,39 @@ export default function ReportPage() {
             borderRadius="8px"
             boxShadow="md"
           >
-            {labels.map((label, index) => {
-              const value = data.series[index];
-              const color = colors[index];
-              const percentage = ((value / data.series.reduce((a: any, b: any) => a + b, 0)) * 100).toFixed(2);
-
-              return (
-                <Flex
-                  key={index}
-                  w="full"
-                  justify="space-between"
-                  align="center"
-                  bg={cellBgColor}
-                  p={2}
-                  borderRadius="8px"
-                  boxShadow="sm"
-                >
-                  <Flex justify="flex-start" align="center" gap={3}>
-                    <Box w="25px" h="25px" bg={color} borderRadius="full" />
-                    <Text fontWeight="medium" color={textColor}>{label}</Text>
+            {labels
+              .map((label, index) => ({
+                label: label,
+                value: data.series[index],
+                color: colors[index],
+                percentage: ((data.series[index] / data.series.reduce((a: any, b: any) => a + b, 0)) * 100).toFixed(2),
+              }))
+              .sort((a, b) => b.value - a.value) // Ordenando por valor de forma decrescente
+              .map((item, index) => {
+                return (
+                  <Flex
+                    key={index}
+                    w="full"
+                    justify="space-between"
+                    align="center"
+                    bg={cellBgColor}
+                    p={2}
+                    borderRadius="8px"
+                    boxShadow="sm"
+                  >
+                    <Flex justify="flex-start" align="center" gap={3}>
+                      <Box w="25px" h="25px" bg={item.color} borderRadius="full" />
+                      <Text fontWeight="medium" color={textColor}>{item.label}</Text>
+                    </Flex>
+                    <VStack spacing={0} align="flex-end">
+                      <Text fontSize="sm" fontWeight="bold" color={textColor}>R$ {item.value.toFixed(2)}</Text>
+                      <Text fontSize="xs" color={secondaryTextColor}>{item.percentage}%</Text>
+                    </VStack>
                   </Flex>
-                  <VStack spacing={0} align="flex-end">
-                    <Text fontSize="sm" fontWeight="bold" color={textColor}>R$ {value.toFixed(2)}</Text>
-                    <Text fontSize="xs" color={secondaryTextColor}>{percentage}%</Text>
-                  </VStack>
-                </Flex>
-              );
-            })}
+                );
+              })}
           </VStack>
+
         </Flex>
       </Flex>
     );
