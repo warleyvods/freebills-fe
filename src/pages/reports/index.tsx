@@ -87,18 +87,29 @@ export default function ReportPage() {
         borderRadius={"10px"}
         borderColor={"gray.150"}
         direction={["column", "row"]}
-        align={["center", "flex-start"]}
-        justify={["center", "flex-start"]}
+        align={["center", "center"]}
+        justify={["center", "center"]}
       >
-        <Box
-          h={"300px"}
-          w={"300px"}
-          display="flex"
-          alignItems="center"
-          justifyContent="center"
+        <Flex w={"full"}
+              maxW={"1000px"}
+              direction={["column", "row"]}
+              align={["center", "flex-start"]}
+              justify={["center", "flex-start"]}
+              gap={"5px"}
         >
-          <PieChart series={expenseDash?.series} labels={expenseDash?.labels} />
-        </Box>
+          <Box
+            h={"300px"}
+            w={"300px"}
+            display="flex"
+            alignItems="center"
+            justifyContent="center"
+          >
+            <PieChart series={expenseDash?.series} labels={expenseDash?.labels} />
+          </Box>
+          <Flex w={"80%"} bg={"tomato"} h={"100px"}>
+
+          </Flex>
+        </Flex>
       </Flex>
     </SideBarLayout>
   );

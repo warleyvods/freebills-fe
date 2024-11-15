@@ -1,4 +1,4 @@
-import { Box, Circle, Flex } from "@chakra-ui/react";
+import { Box, Circle, Flex, HStack, Text, VStack } from "@chakra-ui/react";
 import React from "react";
 import { RiArrowDownLine } from "react-icons/ri";
 import CardsDashboard from "../../components/Cards/CardsDashboard";
@@ -11,12 +11,9 @@ export const New = () => {
   const {data: revenueDash, isLoading: isLoadingRevenueDash} = useDashboardRevenueGraph(null, null, 2024);
 
   const data = {
-    labels: undefined,
-    series: undefined,
+    labels: ['Viagens', 'Transporte', 'Passeio'],
+    series: [350, 250, 200],
   };
-
-  console.log("data", data)
-  console.log("expenseDash", expenseDash)
 
   if (isLoadingExpenseDash) {
     return null;
@@ -24,9 +21,20 @@ export const New = () => {
 
   // <PieChart series={data.series} labels={data.labels} />
   return (
-    <Box border={"1px"} w={"auto"}>
-      <PieChart series={data.series} labels={data.labels} />
-      {/*<Circle size={"30px"} bg={"tomato"} />*/}
+    <Box maxW={"300px"}>
+      <Flex justify={"flex-start"} alignItems={"center"} bg={"tomato"}>
+        <Box w={"20px"} h={"20px"} bg={"blue"}></Box>
+        <VStack justify={"flex-start"} mt={"10px"}>
+          <HStack justify={"space-between"} w={"full"}>
+            <Text>Casa</Text>
+            <Text>R$ 123,45</Text>
+          </HStack>
+          <HStack justify={"space-between"} w={"full"}>
+            <Text>Porcentagem</Text>
+            <Text>39.29%</Text>
+          </HStack>
+        </VStack>
+      </Flex>
     </Box>
 
   )
