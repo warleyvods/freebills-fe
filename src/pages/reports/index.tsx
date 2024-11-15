@@ -1,9 +1,10 @@
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
-import { Box, Flex, Spinner, VStack, Button, Text, Switch } from "@chakra-ui/react";
+import { Box, Flex, Spinner, VStack, Button, Text, Switch, IconButton } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
 import PieChart from "../../components/PieChart";
+import { ChevronLeftIcon, ChevronRightIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
 
 export default function ReportPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -50,11 +51,26 @@ export default function ReportPage() {
       {/* Componente para seleção de mês e ano */}
       <Flex direction="column" align="center" gap="4" mt="4">
         <Flex align="center" gap="4">
-          <Button onClick={handlePrevious}>&lt;</Button>
-          <Text fontSize="lg" fontWeight="bold">
+          <IconButton
+            _focus={{boxShadow: "none"}}
+            onClick={handlePrevious}
+            size="sm"
+            variant="ghost"
+            aria-label={"show info"}
+            icon={<ChevronLeftIcon w={8} h={8} />}
+          />
+          <Text fontSize="lg" fontWeight="medium">
             {formatDate()}
           </Text>
-          <Button onClick={handleNext}>&gt;</Button>
+          <IconButton
+            _focus={{boxShadow: "none"}}
+            onClick={handleNext}
+            size="sm"
+            variant="ghost"
+            aria-label={"show info"}
+            icon={<ChevronRightIcon w={8} h={8} />}
+          />
+
         </Flex>
         <Flex align="center" gap="2">
           <Text>Exibir mês:</Text>
