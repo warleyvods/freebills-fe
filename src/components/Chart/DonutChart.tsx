@@ -7,10 +7,10 @@ const DonutChart = ({ labels = [], series = [], colors = [] }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [selectedSliceIndex, setSelectedSliceIndex] = useState(null);
 
-  const strokeColor = useColorModeValue('#fff', '#1A202C');
+  const strokeColor = useColorModeValue('#fff', '#131314');
   const tooltipBg = useColorModeValue('gray.700', 'gray.300');
   const tooltipColor = useColorModeValue('white', 'black');
-  const defaultInnerCircleFillColor = useColorModeValue('#ffffff', '#1A202C');
+  const defaultInnerCircleFillColor = useColorModeValue('#ffffff', '#131314');
 
   const total = series.reduce((acc, value) => acc + value, 0);
 
