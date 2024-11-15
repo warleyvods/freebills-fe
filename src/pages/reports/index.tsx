@@ -1,17 +1,45 @@
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
-import { Box, Flex, Spinner, VStack } from "@chakra-ui/react";
-import React from "react";
+import { Box, Flex, Spinner, VStack, Button, Text, Switch } from "@chakra-ui/react";
+import React, { useState } from "react";
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
-import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
 import PieChart from "../../components/PieChart";
 
-
 export default function ReportPage() {
-  const {data: expenseDash, isLoading: isLoadingExpenseDash} = useDashboardExpenseGraph(null,null, 2024);
-  const {data: revenueDash, isLoading: isLoadingRevenueDash} = useDashboardRevenueGraph(null,null, 2024);
+  const [currentDate, setCurrentDate] = useState(new Date());
+  const [showMonth, setShowMonth] = useState(true);
 
-  if (isLoadingExpenseDash && isLoadingRevenueDash) {
+  const handlePrevious = () => {
+    if (showMonth) {
+      setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() - 1)));
+    } else {
+      setCurrentDate(new Date(currentDate.setFullYear(currentDate.getFullYear() - 1)));
+    }
+  };
+
+  const handleNext = () => {
+    if (showMonth) {
+      setCurrentDate(new Date(currentDate.setMonth(currentDate.getMonth() + 1)));
+    } else {
+      setCurrentDate(new Date(currentDate.setFullYear(currentDate.getFullYear() + 1)));
+    }
+  };
+
+  const toggleShowMonth = () => setShowMonth(!showMonth);
+
+  const formatDate = () => {
+    if (showMonth) {
+      return `${currentDate.toLocaleString("default", { month: "long" })} ${currentDate.getFullYear()}`;
+    }
+    return `${currentDate.getFullYear()}`;
+  };
+
+  const selectedMonth = showMonth ? currentDate.getMonth() + 1 : null; // Meses são baseados em 0
+  const selectedYear = currentDate.getFullYear();
+
+  const { data: expenseDash, isLoading: isLoadingExpenseDash } = useDashboardExpenseGraph(null, selectedMonth, selectedYear);
+
+  if (isLoadingExpenseDash) {
     return <Spinner />;
   }
 
@@ -19,16 +47,32 @@ export default function ReportPage() {
     <SideBarLayout>
       <HeadingTable title={"Relatórios"} />
 
+      {/* Componente para seleção de mês e ano */}
+      <Flex direction="column" align="center" gap="4" mt="4">
+        <Flex align="center" gap="4">
+          <Button onClick={handlePrevious}>&lt;</Button>
+          <Text fontSize="lg" fontWeight="bold">
+            {formatDate()}
+          </Text>
+          <Button onClick={handleNext}>&gt;</Button>
+        </Flex>
+        <Flex align="center" gap="2">
+          <Text>Exibir mês:</Text>
+          <Switch isChecked={showMonth} onChange={toggleShowMonth} />
+        </Flex>
+      </Flex>
+
+      {/* Gráfico de despesas */}
       <Flex
         w={"full"}
         h={"full"}
-        border={'1px'}
+        border={"1px"}
         p={"20px"}
         borderRadius={"10px"}
         borderColor={"gray.150"}
-        direction={["column", "row"]} // Alinha em coluna para mobile e em linha para desktop
-        align={["center", "flex-start"]} // Centraliza no eixo Y para mobile
-        justify={["center", "flex-start"]} // Centraliza no eixo X para mobile
+        direction={["column", "row"]}
+        align={["center", "flex-start"]}
+        justify={["center", "flex-start"]}
       >
         <Box
           h={"300px"}
@@ -41,5 +85,5 @@ export default function ReportPage() {
         </Box>
       </Flex>
     </SideBarLayout>
-  )
+  );
 }
