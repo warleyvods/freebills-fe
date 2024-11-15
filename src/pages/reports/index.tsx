@@ -19,8 +19,24 @@ export default function ReportPage() {
     <SideBarLayout>
       <HeadingTable title={"Relatórios"} />
 
-      <Flex w={"full"} h={"full"} border={'1px'} p={"20px"} borderRadius={"10px"} borderColor={"gray.150"}>
-        <Box h={"300px"} w={"300px"}>
+      <Flex
+        w={"full"}
+        h={"full"}
+        border={'1px'}
+        p={"20px"}
+        borderRadius={"10px"}
+        borderColor={"gray.150"}
+        direction={["column", "row"]} // Alinha em coluna para mobile e em linha para desktop
+        align={["center", "flex-start"]} // Centraliza no eixo Y para mobile
+        justify={["center", "flex-start"]} // Centraliza no eixo X para mobile
+      >
+        <Box
+          h={"300px"}
+          w={"300px"}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
           <PieChart series={expenseDash?.series} labels={expenseDash?.labels} />
         </Box>
       </Flex>
