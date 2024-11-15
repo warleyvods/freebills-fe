@@ -48,11 +48,11 @@ export default function ReportPage() {
     <SideBarLayout>
       <HeadingTable title={"Relatórios"} />
 
-      {/* Componente para seleção de mês e ano */}
+      {/* Seletor de mês e ano */}
       <Flex direction="column" align="center" gap="4" mt="4">
         <Flex align="center" gap="4">
           <IconButton
-            _focus={{boxShadow: "none"}}
+            _focus={{ boxShadow: "none" }}
             onClick={handlePrevious}
             size="sm"
             variant="ghost"
@@ -63,14 +63,13 @@ export default function ReportPage() {
             {formatDate()}
           </Text>
           <IconButton
-            _focus={{boxShadow: "none"}}
+            _focus={{ boxShadow: "none" }}
             onClick={handleNext}
             size="sm"
             variant="ghost"
             aria-label={"show info"}
             icon={<ChevronRightIcon w={8} h={8} />}
           />
-
         </Flex>
         <Flex align="center" gap="2">
           <Text>Exibir mês:</Text>
@@ -78,7 +77,7 @@ export default function ReportPage() {
         </Flex>
       </Flex>
 
-      {/* Gráfico de despesas */}
+      {/* Gráfico de despesas e tabela */}
       <Flex
         w={"full"}
         h={"full"}
@@ -90,13 +89,15 @@ export default function ReportPage() {
         align={["center", "center"]}
         justify={["center", "center"]}
       >
-        <Flex w={"full"}
-              maxW={"1000px"}
-              direction={["column", "row"]}
-              align={["center", "flex-start"]}
-              justify={["center", "flex-start"]}
-              gap={"5px"}
+        <Flex
+          w={"full"}
+          maxW={"1000px"}
+          direction={["column", "row"]}
+          align={["center", "flex-start"]}
+          justify={["center", "flex-start"]}
+          gap={"5px"}
         >
+          {/* Gráfico de Pizza */}
           <Box
             h={"300px"}
             w={"300px"}
@@ -106,9 +107,48 @@ export default function ReportPage() {
           >
             <PieChart series={expenseDash?.series} labels={expenseDash?.labels} />
           </Box>
-          <Flex w={"80%"} bg={"tomato"} h={"100px"}>
 
-          </Flex>
+          {/* Tabela */}
+          <VStack
+            w={"full"}
+            maxW={"400px"}
+            align={"flex-start"}
+            spacing={4}
+            mt={4}
+            p={4}
+            bg={"gray.50"}
+            borderRadius={"8px"}
+            boxShadow={"md"}
+          >
+            {expenseDash?.labels.map((label, index) => {
+              const value = expenseDash.series[index];
+              const color = expenseDash.colors[index]; // Obtemos a cor diretamente do payload
+              const percentage = ((value / expenseDash.series.reduce((a, b) => a + b, 0)) * 100).toFixed(2);
+
+              return (
+                <Flex
+                  key={index}
+                  w={"full"}
+                  justify={"space-between"}
+                  align={"center"}
+                  bg={"white"}
+                  p={3}
+                  borderRadius={"8px"}
+                  boxShadow={"sm"}
+                >
+                  <Flex justify={"flex-start"} align={"center"} gap={3}>
+                    {/* Bolinha colorida */}
+                    <Box w={"20px"} h={"20px"} bg={color} borderRadius={"full"}></Box>
+                    <Text fontWeight={"medium"}>{label}</Text>
+                  </Flex>
+                  <VStack spacing={0} align={"flex-end"}>
+                    <Text fontSize={"sm"} fontWeight={"bold"}>R$ {value.toFixed(2)}</Text>
+                    <Text fontSize={"xs"} color={"gray.500"}>{percentage}%</Text>
+                  </VStack>
+                </Flex>
+              );
+            })}
+          </VStack>
         </Flex>
       </Flex>
     </SideBarLayout>
