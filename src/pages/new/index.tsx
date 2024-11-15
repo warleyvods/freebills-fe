@@ -4,7 +4,7 @@ import { RiArrowDownLine } from "react-icons/ri";
 import CardsDashboard from "../../components/Cards/CardsDashboard";
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
 import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
-import PieChart from "../../components/PieChart";
+import DonutChart from "../../components/Chart/DonutChart";
 
 export const New = () => {
   const {data: expenseDash, isLoading: isLoadingExpenseDash} = useDashboardExpenseGraph(null, null, 2024);

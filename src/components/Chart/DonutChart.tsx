@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import { Box, VStack, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Text, useColorModeValue, VStack } from '@chakra-ui/react';
 
-const PieChart = ({ labels = [], series = [], colors = [] }) => {
+const DonutChart = ({ labels = [], series = [], colors = [] }) => {
   const [tooltipContent, setTooltipContent] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
@@ -44,7 +44,7 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
     const fullCircle = deltaAngle >= 359.9999;
 
     if (fullCircle) {
-      const d = [
+      return [
         'M', x, y - outerRadius,
         'A', outerRadius, outerRadius, 0, 1, 1, x, y + outerRadius,
         'A', outerRadius, outerRadius, 0, 1, 1, x, y - outerRadius,
@@ -53,7 +53,6 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
         'A', innerRadius, innerRadius, 0, 1, 0, x, y - innerRadius,
         'Z',
       ].join(' ');
-      return d;
     } else {
       const startOuter = polarToCartesian(x, y, outerRadius, startAngle);
       const endOuter = polarToCartesian(x, y, outerRadius, endAngle);
@@ -61,14 +60,13 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
       const endInner = polarToCartesian(x, y, innerRadius, startAngle);
       const largeArcFlag = deltaAngle <= 180 ? '0' : '1';
 
-      const d = [
+      return [
         'M', startOuter.x, startOuter.y,
         'A', outerRadius, outerRadius, 0, largeArcFlag, 1, endOuter.x, endOuter.y,
         'L', startInner.x, startInner.y,
         'A', innerRadius, innerRadius, 0, largeArcFlag, 0, endInner.x, endInner.y,
         'Z',
       ].join(' ');
-      return d;
     }
   };
 
@@ -101,7 +99,7 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
       setSelectedSliceIndex(index);
     };
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = (e: { clientX: any; clientY: any; }) => {
       setTooltipPosition({ x: e.clientX, y: e.clientY });
     };
 
@@ -121,10 +119,6 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
         cursor="pointer"
-        style={{
-          transition: 'fill 0.2s ease, opacity 0.2s ease',
-          opacity: selectedSliceIndex === index ? 0.7 : 1,
-        }}
       />
     );
   });
@@ -212,4 +206,4 @@ const PieChart = ({ labels = [], series = [], colors = [] }) => {
   );
 };
 
-export default PieChart;
+export default DonutChart;

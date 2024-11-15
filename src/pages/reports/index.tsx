@@ -15,7 +15,7 @@ import {
 import React, { useState } from "react";
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
 import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardRevenueGraph";
-import PieChart from "../../components/PieChart";
+import DonutChart from "../../components/Chart/DonutChart";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import IconComponent from "../../components/Icons/IconComponent";
 
@@ -24,7 +24,6 @@ export default function ReportPage() {
   const [showMonth, setShowMonth] = useState(true);
   const [selectedGraph, setSelectedGraph] = useState("expense");
 
-  // Funções para navegação entre meses e anos
   const handleDateChange = (increment: number) => {
     const newDate = new Date(currentDate);
     if (showMonth) {
@@ -48,7 +47,6 @@ export default function ReportPage() {
   const selectedMonth = showMonth ? currentDate.getMonth() + 1 : null;
   const selectedYear = currentDate.getFullYear();
 
-  // Hooks para as despesas e receita
   const {
     data: expenseDash,
     isLoading: isLoadingExpenseDash
@@ -160,6 +158,11 @@ export default function ReportPage() {
       );
     }
 
+    const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+      style: 'currency',
+      currency: 'BRL',
+    });
+
     return (
       <Flex
         mt="15px"
@@ -182,7 +185,7 @@ export default function ReportPage() {
           gap="5px"
         >
           <Box h="300px" w="300px" display="flex" alignItems="center" justifyContent="center">
-            <PieChart series={data.series} labels={labels} colors={colors} />
+            <DonutChart series={data.series} labels={labels} colors={colors} />
           </Box>
 
           <VStack
@@ -204,7 +207,7 @@ export default function ReportPage() {
                 color: colors[index],
                 percentage: ((data.series[index] / data.series.reduce((a: any, b: any) => a + b, 0)) * 100).toFixed(2),
               }))
-              .sort((a, b) => b.value - a.value) // Ordenando por valor de forma decrescente
+              .sort((a, b) => b.value - a.value)
               .map((item, index) => {
                 return (
                   <Flex
@@ -222,18 +225,19 @@ export default function ReportPage() {
                       <Text fontWeight="medium" color={textColor}>{item.label}</Text>
                     </Flex>
                     <VStack spacing={0} align="flex-end">
-                      <Text fontSize="sm" fontWeight="bold" color={textColor}>R$ {item.value.toFixed(2)}</Text>
+                      <Text fontSize="sm" fontWeight="bold" color={textColor}>{currencyFormatter.format((item.value))}</Text>
                       <Text fontSize="xs" color={secondaryTextColor}>{item.percentage}%</Text>
                     </VStack>
                   </Flex>
                 );
               })}
           </VStack>
-
         </Flex>
       </Flex>
     );
   };
+
+
 
   return (
     <SideBarLayout>
