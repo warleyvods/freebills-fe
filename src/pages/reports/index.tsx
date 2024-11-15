@@ -268,8 +268,8 @@ export default function ReportPage() {
             w={"full"}
             maxW={"400px"}
             align={["center", "flex-start"]}
-            spacing={4}
-            mt={0}
+            spacing={2}
+            mt={[4, 0]}
             p={3}
             bg={tableBg}
             borderRadius={"8px"}
