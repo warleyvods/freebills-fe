@@ -30,7 +30,8 @@ export default function ReportPage() {
 
   const formatDate = () => {
     if (showMonth) {
-      return `${currentDate.toLocaleString("default", { month: "long" })} ${currentDate.getFullYear()}`;
+      const monthName = currentDate.toLocaleString("default", { month: "long" });
+      return `${monthName.charAt(0).toUpperCase()}${monthName.slice(1)} ${currentDate.getFullYear()}`;
     }
     return `${currentDate.getFullYear()}`;
   };
