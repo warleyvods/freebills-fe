@@ -1,10 +1,10 @@
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
-import { Box, Flex, Spinner, VStack, Button, Text, Switch, IconButton, useColorModeValue } from "@chakra-ui/react";
+import { Box, Flex, IconButton, Spinner, Switch, Text, useColorModeValue, VStack } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
 import PieChart from "../../components/PieChart";
-import { ChevronLeftIcon, ChevronRightIcon, ViewIcon, ViewOffIcon } from "@chakra-ui/icons";
+import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 
 export default function ReportPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -118,14 +118,14 @@ export default function ReportPage() {
 
           {/* Tabela */}
           <VStack
-            ml={"60px"}
+            ml={["0", "60px"]}
             w={"full"}
             maxW={"400px"}
-            align={"flex-start"}
+            align={["center", "flex-start"]}
             spacing={4}
             mt={0}
             p={3}
-            bg={tableBg} // Cor de fundo adaptada para o modo escuro
+            bg={tableBg}
             borderRadius={"8px"}
             boxShadow={"md"}
           >
