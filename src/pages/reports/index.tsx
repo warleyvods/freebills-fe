@@ -1,6 +1,6 @@
 import SideBarLayout from "../../components/SidebarLayout/SideBarLayout";
 import HeadingTable from "../../components/Tables/HeadingTable";
-import { Box, Flex, Spinner, VStack, Button, Text, Switch, IconButton } from "@chakra-ui/react";
+import { Box, Flex, Spinner, VStack, Button, Text, Switch, IconButton, useColorModeValue } from "@chakra-ui/react";
 import React, { useState } from "react";
 import { useDashboardExpenseGraph } from "../../hooks/dashboard/useDashboardExpenseGraph";
 import PieChart from "../../components/PieChart";
@@ -39,6 +39,13 @@ export default function ReportPage() {
   const selectedYear = currentDate.getFullYear();
 
   const { data: expenseDash, isLoading: isLoadingExpenseDash } = useDashboardExpenseGraph(null, selectedMonth, selectedYear);
+
+  // Chamadas de useColorModeValue
+  const tableBg = useColorModeValue("gray.50", "gray.700");
+  const cellBgColor = useColorModeValue("white", "gray.800");
+  const textColor = useColorModeValue("black", "white");
+  const borderColor = useColorModeValue("gray.150", "gray.700");
+  const secondaryTextColor = useColorModeValue("gray.500", "gray.400");
 
   if (isLoadingExpenseDash) {
     return <Spinner />;
@@ -84,7 +91,7 @@ export default function ReportPage() {
         border={"1px"}
         p={"20px"}
         borderRadius={"10px"}
-        borderColor={"gray.150"}
+        borderColor={borderColor}
         direction={["column", "row"]}
         align={["center", "center"]}
         justify={["center", "center"]}
@@ -116,13 +123,13 @@ export default function ReportPage() {
             spacing={4}
             mt={4}
             p={4}
-            bg={"gray.50"}
+            bg={tableBg} // Cor de fundo adaptada para o modo escuro
             borderRadius={"8px"}
             boxShadow={"md"}
           >
             {expenseDash?.labels.map((label, index) => {
               const value = expenseDash.series[index];
-              const color = expenseDash.colors[index]; // Obtemos a cor diretamente do payload
+              const color = expenseDash.colors[index]; // Cor do backend
               const percentage = ((value / expenseDash.series.reduce((a, b) => a + b, 0)) * 100).toFixed(2);
 
               return (
@@ -131,7 +138,7 @@ export default function ReportPage() {
                   w={"full"}
                   justify={"space-between"}
                   align={"center"}
-                  bg={"white"}
+                  bg={cellBgColor} // Cor das células
                   p={3}
                   borderRadius={"8px"}
                   boxShadow={"sm"}
@@ -139,11 +146,17 @@ export default function ReportPage() {
                   <Flex justify={"flex-start"} align={"center"} gap={3}>
                     {/* Bolinha colorida */}
                     <Box w={"20px"} h={"20px"} bg={color} borderRadius={"full"}></Box>
-                    <Text fontWeight={"medium"}>{label}</Text>
+                    <Text fontWeight={"medium"} color={textColor}>
+                      {label}
+                    </Text>
                   </Flex>
                   <VStack spacing={0} align={"flex-end"}>
-                    <Text fontSize={"sm"} fontWeight={"bold"}>R$ {value.toFixed(2)}</Text>
-                    <Text fontSize={"xs"} color={"gray.500"}>{percentage}%</Text>
+                    <Text fontSize={"sm"} fontWeight={"bold"} color={textColor}>
+                      R$ {value.toFixed(2)}
+                    </Text>
+                    <Text fontSize={"xs"} color={secondaryTextColor}>
+                      {percentage}%
+                    </Text>
                   </VStack>
                 </Flex>
               );
@@ -154,3 +167,4 @@ export default function ReportPage() {
     </SideBarLayout>
   );
 }
+
