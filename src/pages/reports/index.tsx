@@ -105,7 +105,7 @@ export default function ReportPage() {
             alignItems="center"
             justifyContent="center"
           >
-            <PieChart series={expenseDash?.series} labels={expenseDash?.labels} />
+            <PieChart series={expenseDash?.series} labels={expenseDash?.labels} colors={expenseDash?.colors} />
           </Box>
 
           {/* Tabela */}

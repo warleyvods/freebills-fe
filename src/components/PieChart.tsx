@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { Box, VStack, Text, useColorModeValue } from '@chakra-ui/react';
 
-const PieChart = ({ labels = [], series = [] }) => {
+const PieChart = ({ labels = [], series = [], colors = [] }) => {
   const [tooltipContent, setTooltipContent] = useState('');
   const [tooltipVisible, setTooltipVisible] = useState(false);
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [selectedSliceIndex, setSelectedSliceIndex] = useState(null);
 
-  // Mover hooks para o topo do componente
   const strokeColor = useColorModeValue('#fff', '#1A202C');
   const tooltipBg = useColorModeValue('gray.700', 'gray.300');
   const tooltipColor = useColorModeValue('white', 'black');
@@ -73,23 +72,8 @@ const PieChart = ({ labels = [], series = [] }) => {
     }
   };
 
-  const describeFullDonut = (x, y, innerRadius, outerRadius) => {
-    const d = [
-      'M', x, y - outerRadius,
-      'A', outerRadius, outerRadius, 0, 1, 1, x, y + outerRadius,
-      'A', outerRadius, outerRadius, 0, 1, 1, x, y - outerRadius,
-      'M', x, y - innerRadius,
-      'A', innerRadius, innerRadius, 0, 1, 0, x, y + innerRadius,
-      'A', innerRadius, innerRadius, 0, 1, 0, x, y - innerRadius,
-      'Z',
-    ].join(' ');
-    return d;
-  };
-
-  const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
   let cumulativeAngle = 0;
 
-  // Formatador de moeda para Real Brasileiro
   const currencyFormatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
@@ -130,7 +114,7 @@ const PieChart = ({ labels = [], series = [] }) => {
       <path
         key={index}
         d={pathData}
-        fill={colors[index % colors.length]}
+        fill={colors[index % colors.length] || '#ccc'} // Usar a cor do backend ou fallback
         stroke={strokeColor}
         strokeWidth="1"
         onMouseEnter={handleMouseEnter}
@@ -141,7 +125,6 @@ const PieChart = ({ labels = [], series = [] }) => {
     );
   });
 
-  // Preparar o conteúdo do texto central
   const centerLabel = selectedSliceIndex !== null
     ? labels[selectedSliceIndex] || ''
     : 'Total';
@@ -152,12 +135,11 @@ const PieChart = ({ labels = [], series = [] }) => {
     ? `${((series[selectedSliceIndex] / total) * 100).toFixed(1)}%`
     : '';
 
-  // Controlar a opacidade e cor do círculo interno
   const innerCircleFillColor = selectedSliceIndex !== null
-    ? colors[selectedSliceIndex % colors.length]
+    ? colors[selectedSliceIndex % colors.length] || defaultInnerCircleFillColor
     : defaultInnerCircleFillColor;
 
-  const innerCircleOpacity = selectedSliceIndex !== null ? 1 : 0.7; // Opacidade reduzida quando nenhuma fatia está selecionada
+  const innerCircleOpacity = selectedSliceIndex !== null ? 1 : 0.7;
 
   return (
     <Box position="relative" width="100%" height="100%">
@@ -169,17 +151,18 @@ const PieChart = ({ labels = [], series = [] }) => {
       >
         {slices}
         <path
-          d={describeFullDonut(
+          d={describeArc(
             centerX,
             centerY,
             innerCircleInnerRadius,
-            innerCircleOuterRadius
+            innerCircleOuterRadius,
+            0,
+            360
           )}
           fill={innerCircleFillColor}
           stroke={strokeColor}
           strokeWidth="1"
           opacity={innerCircleOpacity}
-          style={{ transition: 'fill 0.3s ease, opacity 0.3s ease' }} // Adicionar transição suave
         />
       </svg>
       <Box
