@@ -7,15 +7,14 @@ const PieChart = ({ labels = [], series = [] }) => {
   const [tooltipPosition, setTooltipPosition] = useState({ x: 0, y: 0 });
   const [selectedSliceIndex, setSelectedSliceIndex] = useState(null);
 
-  // Move useColorModeValue hooks to the top level
-  const strokeColor = useColorModeValue('#fff', '#1A202C'); // Adjust dark mode color as needed
+  // Mover hooks para o topo do componente
+  const strokeColor = useColorModeValue('#fff', '#1A202C');
   const tooltipBg = useColorModeValue('gray.700', 'gray.300');
   const tooltipColor = useColorModeValue('white', 'black');
-  const defaultInnerCircleFillColor = useColorModeValue('#ffffff', '#1A202C'); // For inner circle
+  const defaultInnerCircleFillColor = useColorModeValue('#ffffff', '#1A202C');
 
   const total = series.reduce((acc, value) => acc + value, 0);
 
-  // Now it's safe to have early returns after hooks
   if (total === 0) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100%">
@@ -90,7 +89,7 @@ const PieChart = ({ labels = [], series = [] }) => {
   const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
   let cumulativeAngle = 0;
 
-  // Currency formatter for Brazilian Real
+  // Formatador de moeda para Real Brasileiro
   const currencyFormatter = new Intl.NumberFormat('pt-BR', {
     style: 'currency',
     currency: 'BRL',
@@ -142,7 +141,7 @@ const PieChart = ({ labels = [], series = [] }) => {
     );
   });
 
-  // Prepare center text content
+  // Preparar o conteúdo do texto central
   const centerLabel = selectedSliceIndex !== null
     ? labels[selectedSliceIndex] || ''
     : 'Total';
@@ -153,10 +152,12 @@ const PieChart = ({ labels = [], series = [] }) => {
     ? `${((series[selectedSliceIndex] / total) * 100).toFixed(1)}%`
     : '';
 
-  // Ensure useColorModeValue is not called conditionally
+  // Controlar a opacidade e cor do círculo interno
   const innerCircleFillColor = selectedSliceIndex !== null
     ? colors[selectedSliceIndex % colors.length]
-    : defaultInnerCircleFillColor; // Use the default color mode value
+    : defaultInnerCircleFillColor;
+
+  const innerCircleOpacity = selectedSliceIndex !== null ? 1 : 0.7; // Opacidade reduzida quando nenhuma fatia está selecionada
 
   return (
     <Box position="relative" width="100%" height="100%">
@@ -177,6 +178,8 @@ const PieChart = ({ labels = [], series = [] }) => {
           fill={innerCircleFillColor}
           stroke={strokeColor}
           strokeWidth="1"
+          opacity={innerCircleOpacity}
+          style={{ transition: 'fill 0.3s ease, opacity 0.3s ease' }} // Adicionar transição suave
         />
       </svg>
       <Box
