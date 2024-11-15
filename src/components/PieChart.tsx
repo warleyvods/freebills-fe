@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Box } from '@chakra-ui/react';
+import { Box, VStack, Text } from '@chakra-ui/react';
 
 const PieChart = ({ labels = [], series = [] }) => {
   const [tooltipContent, setTooltipContent] = useState('');
@@ -83,6 +83,12 @@ const PieChart = ({ labels = [], series = [] }) => {
   const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF'];
   let cumulativeAngle = 0;
 
+  // Currency formatter for Brazilian Real
+  const currencyFormatter = new Intl.NumberFormat('pt-BR', {
+    style: 'currency',
+    currency: 'BRL',
+  });
+
   const slices = series.map((value, index) => {
     const angle =
       index === series.length - 1 ? 360 - cumulativeAngle : (value / total) * 360;
@@ -99,9 +105,10 @@ const PieChart = ({ labels = [], series = [] }) => {
       endAngle
     );
 
-    const handleMouseEnter = () => {
-      setTooltipContent(`${labels[index] || ''}: ${series[index] || 0}`);
+    const handleMouseEnter = (e) => {
+      setTooltipContent(`${labels[index] || ''}: ${currencyFormatter.format(series[index] || 0)}`);
       setTooltipVisible(true);
+      setSelectedSliceIndex(index);
     };
 
     const handleMouseMove = (e) => {
@@ -110,6 +117,7 @@ const PieChart = ({ labels = [], series = [] }) => {
 
     const handleMouseLeave = () => {
       setTooltipVisible(false);
+      setSelectedSliceIndex(null);
     };
 
     return (
@@ -122,11 +130,21 @@ const PieChart = ({ labels = [], series = [] }) => {
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        onClick={() => setSelectedSliceIndex(index)}
         cursor="pointer"
       />
     );
   });
+
+  // Prepare center text content
+  const centerLabel = selectedSliceIndex !== null
+    ? labels[selectedSliceIndex] || ''
+    : 'Total';
+  const centerValue = selectedSliceIndex !== null
+    ? currencyFormatter.format(series[selectedSliceIndex] || 0)
+    : currencyFormatter.format(total);
+  const centerPercentage = selectedSliceIndex !== null
+    ? `${((series[selectedSliceIndex] / total) * 100).toFixed(1)}%`
+    : '';
 
   return (
     <Box position="relative" width="100%" height="100%">
@@ -137,35 +155,43 @@ const PieChart = ({ labels = [], series = [] }) => {
         preserveAspectRatio="xMidYMid meet"
       >
         {slices}
-        {selectedSliceIndex !== null && (
-          <>
-            <path
-              d={describeFullDonut(
-                centerX,
-                centerY,
-                innerCircleInnerRadius,
-                innerCircleOuterRadius
-              )}
-              fill={colors[selectedSliceIndex % colors.length]}
-              stroke="#fff"
-              strokeWidth="1"
-              onClick={() => setSelectedSliceIndex(null)}
-              cursor="pointer"
-            />
-            <text
-              x={centerX}
-              y={centerY}
-              textAnchor="middle"
-              dominantBaseline="middle"
-              fontSize="16"
-              fill="#000"
-              fontWeight="bold"
-            >
-              {series[selectedSliceIndex]}
-            </text>
-          </>
-        )}
+        <path
+          d={describeFullDonut(
+            centerX,
+            centerY,
+            innerCircleInnerRadius,
+            innerCircleOuterRadius
+          )}
+          fill={
+            selectedSliceIndex !== null
+              ? colors[selectedSliceIndex % colors.length]
+              : '#ffffff'
+          }
+          stroke="#fff"
+          strokeWidth="1"
+        />
       </svg>
+      <Box
+        position="absolute"
+        top="50%"
+        left="50%"
+        transform="translate(-50%, -50%)"
+        pointerEvents="none"
+      >
+        <VStack spacing={0}>
+          <Text fontSize="md" fontWeight="medium">
+            {centerLabel}
+          </Text>
+          <Text fontSize="lg" fontWeight="medium">
+            {centerValue}
+          </Text>
+          {centerPercentage && (
+            <Text fontSize="md" color="gray.500">
+              {centerPercentage}
+            </Text>
+          )}
+        </VStack>
+      </Box>
       {tooltipVisible && (
         <Box
           position="fixed"
