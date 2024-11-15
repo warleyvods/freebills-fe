@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 type DashboardRevenueGraph = {
   labels: string[];
   series: number[];
+  colors: string[];
 }
 
 async function getDashboard(userId: number, month?: number, year?: number): Promise<DashboardRevenueGraph> {
