@@ -12,7 +12,7 @@ import {
   Text,
   Th,
   Thead,
-  Tr
+  Tr, useColorModeValue
 } from "@chakra-ui/react";
 import { ButtonOptions, CustomButton, TableColumn, TableHeadProps } from "./types/ColumnTypes";
 import TableHead from "./components/TableHead";
@@ -84,6 +84,7 @@ export default function CustomTable({
           <Thead borderLeft={"1px"}
                  borderRight={"1px"}
                  borderTop={"1px"}
+                 borderColor={borderColor}
                  h={"35px"}
           >
             <Tr>
@@ -108,7 +109,7 @@ export default function CustomTable({
           <Flex w={"full"}
                 h={"200px"}
                 border={"1px"}
-                borderColor={"gray.100"}
+                borderColor={borderColor}
                 borderTop={0}
                 borderBottomRadius={"10px"}
                 justify={"center"}

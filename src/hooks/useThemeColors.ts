@@ -8,7 +8,7 @@ enum ColorKeys {
   HOVER_COLOR_LIGHT = 'gray.50',
   HOVER_COLOR_DARK = '#252627',
 
-  BORDER_COLOR_LIGHT = 'gray.150',
+  BORDER_COLOR_LIGHT = 'gray.100',
   BORDER_COLOR_DARK = '#1e1f20',
   BORDER_COLOR_DARK_2 = '#3c3f3f',
 

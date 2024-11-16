@@ -135,9 +135,17 @@ export default function ReportPage() {
 
     if (isLoading) {
       return (
-        <Flex direction="column" align="center" justify="center" mt="15px">
+        <Flex direction="column"
+              align="center"
+              justify="center"
+              mt="15px"
+              border={"1px"}
+              h={"300px"}
+              borderRadius={"10px"}
+              gap={"20px"}
+              borderColor={borderColor}>
           <Text fontSize="18px">Carregando...</Text>
-          <Spinner size="xl" />
+          <Spinner size="md" />
         </Flex>
       );
     }
@@ -151,6 +159,7 @@ export default function ReportPage() {
               border={"1px"}
               borderRadius={"10px"}
               borderColor={borderColor}
+              h={"300px"}
               p={"20px"}>
           <Text fontSize="1rem">Não há dados para exibir</Text>
           <IconComponent name="noData2" width="150" height="150" />
