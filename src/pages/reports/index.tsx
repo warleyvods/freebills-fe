@@ -18,6 +18,7 @@ import { useDashboardRevenueGraph } from "../../hooks/dashboard/useDashboardReve
 import DonutChart from "../../components/Chart/DonutChart";
 import { ChevronLeftIcon, ChevronRightIcon } from "@chakra-ui/icons";
 import IconComponent from "../../components/Icons/IconComponent";
+import { CategoryInfo } from "../../components/Modals/CategoryInfo";
 
 export default function ReportPage() {
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -61,6 +62,7 @@ export default function ReportPage() {
   const cellBgColor = useColorModeValue("white", "gray.800");
   const textColor = useColorModeValue("black", "white");
   const borderColor = useColorModeValue("gray.150", "gray.700");
+  const hoverCellColor = useColorModeValue("rgba(228,228,228,0.77)", "rgba(19,19,20,0.5)");
   const secondaryTextColor = useColorModeValue("gray.500", "gray.400");
 
   const DateSelector = () => (
@@ -219,25 +221,32 @@ export default function ReportPage() {
               .sort((a, b) => b.value - a.value)
               .map((item, index) => {
                 return (
-                  <Flex
-                    key={index}
-                    w="full"
-                    justify="space-between"
-                    align="center"
-                    bg={cellBgColor}
-                    p={2}
-                    borderRadius="8px"
-                    boxShadow="sm"
-                  >
-                    <Flex justify="flex-start" align="center" gap={3}>
-                      <Box w="25px" h="25px" bg={item.color} borderRadius="full" />
-                      <Text fontWeight="medium" color={textColor}>{item.label}</Text>
+                  <CategoryInfo key={item.label} trigger={(onOpen) => (
+                    <Flex
+                      key={index}
+                      w="full"
+                      justify="space-between"
+                      align="center"
+                      bg={cellBgColor}
+                      p={2}
+                      onClick={onOpen}
+                      _hover={{
+                        bg: hoverCellColor,
+                        cursor: 'pointer'
+                      }}
+                      borderRadius="8px"
+                      boxShadow="sm"
+                    >
+                      <Flex justify="flex-start" align="center" gap={3}>
+                        <Box w="25px" h="25px" bg={item.color} borderRadius="full" />
+                        <Text fontWeight="medium" color={textColor}>{item.label}</Text>
+                      </Flex>
+                      <VStack spacing={0} align="flex-end">
+                        <Text fontSize="sm" fontWeight="bold" color={textColor}>{currencyFormatter.format((item.value))}</Text>
+                        <Text fontSize="xs" color={secondaryTextColor}>{item.percentage}%</Text>
+                      </VStack>
                     </Flex>
-                    <VStack spacing={0} align="flex-end">
-                      <Text fontSize="sm" fontWeight="bold" color={textColor}>{currencyFormatter.format((item.value))}</Text>
-                      <Text fontSize="xs" color={secondaryTextColor}>{item.percentage}%</Text>
-                    </VStack>
-                  </Flex>
+                  )} />
                 );
               })}
           </VStack>
