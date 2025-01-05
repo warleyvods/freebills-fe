@@ -27,7 +27,7 @@ import React from "react";
 import { CheckIcon, EditIcon, HamburgerIcon, RepeatIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import { SkeletonTable } from "../../Skeletons/SkeletonTable";
 import { Transaction } from "../../../hooks/transactions/useTransactionById";
-import { category, NewTransactionModal } from "../../Modals/Transaction";
+import { NewTransactionModal } from "../../Modals/Transaction";
 import { BiTrash } from "react-icons/bi";
 import { ConfirmationDialog } from "../../Dialog/ConfirmationDialog";
 import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
@@ -155,11 +155,10 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                                 <VStack spacing={0} alignItems={"start"}>
                                   <Text fontWeight={"bold"} size={"0.95rem"}>{transaction.description}</Text>
                                   <Text fontWeight={"medium"} size={"0.95rem"}>
-                                    {category[transaction.transactionCategory]} | {
-                                    accounts?.filter(acc => acc.id === transaction.accountId)
-                                      .map((acc) => (
-                                        acc.description
-                                      ))}
+                                    {accounts?.filter(acc => acc.id === transaction.accountId)
+                                        .map((acc) => (
+                                          acc.description
+                                        ))}
                                   </Text>
                                 </VStack>
                               </HStack>

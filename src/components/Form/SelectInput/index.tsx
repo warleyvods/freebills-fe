@@ -38,7 +38,6 @@ const SelectBase: ForwardRefRenderFunction<HTMLSelectElement, SelectProps> = ({
 }, ref) => {
   const { bgColor } = useThemeColors();
 
-  // Limpar o erro ao selecionar uma opção válida
   const handleSelectChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     onChange(event);
     // @ts-ignore

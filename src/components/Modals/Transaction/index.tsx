@@ -15,7 +15,7 @@ import {
   SimpleGrid,
   Spinner,
   Switch,
-  Text,
+  Text, Textarea,
   useColorModeValue,
   useDisclosure,
   VStack
@@ -34,7 +34,7 @@ import { NewAccountModal } from "../NewAccount";
 import { RiAddLine } from "react-icons/ri";
 import { transactionSchema } from "../../../utils/utils";
 
-const revenueInitialValues = {
+const initialValues = {
   amount: 0,
   date: new Date().toLocaleDateString("pt-BR", {
     day: "2-digit",
@@ -42,29 +42,23 @@ const revenueInitialValues = {
     year: "numeric"
   }),
   description: '',
-  transactionType: 'REVENUE',
   categoryId: '',
   paid: false,
   barCode: '',
   bankSlip: false,
-  accountId: ''
-}
+  accountId: '',
+  observation: '',
+};
+
+const revenueInitialValues = {
+  ...initialValues,
+  transactionType: 'REVENUE'
+};
 
 const expenseInitialValues = {
-  amount: 0,
-  date: new Date().toLocaleDateString("pt-BR", {
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric"
-  }),
-  description: '',
-  transactionType: 'EXPENSE',
-  categoryId: '',
-  paid: false,
-  barCode: '',
-  bankSlip: false,
-  accountId: ''
-}
+  ...initialValues,
+  transactionType: 'EXPENSE'
+};
 
 const colorType = (transactionType: string): string => {
   if (transactionType === 'TRANSACTION') {
@@ -95,7 +89,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   const {data: categories, isLoading: isCategoryLoading} = useCategories(0, 1000);
   const createTransaction = useCreateTransaction();
   const updateTransaction = useUpdateTransaction();
-  const color = colorType(transactionType);
+  const modalHeaderColor = colorType(transactionType);
 
   const handleOk = useCallback(() => {
     onClose();
@@ -133,12 +127,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   return (
     <>
       {trigger(onOpen, onClose)}
-      <Modal
-        onClose={handleCancel}
-        isOpen={isOpen}
-        isCentered
-        size="lg"
-      >
+      <Modal onClose={handleCancel} isOpen={isOpen} isCentered size="lg">
         <ModalOverlay backdropFilter='blur(3px)' />
         <ModalContent bg={mainColor} borderRadius={"10px"}>
           <Formik
@@ -150,9 +139,8 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
             {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
               <>
                 <form onSubmit={handleSubmit}>
-                  <ModalHeader bg={color}
-                               fontSize="25px"
-                               fontWeight="medium">{!!transactionType && `${edit ? "Editar" : "Adicionar"} ${transactionType === 'REVENUE' ? 'receita' : 'despesa'}`}
+                  <ModalHeader bg={modalHeaderColor} fontSize="25px" fontWeight="medium">
+                    {edit ? `Editar ${transactionType === 'REVENUE' ? 'receita' : 'despesa'}` : `Adicionar ${transactionType === 'REVENUE' ? 'receita' : 'despesa'}`}
                   </ModalHeader>
                   <ModalCloseButton />
                   <ModalBody justifyContent="center" p={{base: "15px", md: "24px"}}>
@@ -190,7 +178,6 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                                        value={values.description}
                                        error={errors.description}
                           />
-
                           {isAccountLoading ? (
                             <Spinner />
                           ) : (
@@ -231,8 +218,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                             options={categoriesOptions}
                             showDefaultOption={true}
                           />
-                          {
-                            edit ? (
+                          { edit && (
                               <Select placeholder={"Selecione um Tipo"}
                                       id={"transactionType"}
                                       name={"transactionType"}
@@ -242,10 +228,9 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                                 <option value='REVENUE'>Receita</option>
                                 <option value='EXPENSE'>Despesa</option>
                               </Select>
-                            ) : null
+                            )
                           }
-
-                          {values.bankSlip ?
+                          { values.bankSlip && (
                             <HStack justify={"space-between"}>
                               <InputFormik id="barCode"
                                            placeholder="Código de Barras"
@@ -255,9 +240,18 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                                            onChange={handleChange}
                               />
                             </HStack>
-                            : null
-                          }
-
+                          ) }
+                          {values.observation && (
+                            <Textarea
+                              placeholder="Adicione uma observação"
+                              name="observation"
+                              value={values.observation}
+                              onChange={handleChange}
+                              size="sm"
+                              resize="vertical"
+                              errorBorderColor="red.500"
+                            />
+                          )}
                           <HStack>
                             <Text fontSize={{base: "0.9rem", md: "1rem"}} fontWeight={"medium"}>Boleto</Text>
                             <Switch
@@ -267,7 +261,6 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                               onChange={handleChange}
                             />
                           </HStack>
-
                           <HStack>
                             <Text fontSize={{base: "0.9rem", md: "1rem"}} fontWeight={"medium"}>Pago</Text>
                             <Switch
@@ -278,6 +271,19 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                             />
                           </HStack>
 
+                          <HStack>
+                            <Text fontSize={{ base: "0.9rem", md: "1rem" }} fontWeight={"medium"}>
+                              Observação
+                            </Text>
+                            <Switch
+                              id="addObservation"
+                              name="addObservation"
+                              isChecked={values.observation !== ""}
+                              onChange={() => {
+                                setFieldValue("observation", values.observation ? "" : " ");
+                              }}
+                            />
+                          </HStack>
 
                         </SimpleGrid>
                       </VStack>

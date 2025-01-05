@@ -14,6 +14,7 @@ export type Transaction = {
   bankSlip: boolean;
   barCode: string;
   accountId: number;
+  observation: string;
 }
 
 async function getTransactionById(transactionId: number): Promise<Transaction> {
@@ -31,7 +32,8 @@ async function getTransactionById(transactionId: number): Promise<Transaction> {
     bankSlip: data.bankSlip,
     barCode: data.barCode,
     accountId: data.accountId,
-    categoryId: data.categoryId
+    categoryId: data.categoryId,
+    observation: data.observation
   }
 }
 
