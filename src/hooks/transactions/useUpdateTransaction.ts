@@ -3,19 +3,7 @@ import { useMutation } from "react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
-
-export type updateTransaction = {
-  id: number
-  accountId: number,
-  amount: string,
-  date: string,
-  paid: boolean,
-  description: string,
-  transactionType: string,
-  transactionCategory: string,
-  barCode: string,
-  bankSlip: boolean
-}
+import { Transaction } from "./type";
 
 type ErrorType = {
   title: string;
@@ -25,11 +13,11 @@ type ErrorType = {
 export function useUpdateTransaction(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (transaction: updateTransaction) => {
+  return useMutation(async (transaction: Transaction) => {
     transaction.date = transaction.date.replace(/\D/g, '-')
     const response = await api.put('v1/transactions', {
       ...transaction
-    })
+    });
 
     return response.data.transaction;
   }, {
@@ -49,6 +37,7 @@ export function useUpdateTransaction(onSuccess?: () => {}, onError?: () => {}) {
       queryClient.invalidateQueries(['transaction-revenue'])
       queryClient.invalidateQueries(['transaction'])
       queryClient.invalidateQueries(['balance'])
+
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()
       toast({

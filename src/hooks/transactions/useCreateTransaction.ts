@@ -3,18 +3,7 @@ import { useMutation } from "react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
-
-export type createTransactionData = {
-  accountId: number,
-  amount: string,
-  date: string,
-  paid: boolean,
-  description: string,
-  transactionType: string,
-  transactionCategory: string,
-  barCode: string,
-  bankSlip: boolean
-}
+import { Transaction } from "./type";
 
 type ErrorType = {
   title: string;
@@ -23,8 +12,7 @@ type ErrorType = {
 
 export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
-
-  return useMutation(async (transaction: createTransactionData) => {
+  return useMutation(async (transaction: Transaction) => {
     transaction.date = transaction.date.replace(/\D/g, '-')
     const response = await api.post('v1/transactions', {
       ...transaction
@@ -48,7 +36,6 @@ export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
       queryClient.invalidateQueries(['transaction'])
       queryClient.invalidateQueries(['balance'])
       onSuccess?.()
-
     }, onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 

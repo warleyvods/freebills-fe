@@ -1,3 +1,5 @@
+import * as yup from "yup";
+
 export function capitalizeFirstLetter(word: string) {
   return word.charAt(0).toUpperCase() + word.slice(1);
 }
@@ -77,3 +79,11 @@ export interface Options {
   label: string;
   active?: boolean
 }
+
+export const transactionSchema = yup.object().shape({
+  amount: yup.number().required('Valor obrigatório.'),
+  date: yup.string().required('Data obrigatória.'),
+  description: yup.string().required('Descrição obrigatória.'),
+  accountId: yup.string().required('Conta obrigatória.'),
+  categoryId: yup.string().required('Categoria obrigatória.')
+});

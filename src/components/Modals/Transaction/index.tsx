@@ -1,9 +1,8 @@
 import {
   Box,
   Button,
-  FormControl,
-  FormLabel,
   HStack,
+  Icon,
   LightMode,
   Modal,
   ModalBody,
@@ -13,98 +12,27 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
-  Text,
   SimpleGrid,
-  Switch, useBreakpointValue,
+  Spinner,
+  Switch,
+  Text,
   useColorModeValue,
   useDisclosure,
-  VStack, Icon, Spinner
+  VStack
 } from '@chakra-ui/react'
 import React, { ReactNode, useCallback } from "react";
 import { Formik } from "formik";
 import { InputFormik } from "../../Form/input";
-import { useMe } from "../../../hooks/users/useMe";
 import { useCreateTransaction } from "../../../hooks/transactions/useCreateTransaction";
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
 import { useTransactionById } from "../../../hooks/transactions/useTransactionById";
 import { useUpdateTransaction } from "../../../hooks/transactions/useUpdateTransaction";
-import * as yup from "yup";
 import InputMoney from "../../Form/MoneyInput";
 import { SelectFormik } from "../../Form/SelectInput";
 import { useCategories } from "../../../hooks/category/useCategories";
 import { NewAccountModal } from "../NewAccount";
 import { RiAddLine } from "react-icons/ri";
-
-const createTransactionSchema = yup.object().shape({
-  amount: yup.number().required('Valor obrigatório.'),
-  date: yup.string().required('Data obrigatória.'),
-  description: yup.string().required('Descrição obrigatória.'),
-  accountId: yup.string().required('Conta obrigatória.'),
-  categoryId: yup.string().required('Categoria obrigatória.')
-});
-
-interface LinkItemProps {
-  category: string;
-  categoryName: string;
-}
-
-const allCategory: Array<LinkItemProps> = [
-  {category: 'HOUSE', categoryName: 'Casa'},
-  {category: 'EDUCATION', categoryName: 'Educação'},
-  {category: 'ELECTRONIC', categoryName: 'Eletrônica'},
-  {category: 'LEISURE', categoryName: 'Lazer'},
-  {category: 'RESTAURANT', categoryName: 'Restaurante'},
-  {category: 'HEALTH', categoryName: 'Saúde'},
-  {category: 'SERVICE', categoryName: 'Serviço'},
-  {category: 'SUPERMARKET', categoryName: 'Supermercado'},
-  {category: 'TRANSPORT', categoryName: 'Transporte'},
-  {category: 'CLOTHES', categoryName: 'Roupa'},
-  {category: 'TRIPS', categoryName: 'Viagem'},
-  {category: 'OTHERS', categoryName: 'Outros'},
-  {category: 'AWARD', categoryName: 'Prêmio'},
-  {category: 'GIFT', categoryName: 'Presente'},
-  {category: 'SALARY', categoryName: 'Salário'},
-];
-
-const revenueCategory: Array<LinkItemProps> = [
-  {category: 'AWARD', categoryName: 'Prêmio'},
-  {category: 'GIFT', categoryName: 'Presente'},
-  {category: 'SALARY', categoryName: 'Salário'},
-  {category: 'OTHERS', categoryName: 'Outros'},
-];
-
-const expenseCategory: Array<LinkItemProps> = [
-  {category: 'HOUSE', categoryName: 'Casa'},
-  {category: 'EDUCATION', categoryName: 'Educação'},
-  {category: 'ELECTRONIC', categoryName: 'Eletrônica'},
-  {category: 'LEISURE', categoryName: 'Lazer'},
-  {category: 'RESTAURANT', categoryName: 'Restaurante'},
-  {category: 'HEALTH', categoryName: 'Saúde'},
-  {category: 'SERVICE', categoryName: 'Serviço'},
-  {category: 'SUPERMARKET', categoryName: 'Supermercado'},
-  {category: 'TRANSPORT', categoryName: 'Transporte'},
-  {category: 'CLOTHES', categoryName: 'Roupa'},
-  {category: 'TRIPS', categoryName: 'Viagem'},
-  {category: 'OTHERS', categoryName: 'Outros'},
-];
-
-export const category = {
-  "HOUSE": "Casa",
-  "EDUCATION": "Educação",
-  "ELECTRONIC": "Eletrônica",
-  "LEISURE": "Lazer",
-  "RESTAURANT": "Restaurante",
-  "HEALTH": "Saúde",
-  "SERVICE": "Serviço",
-  "SUPERMARKET": "Supermercado",
-  "TRANSPORT": "Transporte",
-  "CLOTHES": "Roupas",
-  "TRIPS": "Viagens",
-  "OTHERS": "Outros",
-  "AWARD": "Prêmio",
-  "GIFT": "Presente",
-  "SALARY": "Salário"
-}
+import { transactionSchema } from "../../../utils/utils";
 
 const revenueInitialValues = {
   amount: 0,
@@ -148,16 +76,6 @@ const colorType = (transactionType: string): string => {
   }
 }
 
-const categoryMap = (transactionType: string) => {
-  if (transactionType === 'TRANSACTION') {
-    return allCategory
-  } else if (transactionType === 'REVENUE') {
-    return revenueCategory;
-  } else {
-    return expenseCategory;
-  }
-}
-
 interface ModalTypes {
   transactionId?: number;
   onOk?: () => void;
@@ -170,32 +88,28 @@ interface ModalTypes {
 }
 
 export function NewTransactionModal({onCancel, trigger, transactionType, transactionId, edit}: ModalTypes) {
-  // const isMobile = useBreakpointValue({base: true, md: true, lg: false});
   const mainColor = useColorModeValue('white', 'gray.800');
   const {isOpen, onOpen, onClose} = useDisclosure();
-  const {data: user} = useMe();
-  const userId = user?.id;
-  const createTransaction = useCreateTransaction();
-  const updateTransaction = useUpdateTransaction();
+  const {data: transactionFound} = useTransactionById(transactionId);
   const {data: accounts, isLoading: isAccountLoading} = useAccounts();
   const {data: categories, isLoading: isCategoryLoading} = useCategories(0, 1000);
+  const createTransaction = useCreateTransaction();
+  const updateTransaction = useUpdateTransaction();
   const color = colorType(transactionType);
-  const category = categoryMap(transactionType);
-  const {data: transactionFound} = useTransactionById(transactionId);
 
   const handleOk = useCallback(() => {
     onClose();
   }, [onClose]);
 
-  const handleUpdateTransaction = async (values) => {
+  const handleUpdateTransaction = async (values: any) => {
     updateTransaction.mutate({
       ...values, id: transactionId
     });
     handleOk()
   };
 
-  const handleCreateAddress = (values) => {
-    createTransaction.mutate({...values, userId});
+  const handleCreateTransaction = (values: any) => {
+    createTransaction.mutate({...values});
     handleOk()
   }
 
@@ -211,9 +125,9 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
       label: category.name,
     }));
 
-  const accountOptions = accounts?.map((acc) => ({
-    value: acc.id.toString(),
-    label: acc.description,
+  const accountOptions = accounts?.map((account) => ({
+    value: account.id.toString(),
+    label: account.description,
   }));
 
   return (
@@ -228,9 +142,9 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
         <ModalOverlay backdropFilter='blur(3px)' />
         <ModalContent bg={mainColor} borderRadius={"10px"}>
           <Formik
-            initialValues={transactionFound ? transactionFound : (transactionType === 'REVENUE' ? revenueInitialValues : expenseInitialValues)}
-            onSubmit={!!transactionId ? handleUpdateTransaction : handleCreateAddress}
-            validationSchema={createTransactionSchema}
+            initialValues={transactionFound ?? (transactionType === 'REVENUE' ? revenueInitialValues : expenseInitialValues)}
+            onSubmit={transactionId ? handleUpdateTransaction : handleCreateTransaction}
+            validationSchema={transactionSchema}
             validateOnChange={false}
           >
             {({handleSubmit, handleChange, values, isSubmitting, errors, setFieldValue}) =>
