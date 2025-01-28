@@ -1,51 +1,37 @@
 import {
-  Box,
-  Button, Circle,
   Flex,
   HStack,
   Icon,
   IconButton,
-  LightMode, Menu, MenuButton, MenuItem, MenuList,
-  Skeleton, Spinner,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Skeleton,
+  Spinner,
   Table,
   Tbody,
   Td,
   Text,
   Th,
   Thead,
-  Tooltip,
   Tr,
-  useBreakpointValue, useColorMode, useColorModeValue,
+  useBreakpointValue,
+  useColorMode,
+  useColorModeValue,
   VStack
 } from '@chakra-ui/react'
-import React, { useState } from "react";
-import {
-  AddIcon,
-  CheckIcon,
-  DeleteIcon, EditIcon,
-  ExternalLinkIcon,
-  HamburgerIcon,
-  InfoIcon, RepeatIcon,
-  SmallCloseIcon
-} from "@chakra-ui/icons";
+import React from "react";
+import { EditIcon, HamburgerIcon } from "@chakra-ui/icons";
 import { SkeletonTable } from "../../Skeletons/SkeletonTable";
-import { Transaction } from "../../../hooks/transactions/useTransactionById";
-import { PayTransactionModal } from "../../Modals/Transaction/PayTransaction";
-import { BankSlipModal } from "../../Modals/Transaction/BankSlip";
-import { category, NewTransactionModal } from "../../Modals/Transaction";
-import { BiEdit, BiTrash } from "react-icons/bi";
+import { BiTrash } from "react-icons/bi";
 import { ConfirmationDialog } from "../../Dialog/ConfirmationDialog";
 import { useDeleteTransaction } from "../../../hooks/transactions/useDeleteTransaction";
-import Tag from "../../Tag/Tag";
 import { useAccounts } from "../../../hooks/accounts/useAccounts";
 import { formatDate } from "../../../utils/chartData";
 import { moneyFormat } from "../../Utils/utils";
-import NextLink from "next/link";
-import { CircleTag } from "../../Tag/CircleTag";
-import { useDuplicateTransaction } from "../../../hooks/transactions/useDuplicateTransaction";
 import { useCategories } from "../../../hooks/category/useCategories";
 import { CCTransaction } from "../../../hooks/cc-transactions/type";
-import { RiAddLine } from "react-icons/ri";
 import { NewCCTransactionModal } from "../../Modals/Transaction/CCTransaction";
 
 type CCTransactionProps = {
