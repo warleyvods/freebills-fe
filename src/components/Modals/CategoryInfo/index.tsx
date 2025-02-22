@@ -15,101 +15,123 @@ import {
   Text,
   Stack,
   useBreakpointValue,
+  Spinner,
+  Center,
 } from "@chakra-ui/react";
-
-const additionalData = [
-  {
-    description: "Compra de equipamento",
-    account: "Conta Corrente",
-    date: "15/01/2023",
-    value: "R$ 200,00",
-  },
-  {
-    description: "Pagamento de aluguel",
-    account: "Conta Poupança",
-    date: "20/01/2023",
-    value: "R$ 800,00",
-  },
-];
+import { useTransactionByCategory } from "../../../hooks/transactions/useTransactionByCategory";
+import { Transaction } from "../../../hooks/transactions/useTransactionById";
+import { moneyFormat } from "../../Utils/utils";
+import { formatDate } from "../../../utils/chartData";
 
 interface ModalTypes {
   onOk?: () => void;
   onCancel?: () => void;
   trigger: (onOpen?: () => void, onClose?: () => void) => ReactNode;
+  category: string;
+  transactionType: string;
+  year?: number;
+  month?: number;
 }
 
-export function CategoryInfo({ onCancel, trigger }: ModalTypes) {
+export function CategoryInfo({
+  onCancel,
+  trigger,
+  category,
+  transactionType,
+  year,
+  month,
+}: ModalTypes) {
   const mainColor = useColorModeValue("white", "gray.800");
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const modalSize = useBreakpointValue({ base: "xs", md: "3xl" });
+  const {isOpen, onOpen, onClose} = useDisclosure();
+  const modalSize = useBreakpointValue({base: "xs", md: "3xl"});
+  const {
+    data: transactionsResponse,
+    isLoading,
+    error
+  } = useTransactionByCategory(category, transactionType, year, month);
   const fontSize = "inherit";
 
+  const transactions: Transaction[] = transactionsResponse?.content || [];
+
   const contentView = useMemo(() => {
+    if (isLoading) {
+      return (
+        <Center py={4}>
+          <Spinner />
+          <Text ml={2}>Carregando...</Text>
+        </Center>
+      );
+    }
+
+    if (error) {
+      return (
+        <Center py={4}>
+          <Text>Erro ao carregar dados.</Text>
+        </Center>
+      );
+    }
+
+    if (transactions.length === 0) {
+      return (
+        <Center py={4}>
+          <Text>Nenhuma transação encontrada.</Text>
+        </Center>
+      );
+    }
+
     if (modalSize === "xs") {
       return (
         <Stack spacing={4}>
-          {additionalData.map((item, index) => (
-            <Box
-              key={index}
-              p={4}
-              borderWidth="1px"
-              borderRadius="md"
-              boxShadow="sm"
-            >
+          {transactions.map((item: Transaction) => (
+            <Box key={item.id} p={4} borderWidth="1px" borderRadius="md" boxShadow="sm">
               <Text fontSize={fontSize} fontWeight="bold">
                 Descrição:
               </Text>
               <Text fontSize={fontSize}>{item.description}</Text>
-
               <Text fontSize={fontSize} fontWeight="bold">
                 Conta:
               </Text>
-              <Text fontSize={fontSize}>{item.account}</Text>
-
+              <Text fontSize={fontSize}>{item.accountId}</Text>
               <Text fontSize={fontSize} fontWeight="bold">
                 Data:
               </Text>
               <Text fontSize={fontSize}>{item.date}</Text>
-
               <Text fontSize={fontSize} fontWeight="bold">
                 Valor:
               </Text>
-              <Text fontSize={fontSize}>{item.value}</Text>
+              <Text fontSize={fontSize}>{moneyFormat(item.amount)}</Text>
             </Box>
           ))}
         </Stack>
       );
     }
+
     return (
-      <Table variant="simple">
+      <Table size="sm" variant='striped' colorScheme='gray'>
         <Thead>
           <Tr>
             <Th fontSize={fontSize}>Descrição</Th>
-            <Th fontSize={fontSize}>Conta</Th>
             <Th fontSize={fontSize}>Data</Th>
             <Th fontSize={fontSize}>Valor</Th>
           </Tr>
         </Thead>
         <Tbody>
-          {additionalData.map((item, index) => (
-            <Tr key={index}>
+          {transactions.map((item: Transaction) => (
+            <Tr key={item.id}>
               <Td fontSize={fontSize}>{item.description}</Td>
-              <Td fontSize={fontSize}>{item.account}</Td>
-              <Td fontSize={fontSize}>{item.date}</Td>
-              <Td fontSize={fontSize}>{item.value}</Td>
+              <Td fontSize={fontSize}>{formatDate(item.date)}</Td>
+              <Td fontSize={fontSize}>{moneyFormat(item.amount)}</Td>
             </Tr>
           ))}
         </Tbody>
       </Table>
     );
-  }, [modalSize, fontSize]);
+  }, [isLoading, error, transactions, modalSize, fontSize]);
 
-  // Close the modal and trigger additional actions if provided
   const handleOk = useCallback(() => {
     onClose();
   }, [onClose]);
 
-  // Cancel actions and close the modal, invoking onCancel if provided
   const handleCancel = useCallback(() => {
     onCancel?.();
     onClose();
@@ -117,19 +139,11 @@ export function CategoryInfo({ onCancel, trigger }: ModalTypes) {
 
   return (
     <>
-      {/* Trigger for opening the modal */}
       {trigger(onOpen, onClose)}
-
-      <Modal
-        onClose={handleCancel}
-        isOpen={isOpen}
-        isCentered
-        size={modalSize} // Dynamically set size based on screen size
-      >
+      <Modal onClose={handleCancel} isOpen={isOpen} isCentered size={modalSize}>
         <ModalOverlay backdropFilter="blur(3px)" />
         <ModalContent bg={mainColor}>
           <Box p={4} overflowX="auto">
-            {/* Use memoized content to avoid flickering */}
             {contentView}
           </Box>
         </ModalContent>

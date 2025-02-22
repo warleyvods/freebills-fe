@@ -39,7 +39,7 @@ export default function ReportPage() {
 
   const formatDate = () => {
     if (showMonth) {
-      const monthName = currentDate.toLocaleString("default", { month: "long" });
+      const monthName = currentDate.toLocaleString("default", {month: "long"});
       return `${monthName.charAt(0).toUpperCase()}${monthName.slice(1)} ${currentDate.getFullYear()}`;
     }
     return `${currentDate.getFullYear()}`;
@@ -69,7 +69,7 @@ export default function ReportPage() {
     <Flex direction="column" align="center" gap="4" mt="4">
       <Flex align="center" gap="4">
         <IconButton
-          _focus={{ boxShadow: "none" }}
+          _focus={{boxShadow: "none"}}
           onClick={() => handleDateChange(-1)}
           size="sm"
           variant="ghost"
@@ -78,7 +78,7 @@ export default function ReportPage() {
         />
         <Text fontSize="md" fontWeight="medium">{formatDate()}</Text>
         <IconButton
-          _focus={{ boxShadow: "none" }}
+          _focus={{boxShadow: "none"}}
           onClick={() => handleDateChange(1)}
           size="sm"
           variant="ghost"
@@ -117,13 +117,13 @@ export default function ReportPage() {
     </Flex>
   );
 
-  const GraphDisplay = () => {
+  const GraphDisplay = ({transactionType, year, month}) => {
     let data = null;
     let isLoading: boolean;
     let labels: any[];
     let colors = [];
 
-    if (selectedGraph === "expense") {
+    if (selectedGraph == "expense") {
       data = expenseDash;
       isLoading = isLoadingExpenseDash;
       labels = expenseDash?.labels || [];
@@ -221,32 +221,39 @@ export default function ReportPage() {
               .sort((a, b) => b.value - a.value)
               .map((item, index) => {
                 return (
-                  <CategoryInfo key={item.label} trigger={(onOpen) => (
-                    <Flex
-                      key={index}
-                      w="full"
-                      justify="space-between"
-                      align="center"
-                      bg={cellBgColor}
-                      p={2}
-                      onClick={onOpen}
-                      _hover={{
-                        bg: hoverCellColor,
-                        cursor: 'pointer'
-                      }}
-                      borderRadius="8px"
-                      boxShadow="sm"
-                    >
-                      <Flex justify="flex-start" align="center" gap={3}>
-                        <Box w="25px" h="25px" bg={item.color} borderRadius="full" />
-                        <Text fontWeight="medium" color={textColor}>{item.label}</Text>
+                  <CategoryInfo
+                    category={item.label}
+                    transactionType={transactionType}
+                    year={year}
+                    month={month}
+                    key={item.label}
+                    trigger={(onOpen) => (
+                      <Flex
+                        key={index}
+                        w="full"
+                        justify="space-between"
+                        align="center"
+                        bg={cellBgColor}
+                        p={2}
+                        onClick={onOpen}
+                        _hover={{
+                          bg: hoverCellColor,
+                          cursor: 'pointer'
+                        }}
+                        borderRadius="8px"
+                        boxShadow="sm"
+                      >
+                        <Flex justify="flex-start" align="center" gap={3}>
+                          <Box w="25px" h="25px" bg={item.color} borderRadius="full" />
+                          <Text fontWeight="medium" color={textColor}>{item.label}</Text>
+                        </Flex>
+                        <VStack spacing={0} align="flex-end">
+                          <Text fontSize="sm" fontWeight="bold"
+                                color={textColor}>{currencyFormatter.format((item.value))}</Text>
+                          <Text fontSize="xs" color={secondaryTextColor}>{item.percentage}%</Text>
+                        </VStack>
                       </Flex>
-                      <VStack spacing={0} align="flex-end">
-                        <Text fontSize="sm" fontWeight="bold" color={textColor}>{currencyFormatter.format((item.value))}</Text>
-                        <Text fontSize="xs" color={secondaryTextColor}>{item.percentage}%</Text>
-                      </VStack>
-                    </Flex>
-                  )} />
+                    )} />
                 );
               })}
           </VStack>
@@ -254,7 +261,6 @@ export default function ReportPage() {
       </Flex>
     );
   };
-
 
 
   return (
@@ -273,7 +279,7 @@ export default function ReportPage() {
         <option value="expense">Despesas</option>
         <option value="revenue">Receita</option>
       </Select>
-      <GraphDisplay />
+      <GraphDisplay transactionType={selectedGraph} year={selectedYear} month={selectedMonth} />
     </SideBarLayout>
   );
 }
