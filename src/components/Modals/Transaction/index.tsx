@@ -18,7 +18,11 @@ import {
   Text, Textarea,
   useColorModeValue,
   useDisclosure,
-  VStack
+  VStack,
+  Flex,
+  Input,
+  FormLabel,
+  FormControl
 } from '@chakra-ui/react'
 import React, { ReactNode, useCallback } from "react";
 import { Formik } from "formik";
@@ -31,8 +35,11 @@ import InputMoney from "../../Form/MoneyInput";
 import { SelectFormik } from "../../Form/SelectInput";
 import { useCategories } from "../../../hooks/category/useCategories";
 import { NewAccountModal } from "../NewAccount";
-import { RiAddLine } from "react-icons/ri";
+import { RiAddLine, RiAttachmentLine } from "react-icons/ri";
 import { transactionSchema } from "../../../utils/utils";
+import { useUploadReceipt } from "../../../hooks/transactions/useUploadReceipt";
+import { uploadFileToS3 } from "../../../hooks/users/uploadFile";
+import { useToast } from "@chakra-ui/react";
 
 const initialValues = {
   amount: 0,
@@ -90,6 +97,10 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
   const createTransaction = useCreateTransaction();
   const updateTransaction = useUpdateTransaction();
   const modalHeaderColor = colorType(transactionType);
+  const fileInputRef = React.useRef(null);
+  const [selectedFile, setSelectedFile] = React.useState(null);
+  const [isUploading, setIsUploading] = React.useState(false);
+  const toast = useToast();
 
   const handleOk = useCallback(() => {
     onClose();
@@ -112,17 +123,63 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
     onClose();
   }, [onClose, onCancel])
 
+  const uploadReceipt = useUploadReceipt(transactionId || 0, 
+    async (data) => {
+      try {
+        setIsUploading(true);
+        await uploadFileToS3(data.uploadSignedUrl, selectedFile);
+        setIsUploading(false);
+        setSelectedFile(null);
+        toast({
+          title: "Comprovante anexado com sucesso",
+          status: "success",
+          duration: 3000,
+          isClosable: true,
+        });
+      } catch (error) {
+        console.error("Erro ao fazer o upload do arquivo:", error);
+        setIsUploading(false);
+      }
+    },
+    () => {
+      setIsUploading(false);
+      setSelectedFile(null);
+    }
+  );
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+    }
+  };
+
+  const handleUploadReceipt = () => {
+    if (!selectedFile) return;
+    
+    const fileInfo = {
+      fileName: selectedFile.name,
+      contentType: selectedFile.type,
+      contentLength: selectedFile.size,
+    };
+    
+    uploadReceipt.mutate(fileInfo);
+  };
+
   const categoriesOptions = categories?.content
     ?.filter(category => category.categoryType === transactionType)
     ?.map(category => ({
-      value: category.id.toString(),
-      label: category.name,
-    }));
+      value: category.id?.toString() || '',
+      label: category.name || '',
+    })) || [];
 
   const accountOptions = accounts?.map((account) => ({
-    value: account.id.toString(),
-    label: account.description,
-  }));
+    value: account.id?.toString() || '',
+    label: account.description || '',
+  })) || [];
+
+  // Só mostrar o botão de upload se estiver editando uma transação
+  const showReceiptUpload = edit && transactionId;
 
   return (
     <>
@@ -284,6 +341,51 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                               }}
                             />
                           </HStack>
+
+                          {showReceiptUpload && (
+                            <FormControl>
+                              <FormLabel fontSize={{base: "0.9rem", md: "1rem"}} fontWeight={"medium"}>
+                                Comprovante de Pagamento
+                              </FormLabel>
+                              <Flex>
+                                <Input
+                                  type="file"
+                                  accept="image/*,.pdf"
+                                  onChange={handleFileChange}
+                                  ref={fileInputRef}
+                                  display="none"
+                                />
+                                <Button
+                                  onClick={() => fileInputRef.current?.click()}
+                                  leftIcon={<Icon as={RiAttachmentLine} />}
+                                  mr={2}
+                                  size="sm"
+                                >
+                                  Selecionar arquivo
+                                </Button>
+                                {selectedFile && (
+                                  <Button
+                                    onClick={handleUploadReceipt}
+                                    colorScheme="blue"
+                                    size="sm"
+                                    isLoading={isUploading}
+                                  >
+                                    Anexar
+                                  </Button>
+                                )}
+                              </Flex>
+                              {selectedFile && (
+                                <Text mt={2} fontSize="sm">
+                                  Arquivo selecionado: {selectedFile.name}
+                                </Text>
+                              )}
+                              {values.receiptId && !selectedFile && (
+                                <Text mt={2} fontSize="sm" color="green.500">
+                                  Comprovante anexado
+                                </Text>
+                              )}
+                            </FormControl>
+                          )}
 
                         </SimpleGrid>
                       </VStack>

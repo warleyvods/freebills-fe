@@ -40,6 +40,8 @@ import { useDuplicateTransaction } from "../../../hooks/transactions/useDuplicat
 import { useCategories } from "../../../hooks/category/useCategories";
 import { CCTransaction } from "../../../hooks/cc-transactions/type";
 import { useThemeColors } from "../../../hooks/useThemeColors";
+import { RiAttachmentLine } from "react-icons/ri";
+import { ReceiptViewerModal } from "../../Modals/Transaction/ReceiptViewerModal";
 
 type ProductTableProps = {
   content: Transaction[] | CCTransaction[];
@@ -165,22 +167,43 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
 
                               <VStack spacing={1} alignItems={"end"}>
                                 <Text fontWeight={"bold"}>{moneyFormat(transaction.amount)}</Text>
-                                {transaction.paid ? (
-                                  <Tooltip label='Pago' placement='auto-start'>
-                                    <Circle size='20px' bg='lime.400' color='lime.600' border={"1px"}
-                                            borderColor={"lime.500"}>
-                                      <CheckIcon h={"10px"} />
-                                    </Circle>
-                                  </Tooltip>
+                                <HStack>
+                                  {transaction.receiptId && (
+                                    <ReceiptViewerModal
+                                      transactionId={transaction.id}
+                                      transactionDescription={transaction.description}
+                                      trigger={(onOpen) => (
+                                        <Tooltip label="Visualizar comprovante" placement="top">
+                                          <Icon 
+                                            as={RiAttachmentLine} 
+                                            fontSize={"16px"} 
+                                            color="blue.500"
+                                            onClick={(e) => {
+                                              e.stopPropagation();
+                                              onOpen();
+                                            }}
+                                          />
+                                        </Tooltip>
+                                      )}
+                                    />
+                                  )}
+                                  {transaction.paid ? (
+                                    <Tooltip label='Pago' placement='auto-start'>
+                                      <Circle size='20px' bg='lime.400' color='lime.600' border={"1px"}
+                                              borderColor={"lime.500"}>
+                                        <CheckIcon h={"10px"} />
+                                      </Circle>
+                                    </Tooltip>
 
-                                ) : (
-                                  <Tooltip label='Pendente' placement='auto-start'>
-                                    <Circle size='20px' bg='littlePink.400' color='littlePink.600' border={"1px"}
-                                            borderColor={"littlePink.500"}>
-                                      <SmallCloseIcon h={"14px"} />
-                                    </Circle>
-                                  </Tooltip>
-                                )}
+                                  ) : (
+                                    <Tooltip label='Pendente' placement='auto-start'>
+                                      <Circle size='20px' bg='littlePink.400' color='littlePink.600' border={"1px"}
+                                              borderColor={"littlePink.500"}>
+                                        <SmallCloseIcon h={"14px"} />
+                                      </Circle>
+                                    </Tooltip>
+                                  )}
+                                </HStack>
                               </VStack>
                             </Flex>
                           </Flex>
@@ -256,52 +279,83 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
 
                     {/*OPÇÕES*/}
                     <Td pb={0} pt={0} textAlign={"center"}>
-                      <Menu>
-                        <MenuButton
-                          as={IconButton}
-                          aria-label='Options'
-                          icon={<HamburgerIcon />}
-                          variant='solid'
-                        />
-                        <MenuList>
-                          <NewTransactionModal
-                            transactionType={transaction.transactionType}
-                            edit={true}
+                      <Flex justify="center" align="center" gap={2}>
+                        {transaction.receiptId && (
+                          <ReceiptViewerModal
                             transactionId={transaction.id}
-                            trigger={(open) => (
-                              <MenuItem icon={<EditIcon />} onClick={open}>
-                                Editar
-                              </MenuItem>
-                            )}
-                          />
-                          <ConfirmationDialog
-                            title={"Duplicar Transação"}
-                            mainColor={"white"}
-                            buttonText={"Duplicar"}
-                            description={"A duplicação cria uma nova transação com base nesta atual com a data somando mais um mês. Deseja continuar com a duplicação? "}
-                            variant={"alert"}
-                            onOk={() => handleDuplicateTransaction(transaction.id)}
+                            transactionDescription={transaction.description}
                             trigger={(onOpen) => (
-                              <MenuItem onClick={onOpen} icon={<RepeatIcon />}>
-                                Duplicar
-                              </MenuItem>
+                              <Tooltip label="Visualizar comprovante" placement="top">
+                                <IconButton
+                                  aria-label="Visualizar comprovante"
+                                  icon={<Icon as={RiAttachmentLine} fontSize={"16px"} />}
+                                  size="sm"
+                                  colorScheme="blue"
+                                  variant="outline"
+                                  onClick={onOpen}
+                                />
+                              </Tooltip>
                             )}
                           />
-                          <ConfirmationDialog
-                            title={"Deletar Transação"}
-                            mainColor={"white"}
-                            buttonText={"Deletar"}
-                            description={"Deseja deletar essa transação?"}
-                            variant={"danger"}
-                            onOk={() => handleDeleteTransaction(transaction.id)}
-                            trigger={(onOpen) => (
-                              <MenuItem onClick={onOpen} icon={<Icon as={BiTrash} fontSize={"13px"} />}>
-                                Deletar
-                              </MenuItem>
-                            )}
+                        )}
+                        <Menu>
+                          <MenuButton
+                            as={IconButton}
+                            aria-label='Options'
+                            icon={<HamburgerIcon />}
+                            variant='solid'
                           />
-                        </MenuList>
-                      </Menu>
+                          <MenuList>
+                            <NewTransactionModal
+                              transactionType={transaction.transactionType}
+                              edit={true}
+                              transactionId={transaction.id}
+                              trigger={(open) => (
+                                <MenuItem icon={<EditIcon />} onClick={open}>
+                                  Editar
+                                </MenuItem>
+                              )}
+                            />
+                            {transaction.receiptId && (
+                              <ReceiptViewerModal
+                                transactionId={transaction.id}
+                                transactionDescription={transaction.description}
+                                trigger={(onOpen) => (
+                                  <MenuItem icon={<Icon as={RiAttachmentLine} />} onClick={onOpen}>
+                                    Ver comprovante
+                                  </MenuItem>
+                                )}
+                              />
+                            )}
+                            <ConfirmationDialog
+                              title={"Duplicar Transação"}
+                              mainColor={"white"}
+                              buttonText={"Duplicar"}
+                              description={"A duplicação cria uma nova transação com base nesta atual com a data somando mais um mês. Deseja continuar com a duplicação? "}
+                              variant={"alert"}
+                              onOk={() => handleDuplicateTransaction(transaction.id)}
+                              trigger={(onOpen) => (
+                                <MenuItem onClick={onOpen} icon={<RepeatIcon />}>
+                                  Duplicar
+                                </MenuItem>
+                              )}
+                            />
+                            <ConfirmationDialog
+                              title={"Deletar Transação"}
+                              mainColor={"white"}
+                              buttonText={"Deletar"}
+                              description={"Deseja deletar essa transação?"}
+                              variant={"danger"}
+                              onOk={() => handleDeleteTransaction(transaction.id)}
+                              trigger={(onOpen) => (
+                                <MenuItem onClick={onOpen} icon={<Icon as={BiTrash} fontSize={"13px"} />}>
+                                  Deletar
+                                </MenuItem>
+                              )}
+                            />
+                          </MenuList>
+                        </Menu>
+                      </Flex>
                     </Td>
                   </>
                 )}

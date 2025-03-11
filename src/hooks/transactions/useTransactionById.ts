@@ -15,6 +15,7 @@ export type Transaction = {
   barCode: string;
   accountId: number;
   observation: string;
+  receiptId?: string;
 }
 
 async function getTransactionById(transactionId: number): Promise<Transaction> {
@@ -33,7 +34,8 @@ async function getTransactionById(transactionId: number): Promise<Transaction> {
     barCode: data.barCode,
     accountId: data.accountId,
     categoryId: data.categoryId,
-    observation: data.observation
+    observation: data.observation,
+    receiptId: data.receiptId
   }
 }
 
