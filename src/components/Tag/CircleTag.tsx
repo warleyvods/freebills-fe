@@ -3,11 +3,10 @@ import { CheckIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import React from "react";
 
 type CircleProps = {
-  isPaid: boolean;
+  isPaid?: boolean;
 }
 
-
-export function CircleTag({ isPaid }: CircleProps) {
+export function CircleTag({ isPaid = false }: CircleProps) {
   const {colorMode} = useColorMode();
 
   const getColor = (lightColor: string, darkColor: string) => {

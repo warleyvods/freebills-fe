@@ -50,11 +50,18 @@ const initialValues = {
   }),
   description: '',
   categoryId: '',
-  paid: false,
   barCode: '',
-  bankSlip: false,
   accountId: '',
   observation: '',
+  metadata: {
+    hasPaidConfirmation: false,
+    isBankSlip: false,
+    isRecurring: false,
+    isFixed: false,
+    isCreditCardPayment: false,
+    tags: '',
+    isFavorite: false
+  }
 };
 
 const revenueInitialValues = {
@@ -287,7 +294,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                               </Select>
                             )
                           }
-                          { values.bankSlip && (
+                          {values.metadata?.isBankSlip && (
                             <HStack justify={"space-between"}>
                               <InputFormik id="barCode"
                                            placeholder="Código de Barras"
@@ -297,7 +304,7 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                                            onChange={handleChange}
                               />
                             </HStack>
-                          ) }
+                          )}
                           {values.observation && (
                             <Textarea
                               placeholder="Adicione uma observação"
@@ -312,19 +319,23 @@ export function NewTransactionModal({onCancel, trigger, transactionType, transac
                           <HStack>
                             <Text fontSize={{base: "0.9rem", md: "1rem"}} fontWeight={"medium"}>Boleto</Text>
                             <Switch
-                              id="bankSlip"
-                              name="bankSlip"
-                              isChecked={values.bankSlip}
-                              onChange={handleChange}
+                              id="isBankSlip"
+                              name="metadata.isBankSlip"
+                              isChecked={values.metadata?.isBankSlip}
+                              onChange={(e) => {
+                                setFieldValue("metadata.isBankSlip", e.target.checked);
+                              }}
                             />
                           </HStack>
                           <HStack>
                             <Text fontSize={{base: "0.9rem", md: "1rem"}} fontWeight={"medium"}>Pago</Text>
                             <Switch
-                              id="paid"
-                              name="paid"
-                              isChecked={values.paid}
-                              onChange={handleChange}
+                              id="hasPaidConfirmation"
+                              name="metadata.hasPaidConfirmation"
+                              isChecked={values.metadata?.hasPaidConfirmation}
+                              onChange={(e) => {
+                                setFieldValue("metadata.hasPaidConfirmation", e.target.checked);
+                              }}
                             />
                           </HStack>
 

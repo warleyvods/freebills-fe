@@ -85,5 +85,14 @@ export const transactionSchema = yup.object().shape({
   date: yup.string().required('Data obrigatória.'),
   description: yup.string().required('Descrição obrigatória.'),
   accountId: yup.string().required('Conta obrigatória.'),
-  categoryId: yup.string().required('Categoria obrigatória.')
+  categoryId: yup.string().required('Categoria obrigatória.'),
+  metadata: yup.object().shape({
+    hasPaidConfirmation: yup.boolean().default(false),
+    isBankSlip: yup.boolean().default(false),
+    isRecurring: yup.boolean().default(false),
+    isFixed: yup.boolean().default(false),
+    isCreditCardPayment: yup.boolean().default(false),
+    tags: yup.string().default(''),
+    isFavorite: yup.boolean().default(false)
+  }).default(undefined).nullable()
 });

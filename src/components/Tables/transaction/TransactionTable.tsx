@@ -21,7 +21,9 @@ import {
   useBreakpointValue,
   useColorMode,
   useColorModeValue,
-  VStack
+  VStack,
+  Wrap,
+  WrapItem
 } from '@chakra-ui/react'
 import React from "react";
 import { CheckIcon, EditIcon, HamburgerIcon, RepeatIcon, SmallCloseIcon } from "@chakra-ui/icons";
@@ -40,8 +42,9 @@ import { useDuplicateTransaction } from "../../../hooks/transactions/useDuplicat
 import { useCategories } from "../../../hooks/category/useCategories";
 import { CCTransaction } from "../../../hooks/cc-transactions/type";
 import { useThemeColors } from "../../../hooks/useThemeColors";
-import { RiAttachmentLine } from "react-icons/ri";
+import { RiAttachmentLine, RiStickyNoteLine, RiStarLine, RiRefreshLine, RiPriceTag3Line, RiSettings3Line, RiFileList3Line } from "react-icons/ri";
 import { ReceiptViewerModal } from "../../Modals/Transaction/ReceiptViewerModal";
+import { MetadataEditor } from "../../Modals/Transaction/MetadataEditor";
 
 type ProductTableProps = {
   content: Transaction[] | CCTransaction[];
@@ -49,6 +52,59 @@ type ProductTableProps = {
   onDeleteUser?: (userId: number) => void;
   isLoading: boolean;
   error: any;
+}
+
+// Componente para mostrar os metadados da transação como ícones
+function TransactionMetadataIcons({ transaction }) {
+  const isPaid = transaction.metadata?.hasPaidConfirmation;
+  const isBankSlip = transaction.metadata?.isBankSlip;
+  
+  return (
+    <Wrap spacing={1}>
+      {transaction.metadata?.hasReceipt && (
+        <WrapItem>
+          <Tooltip label="Comprovante anexado" placement="top">
+            <Icon as={RiAttachmentLine} color="blue.500" />
+          </Tooltip>
+        </WrapItem>
+      )}
+      {transaction.metadata?.hasObservation && (
+        <WrapItem>
+          <Tooltip label="Contém observação" placement="top">
+            <Icon as={RiStickyNoteLine} color="purple.500" />
+          </Tooltip>
+        </WrapItem>
+      )}
+      {transaction.metadata?.isRecurring && (
+        <WrapItem>
+          <Tooltip label="Transação recorrente" placement="top">
+            <Icon as={RiRefreshLine} color="green.500" />
+          </Tooltip>
+        </WrapItem>
+      )}
+      {isBankSlip && (
+        <WrapItem>
+          <Tooltip label="Boleto" placement="top">
+            <Icon as={RiFileList3Line} color="teal.500" />
+          </Tooltip>
+        </WrapItem>
+      )}
+      {transaction.metadata?.isFavorite && (
+        <WrapItem>
+          <Tooltip label="Transação favorita" placement="top">
+            <Icon as={RiStarLine} color="yellow.500" />
+          </Tooltip>
+        </WrapItem>
+      )}
+      {transaction.metadata?.tags && (
+        <WrapItem>
+          <Tooltip label={`Tags: ${transaction.metadata.tags}`} placement="top">
+            <Icon as={RiPriceTag3Line} color="orange.500" />
+          </Tooltip>
+        </WrapItem>
+      )}
+    </Wrap>
+  );
 }
 
 export default function ProductsTable({content, isLoading, error}: ProductTableProps) {
@@ -156,6 +212,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                                 <Circle size={"42px"} bg={"gray.200"} />
                                 <VStack spacing={0} alignItems={"start"}>
                                   <Text fontWeight={"bold"} size={"0.95rem"}>{transaction.description}</Text>
+                                  <TransactionMetadataIcons transaction={transaction} />
                                   <Text fontWeight={"medium"} size={"0.95rem"}>
                                     {accounts?.filter(acc => acc.id === transaction.accountId)
                                         .map((acc) => (
@@ -187,7 +244,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                                       )}
                                     />
                                   )}
-                                  {transaction.paid ? (
+                                  {transaction.metadata?.hasPaidConfirmation ? (
                                     <Tooltip label='Pago' placement='auto-start'>
                                       <Circle size='20px' bg='lime.400' color='lime.600' border={"1px"}
                                               borderColor={"lime.500"}>
@@ -215,15 +272,16 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                   <>
                     {/*DESCRIÇÃO*/}
                     <Td pl={5} pb={"15px"} pt={"15px"}>
-                      <Flex justify="flex-start">
+                      <Flex justify="flex-start" direction="column">
                         <Text fontWeight={"medium"}>{transaction.description}</Text>
+                        <TransactionMetadataIcons transaction={transaction} />
                       </Flex>
                     </Td>
 
                     {/*SITUAÇÃO*/}
                     <Td pb={0} pt={0}>
                       <Flex justify="center">
-                        <CircleTag isPaid={transaction.paid} />
+                        <CircleTag isPaid={transaction.metadata?.hasPaidConfirmation ?? false} />
                       </Flex>
                     </Td>
 
@@ -252,7 +310,7 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                           <Spinner />
                         ) : (
                           <Text fontWeight={"medium"}>
-                            {categories.content?.filter(cat => cat.id === transaction.categoryId)
+                            {categories?.content?.filter(cat => cat.id === transaction.categoryId)
                               .map((category) => (
                                 category.name
                               ))}
@@ -327,6 +385,16 @@ export default function ProductsTable({content, isLoading, error}: ProductTableP
                                 )}
                               />
                             )}
+                            <MetadataEditor
+                              transactionId={transaction.id}
+                              transactionDescription={transaction.description}
+                              initialMetadata={transaction.metadata}
+                              trigger={(onOpen) => (
+                                <MenuItem icon={<Icon as={RiSettings3Line} />} onClick={onOpen}>
+                                  Editar metadados
+                                </MenuItem>
+                              )}
+                            />
                             <ConfirmationDialog
                               title={"Duplicar Transação"}
                               mainColor={"white"}

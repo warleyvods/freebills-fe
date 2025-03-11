@@ -2,20 +2,32 @@ import { api } from "../../services/api";
 import { useQuery } from "react-query";
 import { formatDate } from "../../utils/chartData";
 
+export type TransactionMetadata = {
+  id: number;
+  hasReceipt: boolean;
+  hasPaidConfirmation: boolean;
+  hasObservation: boolean;
+  isRecurring: boolean;
+  isFixed: boolean;
+  isCreditCardPayment: boolean;
+  isBankSlip: boolean;
+  tags: string;
+  isFavorite: boolean;
+}
+
 export type Transaction = {
   id: number;
   amount: number;
-  paid: boolean;
   date: string,
   description: string;
   transactionType: string;
   categoryId: number;
   transactionCategory: string;
-  bankSlip: boolean;
   barCode: string;
   accountId: number;
   observation: string;
   receiptId?: string;
+  metadata?: TransactionMetadata;
 }
 
 async function getTransactionById(transactionId: number): Promise<Transaction> {
@@ -25,17 +37,16 @@ async function getTransactionById(transactionId: number): Promise<Transaction> {
   return {
     id: data.id,
     amount: data.amount,
-    paid: data.paid,
     date: formatDate(data.date),
     description: data.description,
     transactionType: data.transactionType,
     transactionCategory: data.transactionCategory,
-    bankSlip: data.bankSlip,
     barCode: data.barCode,
     accountId: data.accountId,
     categoryId: data.categoryId,
     observation: data.observation,
-    receiptId: data.receiptId
+    receiptId: data.receiptId,
+    metadata: data.metadata
   }
 }
 
