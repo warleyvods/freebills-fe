@@ -41,14 +41,10 @@ jobs:
       with:
         context: .
         push: true
-        tags: warleyvods/freebills-fe:${{ steps.tagging.outputs.new_version }}
-        platforms: linux/amd64,linux/arm64/v8
-
-    - name: Deploy Kubernetes
-      uses: steebchen/kubectl@v2.1.1
-      with:
-        config: ${{ secrets.KUBE_CONFIG }}
-        command: set image deployment/freebills-fe freebills-fe=warleyvods/freebills-fe:${{ steps.tagging.outputs.new_version }}
+        tags: |
+            warleyvods/freebills-fe:${{ steps.tagging.outputs.new_tag }}
+            warleyvods/freebills-fe:latest
+        platforms: linux/amd64,linux/arm64
 
     - name: Discord
       uses: sarisia/actions-status-discord@v1.9.0
