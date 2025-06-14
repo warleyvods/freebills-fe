@@ -26,7 +26,7 @@ const InputMoney: React.FC<InputProps> = ({
   fontSize = "1rem",
   ...rest
 }: InputProps) => {
-  const inputRef = useRef<any>();
+  const inputRef = useRef<any>(null);
   const mainColor = useColorModeValue('gray.10', '#1E1F20');
   const borderColor = useColorModeValue('gray.200', '#424344');
   const hover = useColorModeValue('#9699B0', '#545555');

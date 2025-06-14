@@ -13,7 +13,7 @@ type ForgotPasswordFormInputs = {
   email: string;
 };
 
-export default function ForgotPasswordForm(): JSX.Element {
+export default function ForgotPasswordForm(): React.ReactElement {
   return (
     <Flex
       minH={'100vh'}

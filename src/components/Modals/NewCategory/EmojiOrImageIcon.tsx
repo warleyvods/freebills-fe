@@ -6,7 +6,7 @@ type Props = {
   icon?: string | null
   emojiFontSize?: string
   boxSize?: string
-  defaultIcon?: (props: IconProps) => JSX.Element
+  defaultIcon?: (props: IconProps) => React.ReactElement
 }
 
 export const EmojiOrImageIcon = ({

@@ -18,9 +18,8 @@ export const NavItem = ({icon, children, href, ...rest}: NavItemProps) => {
   const isSelected = router.asPath === href;
 
   return (
-    <NextLink href={href} passHref>
+    <NextLink href={href}>
       <Flex
-        as="a"
         borderRadius={"md"}
         align="center"
         cursor="pointer"
@@ -39,10 +38,8 @@ export const NavItem = ({icon, children, href, ...rest}: NavItemProps) => {
         }}
         {...rest}
       >
-        <>
-          {icon}
-          {children}
-        </>
+        {typeof icon === 'function' ? React.createElement(icon) : icon}
+        {children}
       </Flex>
     </NextLink>
   );

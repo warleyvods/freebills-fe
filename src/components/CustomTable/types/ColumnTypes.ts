@@ -1,9 +1,9 @@
-import { ReactNode } from "react";
+import { ReactNode, ReactElement } from "react";
 
 export type TableColumn = {
   link?: {
     url?: string;
-    component?: (id: number, name: string) => Element | JSX.Element
+    component?: (id: number, name: string) => Element | ReactElement
   },
   tag?: {
     animation?: boolean;
@@ -23,11 +23,11 @@ export type ButtonOptions = {
   active: boolean;
   editIsModal: {
     active: boolean;
-    component?: (object?: any) => Element | JSX.Element | ReactNode
+    component?: (object?: any) => Element | ReactElement | ReactNode
   };
   isMenu?: {
     active?: boolean;
-    component?: (object?: any) => Element | JSX.Element | ReactNode
+    component?: (object?: any) => Element | ReactElement | ReactNode
   }
   deleteButton: boolean;
 }

@@ -67,7 +67,7 @@ export function NewCategoryModal({onCancel, trigger, text, categoryId}: ModalTyp
   const mainColor = useColorModeValue('white', 'gray.800');
   const inverseMainColor = useColorModeValue('gray.800', 'white');
   const scrollContainer = useRef<HTMLDivElement>(null);
-  const initialFocusRef = React.useRef()
+  const initialFocusRef = React.useRef(null)
 
   const {isOpen, onOpen, onClose} = useDisclosure();
 
