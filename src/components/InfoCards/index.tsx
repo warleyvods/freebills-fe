@@ -313,8 +313,7 @@ export function InfoDashboardCard({
                   transactionType={dashboardType}
                   trigger={(open) =>
                     <LightMode>
-                      <Button as={"a"}
-                              onClick={open}
+                      <Button onClick={open}
                               size={"sm"}
                               fontSize={"sm"}
                               color={"white"}

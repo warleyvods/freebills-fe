@@ -18,7 +18,7 @@ export default function CardsDashboard({icon, description, value, color, amountC
   const bg = useColorModeValue("white", "gray.700");
 
   return (
-    <Box w={"auto"} minH={"105px"} maxH={"105px"} h={"105px"} borderRadius={"10px"} p={"15px"} boxShadow={"sm"} as={"a"}
+    <Box w={"auto"} minH={"105px"} maxH={"105px"} h={"105px"} borderRadius={"10px"} p={"15px"} boxShadow={"sm"}
          border={"1px"} borderColor={borderColor} bg={bg}>
       <HStack justifyContent={"space-between"} align={"center"} h={"full"}>
         <VStack justify={"flex-start"} p={2} alignItems={"start"} h={"full"}>

@@ -26,7 +26,7 @@ import SideBarLayout from "../../SidebarLayout/SideBarLayout";
 import HeadingTable from "../HeadingTable";
 import { NewCreditCard } from "../../Modals/NewCreditCard";
 import { moneyFormat } from "../../Utils/utils";
-import { CreditCard } from "../../../hooks/cards/type";
+import type { CreditCard } from "../../../hooks/cards/type";
 import { ConfirmationDialog } from "../../Dialog/ConfirmationDialog";
 import { useUpdateArchiveCC } from "../../../hooks/cards/useUpdateArchiveCC";
 import { useDeleteCard } from "../../../hooks/cards/useDeleteCard";
@@ -75,8 +75,7 @@ export default function CreditCards({archived}: { archived: boolean }) {
             />
             <LightMode>
               <NextLink href={"/cards/archived"}>
-                <Button as={"a"}
-                        size={"sm"}
+                <Button size={"sm"}
                         fontSize={"sm"}
                         colorScheme={"purple"}
                         leftIcon={<Icon as={RiArchiveLine} fontSize={"20"} />}

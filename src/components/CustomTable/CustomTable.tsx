@@ -41,7 +41,7 @@ type CustomTableProps = {
   onDelete?: (id: number) => void;
   tableHeight: number;
   isLoading?: boolean;
-  data: CategoryResponse | TransferResponse
+  data: CategoryResponse | TransferResponse | any
   customInfo?: any;
   accounts?: any;
 };
@@ -232,7 +232,6 @@ export default function CustomTable({
                               trigger={
                                 (onOpen) =>
                                   <IconButton
-                                    as={"a"}
                                     colorScheme={"red"}
                                     aria-label={"Call Segun"}
                                     size="sm"

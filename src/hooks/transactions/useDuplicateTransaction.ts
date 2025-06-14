@@ -3,7 +3,7 @@ import { useMutation } from "react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
-import { config } from "../../pages/_middleware";
+// Middleware import removed - not needed for this hook
 
 export type createTransactionData = {
   accountId: number,

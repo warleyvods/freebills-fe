@@ -1,5 +1,5 @@
 import React, { useCallback, useRef } from "react";
-import NumberFormat, { NumberFormatValues } from "react-number-format";
+import { NumericFormat, NumberFormatValues } from "react-number-format";
 import { Box, Text, FormControl, useColorModeValue } from "@chakra-ui/react";
 
 interface InputProps {
@@ -31,14 +31,6 @@ const InputMoney: React.FC<InputProps> = ({
   const borderColor = useColorModeValue('gray.200', '#424344');
   const hover = useColorModeValue('#9699B0', '#545555');
 
-  const formatCurrencyByEnd = (value: string): string => {
-    const amount = new Intl.NumberFormat("pt-BR", {
-      style: "decimal",
-      minimumFractionDigits: 2
-    }).format(parseFloat(value) / 100);
-    return `${amount}`;
-  };
-
   const setCursorToEnd = useCallback(() => {
     setTimeout(() => {
       const inputElement = inputRef.current;
@@ -51,9 +43,7 @@ const InputMoney: React.FC<InputProps> = ({
 
   const handleValueChange = (values: NumberFormatValues) => {
     const floatValue = values.floatValue || 0;
-    const newValue = !!floatValue ? (parseFloat(String(floatValue)) / 100).toFixed(2) : 0;
-
-    onChange(newValue);
+    onChange(floatValue);
     setCursorToEnd();
   };
 
@@ -95,9 +85,8 @@ const InputMoney: React.FC<InputProps> = ({
             <Box userSelect="none" paddingRight="8px">R$</Box>
           </Box>
           <FormControl isInvalid={!!error}>
-            <NumberFormat
+            <NumericFormat
               allowNegative={true}
-              prefix="-"
               style={{
                 fontWeight: 'normal',
                 fontSize: '17px',
@@ -109,10 +98,12 @@ const InputMoney: React.FC<InputProps> = ({
                 borderTopRightRadius: '0.5rem',
               }}
               placeholder={placeholder}
-              format={formatCurrencyByEnd}
-              inputMode="text"
               name={name}
-              value={value * 100}
+              value={value}
+              decimalScale={2}
+              fixedDecimalScale
+              thousandSeparator="."
+              decimalSeparator=","
               getInputRef={inputRef}
               onValueChange={handleValueChange}
               onClick={handleFocus}

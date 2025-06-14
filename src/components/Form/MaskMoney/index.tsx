@@ -1,5 +1,5 @@
 import React from "react";
-import NumberFormat from "react-number-format";
+import { NumericFormat } from "react-number-format";
 import { Box, FormControl, FormErrorMessage, Input, useColorModeValue } from "@chakra-ui/react";
 
 interface InputProps {
@@ -14,23 +14,14 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, name, 
   const mainColor = useColorModeValue('gray.10', 'gray.900');
   const inverseMainColor = useColorModeValue('#B3B5C6', 'gray.600');
 
-  const formatCurrencyByEnd = (value: string): string => {
-    const amount = new Intl.NumberFormat("pt-BR", {
-      style: "decimal",
-      minimumFractionDigits: 2
-    }).format(parseFloat(value) / 100);
-    return `${amount}`;
-  };
-
   return (
     <Box display="flex" borderRadius="lg" border="1px" borderColor={inverseMainColor} backgroundColor={mainColor}>
       <Box display="flex" alignItems="center" paddingLeft="16px" borderRight="1px" borderColor="#9699B0">
         <Box userSelect="none" paddingRight="8px">R$</Box>
       </Box>
       <FormControl isInvalid={!!error}>
-        <NumberFormat
+        <NumericFormat
           allowNegative={true}
-          prefix="-"
           style={{
             outline: 'none',
             padding: "8px",
@@ -38,15 +29,16 @@ const MaskMoney: React.FC<InputProps> = ({ value, onChange, label, error, name, 
             background: 'inherit',
             borderBottomRightRadius: '0.5rem',
             borderTopRightRadius: '0.5rem',
-
           }}
           placeholder={"0,00"}
-          format={formatCurrencyByEnd}
-          inputMode="text"
           name={name}
-          value={value * 100}
+          value={value}
+          decimalScale={2}
+          fixedDecimalScale
+          thousandSeparator="."
+          decimalSeparator=","
           onValueChange={(values) => {
-            onChange(!!values.floatValue ? (parseFloat(String(values.floatValue)) / 100).toFixed(2) : 0);
+            onChange(values.floatValue || 0);
           }}
         />
         <FormErrorMessage>

@@ -257,8 +257,7 @@ export default function CategoryTable({ archived }: { archived: boolean }) {
             />
             <LightMode>
               <NextLink href={"/categories/archived"}>
-                <Button as={"a"}
-                        size={"sm"}
+                <Button size={"sm"}
                         fontSize={"sm"}
                         colorScheme={"purple"}
                         leftIcon={<Icon as={RiArchiveLine} fontSize={"20"} />}

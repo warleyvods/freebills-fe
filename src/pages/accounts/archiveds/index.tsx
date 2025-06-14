@@ -101,7 +101,7 @@ export default function ArchivedAccount() {
                     {items.map((columns, index) => (
                       <Th key={columns.name}>
                         <Flex
-                          justify={index == 0 ? 'start' : 'center' && index == (items.length - 1) ? 'flex-end' : 'center'}>
+                          justify={index == 0 ? 'start' : index == (items.length - 1) ? 'flex-end' : 'center'}>
                           {columns.name}
                         </Flex>
                       </Th>
