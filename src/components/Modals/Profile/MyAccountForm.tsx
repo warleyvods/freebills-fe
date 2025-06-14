@@ -62,8 +62,8 @@ export const MyAccountForm = ({onClose}) => {
       useUploadImage.mutate(fileInfo, {
         onSuccess: (data) => {
           setReferenceId(data.fileReferenceId);
-          queryClient.invalidateQueries(['users']);
-          queryClient.invalidateQueries(['me']);
+          queryClient.invalidateQueries({ queryKey: ['users'] });
+          queryClient.invalidateQueries({ queryKey: ['me'] });
           refetch();
         },
         onError: (error) => {

@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
@@ -13,13 +13,14 @@ type ErrorType = {
 export function useUpdateArchiveCC(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (creditCardId: number) => {
-    await api.patch(`v1/credit-card/${creditCardId}`)
+  return useMutation({
+    mutationFn: async (creditCardId: number) => {
+      await api.patch(`v1/credit-card/${creditCardId}`)
 
-    return null;
-  }, {
+      return null;
+    },
     onSuccess: async () => {
-      await queryClient.invalidateQueries([QueryKeys.CREDIT_CARDS])
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.CREDIT_CARDS] })
       onSuccess?.()
 
       toast({
@@ -29,7 +30,8 @@ export function useUpdateArchiveCC(onSuccess?: () => {}, onError?: () => {}) {
         isClosable: true,
         position: "top"
       })
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({

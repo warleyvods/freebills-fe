@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
@@ -18,17 +18,19 @@ type ErrorType = {
 export function useUpdateUserPassword(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (password: updatePasswordUserFormData) => {
-    await api.patch('v1/user', {
-      ...password
-    })
+  return useMutation({
+    mutationFn: async (password: updatePasswordUserFormData) => {
+      await api.patch('v1/user', {
+        ...password
+      })
 
-    return null;
-  }, {
+      return null;
+    },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['users'])
+      await queryClient.invalidateQueries({ queryKey: ['users'] })
       onSuccess?.()
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({

@@ -15,7 +15,7 @@ import {
 import NextLink from "next/link";
 
 import * as yup from "yup";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/router";
 import React from "react";
 
@@ -42,9 +42,12 @@ export default function EditUser() {
   const {id} = router.query as RouteParams;
   const {data: me} = useMe();
 
-  const { data: user, isLoading } = useQuery(['user', id], async () => {
-    const res = await api.get('v1/user/' + id);
-    return res.data;
+  const { data: user, isLoading } = useQuery({
+    queryKey: ['user', id],
+    queryFn: async () => {
+      const res = await api.get('v1/user/' + id);
+      return res.data;
+    }
   });
 
   const updateUser = useUpdateUser(() => router.push('/users'));

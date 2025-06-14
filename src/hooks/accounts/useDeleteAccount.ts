@@ -1,14 +1,15 @@
 import { useToast } from "@chakra-ui/react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../services/queryClient";
 import { api } from "../../services/api";
 import { QueryKeys } from "../queryKeys";
 
 export function useDeleteAccount() {
   const toast = useToast();
-  return useMutation(async (accountId: number) => {
-    return api.delete(`v1/accounts/${accountId}`);
-  }, {
+  return useMutation({
+    mutationFn: async (accountId: number) => {
+      return api.delete(`v1/accounts/${accountId}`);
+    },
     onSuccess: async () => {
       toast({
         description: "Conta excluída com sucesso!",
@@ -17,9 +18,10 @@ export function useDeleteAccount() {
         isClosable: true,
         position: "top"
       })
-      await queryClient.invalidateQueries([QueryKeys.ACCOUNTS])
-      await queryClient.invalidateQueries(['accounts-archived'])
-    }, onError: (err: any) => {
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.ACCOUNTS] })
+      await queryClient.invalidateQueries({ queryKey: ['accounts-archived'] })
+    }, 
+    onError: (err: any) => {
       toast({
         title: err.response.data.title,
         description: err.response.data.details,

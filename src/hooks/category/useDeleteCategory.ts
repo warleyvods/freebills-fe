@@ -1,13 +1,14 @@
 import { useToast } from "@chakra-ui/react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../services/queryClient";
 import { api } from "../../services/api";
 
 export function useDeleteCategory() {
   const toast = useToast();
-  return useMutation(async (categoryId: number) => {
-    return await api.delete(`v1/categories/${categoryId}`);
-  }, {
+  return useMutation({
+    mutationFn: async (categoryId: number) => {
+      return await api.delete(`v1/categories/${categoryId}`);
+    },
     onSuccess: async () => {
       toast({
         description: "Categoria deletada com sucesso!",
@@ -16,8 +17,9 @@ export function useDeleteCategory() {
         isClosable: true,
         position: "top"
       })
-      await queryClient.invalidateQueries(['category'])
-    }, onError: (error: any) => {
+      await queryClient.invalidateQueries({ queryKey: ['category'] })
+    }, 
+    onError: (error: any) => {
       toast({
         title: error.response.data.title,
         description: error.response.data.details,

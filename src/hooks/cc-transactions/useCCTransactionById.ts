@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "../../utils/chartData";
 import { QueryKeys } from "../queryKeys";
 import { CCTransaction } from "./type";
@@ -21,7 +21,11 @@ async function getCCTransactionById(cctId: number): Promise<CCTransaction> {
 }
 
 export function useCCTransactionById(transactionId: number) {
-  return useQuery([QueryKeys.CC_TRANSACTIONS, transactionId], async () => getCCTransactionById(transactionId), {
+  return useQuery({
+    queryKey: [QueryKeys.CC_TRANSACTIONS, transactionId],
+    queryFn: async () => getCCTransactionById(transactionId),
+    
     enabled: Number.isFinite(transactionId)
+  
   })
 }

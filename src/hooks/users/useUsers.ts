@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 
 export type User = {
@@ -72,7 +72,9 @@ function isValidDate(dateStr: string): boolean {
 }
 
 export function useUsers(page, sort?, status?, keyword?, size?) {
-  return useQuery(['users', page, sort, status, keyword, size], () => getUsers(page, sort, status, keyword, size), {
+  return useQuery({
+    queryKey: ['users', page, sort, status, keyword, size],
+    queryFn: () => getUsers(page, sort, status, keyword, size),
     staleTime: 1000 * 5,
   })
 }

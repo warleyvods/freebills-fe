@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Transaction } from "./useTransactionById";
 import { QueryKeys } from "../queryKeys";
 
@@ -28,12 +28,10 @@ export function useTransactionByCategory(
   year?: number,
   month?: number,
 ) {
-  return useQuery(
-    [QueryKeys.TRANSACTIONS_CATEGORY, category, transactionType, year, month],
-    () => getAllTransactionByCategory(category, transactionType, year, month),
-    {
-      staleTime: 0,
-      cacheTime: 0
-    }
-  )
+  return useQuery({
+    queryKey: [QueryKeys.TRANSACTIONS_CATEGORY, category, transactionType, year, month],
+    queryFn: () => getAllTransactionByCategory(category, transactionType, year, month),
+    staleTime: 0,
+    gcTime: 0
+  })
 }

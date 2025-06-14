@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { Transfer } from "./type";
 
@@ -35,9 +35,11 @@ export function useTransfer(
   month?: number,
   year?: number
 ) {
-  return useQuery(
-    ['transfer', page, size, sort, month, year],
-    () => getTransfer(page, size, sort, month, year), {
+  return useQuery({
+    queryKey: ['transfer', page, size, sort, month, year],
+    queryFn: () => getTransfer(page, size, sort, month, year),
+    
       staleTime: 1000,
-    });
+    
+  });
 }

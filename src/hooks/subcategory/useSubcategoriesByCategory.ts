@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { Subcategory } from "./type";
 import { QueryKeys } from "../queryKeys";
@@ -42,12 +42,12 @@ export function useSubcategoriesByCategory(
   keyword?: string,
   archived = false
 ) {
-  return useQuery(
-    [QueryKeys.SUBCATEGORY, 'by-category', categoryId, page, size, sort, type, keyword, archived],
-    () => getSubcategoriesByCategory(categoryId, page, size, sort, type, keyword, archived),
-    {
+  return useQuery({
+    queryKey: [QueryKeys.SUBCATEGORY, 'by-category', categoryId, page, size, sort, type, keyword, archived],
+    queryFn: () => getSubcategoriesByCategory(categoryId, page, size, sort, type, keyword, archived),
+    
       staleTime: 1000 * 60, // 1 minuto
       enabled: Number.isFinite(categoryId) && categoryId > 0
-    }
-  );
+    
+  });
 } 

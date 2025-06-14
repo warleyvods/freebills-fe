@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
@@ -27,12 +27,13 @@ const errorHint = {
 export function useUpdateUser(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (user: createUserFormData) => {
+  return useMutation({
+    mutationFn: async (user: createUserFormData) => {
       const response = await api.put('v1/user', {
         ...user
       })
       return response.data.user;
-  }, {
+    },
     onSuccess: async () => {
       toast({
         description: 'Atualizado com sucesso!',
@@ -42,10 +43,11 @@ export function useUpdateUser(onSuccess?: () => {}, onError?: () => {}) {
         position: 'top'
       })
 
-      await queryClient.invalidateQueries(['users'])
-      await queryClient.invalidateQueries(['me'])
+      await queryClient.invalidateQueries({ queryKey: ['users'] })
+      await queryClient.invalidateQueries({ queryKey: ['me'] })
       onSuccess?.()
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({

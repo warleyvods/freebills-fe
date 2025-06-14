@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { useRouter } from "next/router";
 
@@ -20,5 +20,8 @@ export async function getDashboardRevenue(month: number, year: number): Promise<
 }
 
 export function useDashboardRevenue(month: number, year: number) {
-  return useQuery(['balance-revenue', month, year], async () => getDashboardRevenue(month, year));
+  return useQuery({
+    queryKey: ['balance-revenue', month, year],
+    queryFn: async () => getDashboardRevenue(month, year)
+  });
 }

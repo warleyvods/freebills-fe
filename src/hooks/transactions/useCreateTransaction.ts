@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
@@ -12,14 +12,15 @@ type ErrorType = {
 
 export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
-  return useMutation(async (transaction: Transaction) => {
-    transaction.date = transaction.date.replace(/\D/g, '-')
-    const response = await api.post('v1/transactions', {
-      ...transaction
-    });
+  return useMutation({
+    mutationFn: async (transaction: Transaction) => {
+      transaction.date = transaction.date.replace(/\D/g, '-')
+      const response = await api.post('v1/transactions', {
+        ...transaction
+      });
 
-    return response.data.transaction;
-  }, {
+      return response.data.transaction;
+    },
     onSuccess: async () => {
       toast({
         description: "Transação criada com sucesso.",
@@ -29,14 +30,15 @@ export function useCreateTransaction(onSuccess?: () => {}, onError?: () => {}) {
         position: 'top'
       })
 
-      queryClient.invalidateQueries(['balance-expense'])
-      queryClient.invalidateQueries(['balance-revenue'])
-      queryClient.invalidateQueries(['transaction-expense'])
-      queryClient.invalidateQueries(['transaction-revenue'])
-      queryClient.invalidateQueries(['transaction'])
-      queryClient.invalidateQueries(['balance'])
+      queryClient.invalidateQueries({ queryKey: ['balance-expense'] })
+      queryClient.invalidateQueries({ queryKey: ['balance-revenue'] })
+      queryClient.invalidateQueries({ queryKey: ['transaction-expense'] })
+      queryClient.invalidateQueries({ queryKey: ['transaction-revenue'] })
+      queryClient.invalidateQueries({ queryKey: ['transaction'] })
+      queryClient.invalidateQueries({ queryKey: ['balance'] })
       onSuccess?.()
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({

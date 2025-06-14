@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
@@ -14,15 +14,16 @@ type ErrorType = {
 export function useCreateCategory(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (category: Category) => {
-    const response = await api.post('v1/categories', {
-      ...category
-    })
+  return useMutation({
+    mutationFn: async (category: Category) => {
+      const response = await api.post('v1/categories', {
+        ...category
+      })
 
-    return response.data;
-  }, {
+      return response.data;
+    },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['category'])
+      await queryClient.invalidateQueries({ queryKey: ['category'] })
       onSuccess?.()
       toast({
         description: "Nova categoria criada com sucesso!",
@@ -31,7 +32,8 @@ export function useCreateCategory(onSuccess?: () => {}, onError?: () => {}) {
         isClosable: true,
         position: "top"
       })
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
       toast({
         title: error.response.data.title,

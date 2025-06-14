@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
@@ -14,18 +14,20 @@ type ErrorType = {
 export function useCreateCreditCard(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast();
 
-  return useMutation(async (cc: CreditCard) => {
-    const response = await api.post('v1/credit-card', {
-      ...cc
-    });
+  return useMutation({
+    mutationFn: async (cc: CreditCard) => {
+      const response = await api.post('v1/credit-card', {
+        ...cc
+      });
 
-    return response.data.user;
-  }, {
+      return response.data.user;
+    },
     onSuccess: async () => {
-      await queryClient.invalidateQueries([QueryKeys.CREDIT_CARDS])
+      await queryClient.invalidateQueries({ queryKey: [QueryKeys.CREDIT_CARDS] })
       onSuccess?.()
 
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
       toast({
         title: error.response.data.title,

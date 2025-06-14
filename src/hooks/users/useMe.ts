@@ -1,6 +1,7 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 
 type User = {
   id: number;
@@ -20,11 +21,18 @@ export async function getMe(): Promise<User> {
 
 export function useMe() {
   const router = useRouter();
-  return useQuery(['me'], async () => getMe(), {
-    onError: () => {
-      router.push("/logout")
-    },
+  const query = useQuery({
+    queryKey: ['me'],
+    queryFn: async () => getMe(),
     enabled: router.pathname !== '/',
     retry: false
   });
+
+  useEffect(() => {
+    if (query.error) {
+      router.push("/logout");
+    }
+  }, [query.error, router]);
+
+  return query;
 }

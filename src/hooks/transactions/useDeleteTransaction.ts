@@ -1,13 +1,14 @@
 import { useToast } from "@chakra-ui/react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../services/queryClient";
 import { api } from "../../services/api";
 
 export function useDeleteTransaction() {
   const toast = useToast();
-  return useMutation(async (transactionId: number) => {
-    return await api.delete(`v1/transactions/${transactionId}`);
-  }, {
+  return useMutation({
+    mutationFn: async (transactionId: number) => {
+      return await api.delete(`v1/transactions/${transactionId}`);
+    },
     onSuccess: async () => {
       toast({
         title: "Transação Excluída",
@@ -18,13 +19,14 @@ export function useDeleteTransaction() {
         position: "top"
       })
 
-      queryClient.invalidateQueries(['balance-expense'])
-      queryClient.invalidateQueries(['balance-revenue'])
-      queryClient.invalidateQueries(['transaction-expense'])
-      queryClient.invalidateQueries(['transaction-revenue'])
-      queryClient.invalidateQueries(['transaction'])
-      queryClient.invalidateQueries(['balance'])
-    }, onError: (err: any) => {
+      queryClient.invalidateQueries({ queryKey: ['balance-expense'] })
+      queryClient.invalidateQueries({ queryKey: ['balance-revenue'] })
+      queryClient.invalidateQueries({ queryKey: ['transaction-expense'] })
+      queryClient.invalidateQueries({ queryKey: ['transaction-revenue'] })
+      queryClient.invalidateQueries({ queryKey: ['transaction'] })
+      queryClient.invalidateQueries({ queryKey: ['balance'] })
+    }, 
+    onError: (err: any) => {
       toast({
         title: err.response.data.title,
         description: err.response.data.details,

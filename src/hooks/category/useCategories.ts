@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { Category } from "./type";
 
@@ -24,9 +24,9 @@ async function getCategory(page: number, sort?: string, categoryType?: string, k
 }
 
 export function useCategories(page?: number, size?: number, sort?: string, categoryType?: string, keyword?: string, archived?: boolean) {
-  return useQuery(
-    ['category', page, sort, size, categoryType, keyword, archived],
-    () => getCategory(page, sort, categoryType, keyword, size, archived), {
+  return useQuery({
+    queryKey: ['category', page, sort, size, categoryType, keyword, archived],
+    queryFn: () => getCategory(page, sort, categoryType, keyword, size, archived),
     staleTime: 1000,
   })
 }

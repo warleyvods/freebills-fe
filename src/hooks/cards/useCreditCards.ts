@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { QueryKeys } from "../queryKeys";
 import { CreditCard } from "./type";
@@ -13,8 +13,12 @@ export async function getCreditCards({archived}: {archived: boolean}): Promise<C
 }
 
 export function useCreditCards(archived: boolean) {
-  return useQuery([QueryKeys.CREDIT_CARDS], () => getCreditCards({archived}), {
+  return useQuery({
+    queryKey: [QueryKeys.CREDIT_CARDS],
+    queryFn: () => getCreditCards({archived}),
+    
     staleTime: 0,
-    cacheTime: 0
+    gcTime: 0
+  
   })
 }

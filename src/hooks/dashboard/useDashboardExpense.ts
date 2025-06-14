@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 
 export type DashboardBalanceExpense = {
@@ -19,5 +19,8 @@ export async function getDashboardExpense(month: number, year: number): Promise<
 }
 
 export function useDashboardExpense(month: number, year: number) {
-  return useQuery(['balance-expense', month, year], async () => getDashboardExpense(month, year));
+  return useQuery({
+    queryKey: ['balance-expense', month, year],
+    queryFn: async () => getDashboardExpense(month, year)
+  });
 }

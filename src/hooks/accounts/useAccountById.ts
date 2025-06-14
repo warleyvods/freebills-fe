@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Account } from "./type";
 import { QueryKeys } from "../queryKeys";
 
@@ -9,7 +9,9 @@ async function getAccountById(accountId: number): Promise<Account> {
 }
 
 export function useAccountById(accountId: number) {
-  return useQuery([QueryKeys.ACCOUNTS, accountId], async () => getAccountById(accountId), {
+  return useQuery({
+    queryKey: [QueryKeys.ACCOUNTS, accountId],
+    queryFn: async () => getAccountById(accountId),
     enabled: Number.isFinite(accountId)
   });
 }

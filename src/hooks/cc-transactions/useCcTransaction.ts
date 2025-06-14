@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CCTransaction } from "./type";
 import { QueryKeys } from "../queryKeys";
 
@@ -24,10 +24,12 @@ async function getCCTransaction(id: number, page: number, sort?: string, keyword
 }
 
 export function useCCTransactions(id: number, page?: number, size?: number, sort?: string, keyword?: string, year?: number, month?: number) {
-  return useQuery(
-    [QueryKeys.CC_TRANSACTIONS, id, page, sort, size, keyword, year, month],
-    () => getCCTransaction(id, page, sort, keyword, size, month, year), {
+  return useQuery({
+    queryKey: [QueryKeys.CC_TRANSACTIONS, id, page, sort, size, keyword, year, month],
+    queryFn: () => getCCTransaction(id, page, sort, keyword, size, month, year),
+    
       staleTime: 1000,
       enabled: Number.isFinite(id)
-    })
+    
+  })
 }

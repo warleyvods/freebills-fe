@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Transaction } from "./useTransactionById";
 
 type TransactionResponse = {
@@ -49,12 +49,12 @@ export function useTransaction(
   transactionType?: string,
   size?: number,
 ) {
-  return useQuery(
-    ['transaction-revenue', page, keyword, month, year, sort, transactionType, size],
-    () => getAllTransactions(page, keyword, month, year, size, sort, transactionType),
-    {
+  return useQuery({
+    queryKey: ['transaction-revenue', page, keyword, month, year, sort, transactionType, size],
+    queryFn: () => getAllTransactions(page, keyword, month, year, size, sort, transactionType),
+    
       staleTime: 0,
-      cacheTime: 0
-    }
-  )
+      gcTime: 0
+    
+  })
 }

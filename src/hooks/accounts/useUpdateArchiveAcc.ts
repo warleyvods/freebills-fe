@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
@@ -17,16 +17,17 @@ type ErrorType = {
 export function useUpdateArchiveAccount(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (updateArchiveAccount: updateArchiveAccount) => {
-    await api.patch('v1/accounts', {
-      ...updateArchiveAccount
-    })
+  return useMutation({
+    mutationFn: async (updateArchiveAccount: updateArchiveAccount) => {
+      await api.patch('v1/accounts', {
+        ...updateArchiveAccount
+      })
 
-    return null;
-  }, {
+      return null;
+    },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['accounts'])
-      await queryClient.invalidateQueries(['accounts-archived'])
+      await queryClient.invalidateQueries({ queryKey: ['accounts'] })
+      await queryClient.invalidateQueries({ queryKey: ['accounts-archived'] })
       toast({
         description: "Ação executada com sucesso!",
         status: 'success',
@@ -35,7 +36,8 @@ export function useUpdateArchiveAccount(onSuccess?: () => {}, onError?: () => {}
         position: "top"
       })
       onSuccess?.()
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({

@@ -1,5 +1,5 @@
 import { useToast } from "@chakra-ui/react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { AxiosError } from "axios";
@@ -13,17 +13,18 @@ type ErrorType = {
 export function useUpdateTransfer(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (transfer: Transfer) => {
-    transfer.date = transfer.date.replace(/\D/g, '-')
-    const response = await api.put('v1/transfer', {
-      ...transfer
-    });
+  return useMutation({
+    mutationFn: async (transfer: Transfer) => {
+      transfer.date = transfer.date.replace(/\D/g, '-')
+      const response = await api.put('v1/transfer', {
+        ...transfer
+      });
 
-    return response.data.transaction;
-  }, {
+      return response.data.transaction;
+    },
     onSuccess: async () => {
       onSuccess?.()
-      queryClient.invalidateQueries(['transfer'])
+      queryClient.invalidateQueries({ queryKey: ['transfer'] })
 
       toast({
         title: "Transfer atualizado com sucesso.",
@@ -32,7 +33,8 @@ export function useUpdateTransfer(onSuccess?: () => {}, onError?: () => {}) {
         isClosable: true,
         position: 'top'
       })
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({

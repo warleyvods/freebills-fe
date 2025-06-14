@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { QueryKeys } from "../queryKeys";
 
 type CreditCard = {
@@ -18,5 +18,9 @@ async function getAccountById(creditCardId: number): Promise<CreditCard> {
 }
 
 export function useCreditCardById(creditCardId: number) {
-  return useQuery([QueryKeys.CREDIT_CARDS, creditCardId], async () => getAccountById(creditCardId), { enabled: creditCardId != undefined })
+  return useQuery({
+    queryKey: [QueryKeys.CREDIT_CARDS, creditCardId],
+    queryFn: async () => getAccountById(creditCardId),
+     enabled: creditCardId != undefined 
+  })
 }

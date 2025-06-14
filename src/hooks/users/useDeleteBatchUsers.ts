@@ -1,17 +1,18 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
 
 export function useDeleteBatchUsers(onSuccess?: () => void, onError?: () => void) {
   const toast = useToast();
-  return useMutation(async (productsIds: number[]) => {
-    const params = productsIds.join(',');
-    const response = await api.delete(`v1/user?ids=${params}`);
-    return response.data;
-  }, {
+  return useMutation({
+    mutationFn: async (productsIds: number[]) => {
+      const params = productsIds.join(',');
+      const response = await api.delete(`v1/user?ids=${params}`);
+      return response.data;
+    },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['users']);
+      await queryClient.invalidateQueries({ queryKey: ['users'] });
       onSuccess?.();
       toast({
         description: 'Usuários excluídos!',

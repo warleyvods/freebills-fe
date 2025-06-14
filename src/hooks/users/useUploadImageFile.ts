@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
@@ -18,16 +18,17 @@ const errorHint = {
 export function useUploadImageFile(onSuccess?: (data: UploadFilePresign) => void, onError?: () => void) {
   const toast = useToast()
 
-  return useMutation(async (uploadFile: UploadFile) => {
-    const response = await api.patch<UploadFilePresign>('v1/user/add-image', {
-      ...uploadFile
-    });
+  return useMutation({
+    mutationFn: async (uploadFile: UploadFile) => {
+      const response = await api.patch<UploadFilePresign>('v1/user/add-image', {
+        ...uploadFile
+      });
 
-    return response.data;
-  }, {
+      return response.data;
+    },
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries(['users']);
-      await queryClient.invalidateQueries(['me']);
+      await queryClient.invalidateQueries({ queryKey: ['users'] });
+      await queryClient.invalidateQueries({ queryKey: ['me'] });
       onSuccess?.(data);
     },
     onError: (error: AxiosError<ErrorType>) => {

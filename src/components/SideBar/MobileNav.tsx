@@ -19,7 +19,7 @@ import React, { useEffect, useState } from "react";
 import { MoonIcon, SunIcon } from "@chakra-ui/icons";
 import NextLink from "next/link";
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { useMe } from "../../hooks/users/useMe";
 
 interface MobileProps extends FlexProps {
@@ -27,10 +27,12 @@ interface MobileProps extends FlexProps {
 }
 
 function useProfilePicture(id: number){
-  return useQuery(['profile-picture'], async () => {
-    const response = await api.get('v1/user-image/' + id)
-    return response.data.image;
-  }, {
+  return useQuery({
+    queryKey: ['profile-picture'],
+    queryFn: async () => {
+      const response = await api.get('v1/user-image/' + id)
+      return response.data.image;
+    },
     enabled: id !== undefined,
   });
 }

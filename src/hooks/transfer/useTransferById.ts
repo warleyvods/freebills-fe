@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "../../utils/chartData";
 import { Transfer } from "./type";
 
@@ -9,8 +9,9 @@ async function getTransferById(transferId: number): Promise<Transfer> {
 }
 
 export function useTransferById(transferId: number) {
-  return useQuery(
-    ['transfer', transferId],
-    async () => getTransferById(transferId), { enabled: transferId != undefined }
-  )
+  return useQuery({
+    queryKey: ['transfer', transferId],
+    queryFn: async () => getTransferById(transferId),
+    enabled: transferId != undefined
+  })
 }

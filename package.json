@@ -14,6 +14,7 @@
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.8.1",
     "@hookform/resolvers": "^3.9.1",
+    "@tanstack/react-query": "^5.62.8",
     "@types/faker": "^5.1.2",
     "apexcharts": "^4.0.0",
     "axios": "^1.7.9",
@@ -37,12 +38,12 @@
     "react-input-mask": "^2.0.4",
     "react-jsx-highcharts": "^5.0.1",
     "react-number-format": "^5.4.2",
-    "react-query": "^3.39.3",
     "tinycolor2": "^1.6.0",
     "use-debounce": "^10.0.4",
     "yup": "^1.4.0"
   },
   "devDependencies": {
+    "@tanstack/react-query-devtools": "^5.80.7",
     "@types/node": "^22.10.2",
     "@types/react": "^19.0.1",
     "@types/react-dom": "^19.0.1",

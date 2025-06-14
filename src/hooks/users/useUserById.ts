@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { User } from "./useUsers";
 
 async function getUserById(userId: number): Promise<User> {
@@ -8,7 +8,11 @@ async function getUserById(userId: number): Promise<User> {
 }
 
 export function useUserById(userId: number) {
-  return useQuery(['user', userId], async () => getUserById(userId), {
+  return useQuery({
+    queryKey: ['user', userId],
+    queryFn: async () => getUserById(userId),
+    
     enabled: Number.isFinite(userId)
+  
   });
 }

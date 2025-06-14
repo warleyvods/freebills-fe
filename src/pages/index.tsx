@@ -1,6 +1,6 @@
 import { Flex, Image, Link, Text, useColorModeValue, useToast } from "@chakra-ui/react";
 import * as yup from 'yup';
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../services/api";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -32,39 +32,41 @@ export default function SignIn() {
 
   const handleClick = () => setShow(!show)
 
-  const {mutate: signIn} = useMutation(async ({login, password}: SignInFormData) => {
-    try {
-      setLoading(true)
-      await api.post(`/v1/auth/login`, {
-        login, password
-      })
-
-      await router.push('/dashboard')
-
-    } catch (err) {
-
-      if (err.response.status === 401) {
-        setLoading(false)
-        return toast({
-          title: 'Erro na autenticação',
-          description: "login ou senha incorretos.",
-          status: 'error',
-          duration: 3000,
-          position: 'top',
-          isClosable: true,
+  const {mutate: signIn} = useMutation({
+    mutationFn: async ({login, password}: SignInFormData) => {
+      try {
+        setLoading(true)
+        await api.post(`/v1/auth/login`, {
+          login, password
         })
-      }
 
-      if (err.data === undefined) {
-        setLoading(false)
-        return toast({
-          title: 'Erro 500',
-          description: "Um erro aconteceu ao tentar concluir sua solicação, tenta novamente mais tarde.",
-          status: 'error',
-          duration: 3000,
-          position: 'top',
-          isClosable: true,
-        })
+        await router.push('/dashboard')
+
+      } catch (err) {
+
+        if (err.response.status === 401) {
+          setLoading(false)
+          return toast({
+            title: 'Erro na autenticação',
+            description: "login ou senha incorretos.",
+            status: 'error',
+            duration: 3000,
+            position: 'top',
+            isClosable: true,
+          })
+        }
+
+        if (err.data === undefined) {
+          setLoading(false)
+          return toast({
+            title: 'Erro 500',
+            description: "Um erro aconteceu ao tentar concluir sua solicação, tenta novamente mais tarde.",
+            status: 'error',
+            duration: 3000,
+            position: 'top',
+            isClosable: true,
+          })
+        }
       }
     }
   });

@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { queryClient } from "../../services/queryClient";
 import { useToast } from "@chakra-ui/react";
@@ -12,13 +12,14 @@ type ErrorType = {
 export function useUpdateArchiveCategory(onSuccess?: () => {}, onError?: () => {}) {
   const toast = useToast()
 
-  return useMutation(async (categoryId: number) => {
-    await api.patch(`v1/categories/${categoryId}`)
+  return useMutation({
+    mutationFn: async (categoryId: number) => {
+      await api.patch(`v1/categories/${categoryId}`)
 
-    return null;
-  }, {
+      return null;
+    },
     onSuccess: async () => {
-      await queryClient.invalidateQueries(['category'])
+      await queryClient.invalidateQueries({ queryKey: ['category'] })
       onSuccess?.()
 
       toast({
@@ -28,7 +29,8 @@ export function useUpdateArchiveCategory(onSuccess?: () => {}, onError?: () => {
         isClosable: true,
         position: "top"
       })
-    }, onError: (error: AxiosError<ErrorType>) => {
+    }, 
+    onError: (error: AxiosError<ErrorType>) => {
       onError?.()
 
       toast({

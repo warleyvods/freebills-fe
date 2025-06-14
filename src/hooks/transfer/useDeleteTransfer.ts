@@ -1,13 +1,14 @@
 import { useToast } from "@chakra-ui/react";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "../../services/queryClient";
 import { api } from "../../services/api";
 
 export function useDeleteTransfer() {
   const toast = useToast();
-  return useMutation(async (transferId: number) => {
-    return await api.delete(`v1/transfer/${transferId}`);
-  }, {
+  return useMutation({
+    mutationFn: async (transferId: number) => {
+      return await api.delete(`v1/transfer/${transferId}`);
+    },
     onSuccess: async () => {
       toast({
         title: "Transfer Excluído com sucesso!",
@@ -16,8 +17,9 @@ export function useDeleteTransfer() {
         isClosable: true,
         position: "top"
       })
-      await queryClient.invalidateQueries(['transfer'])
-    }, onError: (err: any) => {
+      await queryClient.invalidateQueries({ queryKey: ['transfer'] })
+    }, 
+    onError: (err: any) => {
       toast({
         title: err.response.data.title,
         description: err.response.data.details,

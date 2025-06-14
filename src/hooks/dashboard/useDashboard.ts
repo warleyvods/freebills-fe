@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { api } from "../../services/api";
 import { useRouter } from "next/router";
 
@@ -21,5 +21,8 @@ export async function getDashboard(month: number, year: number): Promise<Dashboa
 }
 
 export function useDashboard(month: number, year: number) {
-  return useQuery(['balance', month, year], async () => getDashboard(month, year));
+  return useQuery({
+    queryKey: ['balance', month, year],
+    queryFn: async () => getDashboard(month, year)
+  });
 }

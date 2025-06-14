@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { Category } from "./type";
 
 async function getCategoryById(categoryId: number): Promise<Category> {
@@ -8,7 +8,9 @@ async function getCategoryById(categoryId: number): Promise<Category> {
 }
 
 export function useCategoryById(categoryId: number) {
-  return useQuery(['category', categoryId], async () => getCategoryById(categoryId), {
-      enabled: Number.isFinite(categoryId)
-    });
+  return useQuery({
+    queryKey: ['category', categoryId],
+    queryFn: async () => getCategoryById(categoryId),
+    enabled: Number.isFinite(categoryId)
+  });
 }

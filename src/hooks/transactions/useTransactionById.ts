@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { formatDate } from "../../utils/chartData";
 
 export type Transaction = {
@@ -38,5 +38,9 @@ async function getTransactionById(transactionId: number): Promise<Transaction> {
 }
 
 export function useTransactionById(transactionId: number) {
-  return useQuery(['transaction', transactionId], async () => getTransactionById(transactionId), { enabled: transactionId != undefined })
+  return useQuery({
+    queryKey: ['transaction', transactionId],
+    queryFn: async () => getTransactionById(transactionId),
+     enabled: transactionId != undefined 
+  })
 }

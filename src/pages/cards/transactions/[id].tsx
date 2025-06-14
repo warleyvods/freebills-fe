@@ -85,7 +85,7 @@ export default function CardTransactions() {
   const handleCardSelect = (event: any) => {
     const selectedCardId = event.target.value;
     router.replace(`/cards/transactions/${selectedCardId}`);
-    queryClient.invalidateQueries([QueryKeys.CC_TRANSACTIONS]);
+    queryClient.invalidateQueries({ queryKey: [QueryKeys.CC_TRANSACTIONS] });
   };
 
   useEffect(() => {
