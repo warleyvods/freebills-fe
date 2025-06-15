@@ -8,8 +8,7 @@ import {
   useColorModeValue
 } from "@chakra-ui/react";
 import { forwardRef, ForwardRefRenderFunction } from "react";
-import InputMask from "react-input-mask";
-
+import { InputMask } from "@react-input/mask";
 
 interface InputProps extends ChakraInputProps {
   name?: string;
@@ -45,24 +44,34 @@ const InputBase: ForwardRefRenderFunction<HTMLInputElement, InputProps> = ({
           </FormLabel>
         )
       }
-      <InputMask
-        mask={mask}
-        name={name}
-        value={value} // needed because of bug in react-input-mask
-        onChange={onChange} // needed because of bug in react-input-mask
-      >
-        {(inputProps) => <ChakraInput
-          isDisabled={rest.isDisabled}
+      {mask ? (
+        <InputMask
+          mask={mask}
+          replacement={{ _: /\d/ }}
+          component={ChakraInput}
+          value={value || ''}
+          onChange={onChange}
+          name={name}
           placeholder={placeholder}
           type={type}
-          {...inputProps}
-          value={value} // needed because of bug in react-input-mask
-          onChange={onChange} // needed because of bug in react-input-mask
+          isDisabled={rest.isDisabled}
           focusBorderColor={"blue.500"}
           bgColor={mainColor}
+          {...rest}
         />
-        }
-      </InputMask>
+      ) : (
+        <ChakraInput
+          name={name}
+          value={value || ''}
+          onChange={onChange}
+          placeholder={placeholder}
+          type={type}
+          isDisabled={rest.isDisabled}
+          focusBorderColor={"blue.500"}
+          bgColor={mainColor}
+          {...rest}
+        />
+      )}
 
       <FormErrorMessage mt={1}>
         <Text fontSize={"0.8rem"} fontWeight={"medium"}>{error}</Text>

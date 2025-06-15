@@ -1,5 +1,4 @@
-import { useEffect, useRef } from "react";
-import { useInView, useMotionValue, useSpring } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
 import { Text, TextProps } from "@chakra-ui/react";
 
 interface CounterProps extends TextProps {
@@ -14,42 +13,68 @@ export default function Counter({
   delay = 0,
   ...rest
 }: CounterProps) {
-
   const ref = useRef<HTMLSpanElement>(null);
-  const isGoingUp = direction === "up";
-  const motionValue = useMotionValue(isGoingUp ? 0 : targetValue);
+  const [currentValue, setCurrentValue] = useState(direction === "up" ? 0 : targetValue);
+  const [isVisible, setIsVisible] = useState(false);
 
-  const springValue = useSpring(motionValue, {
-    damping: 80,
-    stiffness: 1000,
-  });
-
-  const isInView = useInView(ref, { margin: "0px", once: true });
-
+  // Intersection Observer para detectar quando o elemento está visível
   useEffect(() => {
-    if (!isInView) {
-      return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.1 }
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
     }
 
+    return () => observer.disconnect();
+  }, []);
+
+  // Animação do contador
+  useEffect(() => {
+    if (!isVisible) return;
+
     const timer = setTimeout(() => {
-      motionValue.set(isGoingUp ? targetValue : 0);
+      const isGoingUp = direction === "up";
+      const startValue = isGoingUp ? 0 : targetValue;
+      const endValue = isGoingUp ? targetValue : 0;
+      const duration = 2000; // 2 segundos
+      const steps = 60; // 60 FPS
+      const stepValue = (endValue - startValue) / steps;
+      let currentStep = 0;
+
+      const interval = setInterval(() => {
+        currentStep++;
+        const newValue = startValue + (stepValue * currentStep);
+        
+        if (currentStep >= steps) {
+          setCurrentValue(endValue);
+          clearInterval(interval);
+        } else {
+          setCurrentValue(newValue);
+        }
+      }, duration / steps);
+
+      return () => clearInterval(interval);
     }, delay);
 
     return () => clearTimeout(timer);
-  }, [isInView, delay, isGoingUp, targetValue, motionValue]);
+  }, [isVisible, delay, direction, targetValue]);
 
-  useEffect(() => {
-    const unsubscribe = springValue.onChange((value) => {
-      if (ref.current) {
-        // @ts-ignore
-        ref.current.textContent = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
-      }
-    });
-
-    return () => unsubscribe();
-  }, [springValue]);
+  const formattedValue = new Intl.NumberFormat('pt-BR', { 
+    style: 'currency', 
+    currency: 'BRL' 
+  }).format(currentValue);
 
   return (
-    <Text ref={ref} {...rest} />
+    <Text ref={ref} {...rest}>
+      {formattedValue}
+    </Text>
   );
 }
